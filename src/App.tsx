@@ -57,30 +57,54 @@ const Hero = () => (
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 px-3 py-1 rounded-full mb-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 px-3 py-1 rounded-full mb-6"
+          >
             <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
-            <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">O Tinder da Permuta Imobiliária</span>
-          </div>
-          <h1 className="text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 text-balance">
+            <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">A Evolução Inteligente da Permuta Imobiliária</span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 text-balance"
+          >
             Encontre o <span className="accent-gradient-text">Match Perfeito</span> para o seu Imóvel.
-          </h1>
-          <p className="text-lg lg:text-xl text-slate-400 mb-10 leading-relaxed text-balance">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-lg lg:text-xl text-slate-400 mb-10 leading-relaxed text-balance"
+          >
             Deslize, conecte e negocie. O ImovelMatch utiliza algoritmos de inteligência para unir pessoas com interesses de troca complementares, transformando permuta em liquidez rápida.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a 
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <motion.a 
               href="#contato" 
-              className="bg-brand-orange text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-lg shadow-brand-orange/20 hover:-translate-y-1 active:translate-y-0"
+              whileHover={{ scale: 1.05, backgroundColor: "#ea580c" }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-brand-orange text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-brand-orange/20"
             >
               Começar Agora <ArrowRight className="w-5 h-5" />
-            </a>
-            <a 
+            </motion.a>
+            <motion.a 
               href="#como-funciona" 
-              className="glass-card px-8 py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 hover:bg-white/10 transition-all"
+              whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
+              whileTap={{ scale: 0.95 }}
+              className="glass-card px-8 py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all"
             >
               Ver Como Funciona
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </motion.div>
 
         <motion.div 
@@ -89,7 +113,11 @@ const Hero = () => (
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          <div className="relative z-10 glass-card p-2 rounded-3xl shadow-2xl overflow-hidden max-w-[400px] mx-auto">
+          <motion.div 
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="relative z-10 glass-card p-2 rounded-3xl shadow-2xl overflow-hidden max-w-[400px] mx-auto"
+          >
             <img 
               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
               alt="Imóvel em destaque" 
@@ -103,12 +131,18 @@ const Hero = () => (
                     <p className="text-slate-300 text-sm">São Paulo, SP • R$ 2.4M</p>
                   </div>
                   <div className="flex gap-2">
-                     <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+                     <motion.div 
+                        whileHover={{ scale: 1.1 }}
+                        className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
+                      >
                         <Users className="w-6 h-6 text-white" />
-                     </div>
-                     <div className="w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center shadow-lg shadow-brand-orange/40">
+                     </motion.div>
+                     <motion.div 
+                        whileHover={{ scale: 1.1, rotate: 180 }}
+                        className="w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center shadow-lg shadow-brand-orange/40"
+                      >
                         <Repeat className="w-6 h-6 text-white" />
-                     </div>
+                     </motion.div>
                   </div>
                </div>
             </div>
@@ -116,7 +150,7 @@ const Hero = () => (
               <span className="w-2 h-2 rounded-full bg-brand-orange" />
               <span className="text-[10px] font-bold text-white uppercase tracking-tighter">Interesse em Permuta</span>
             </div>
-          </div>
+          </motion.div>
           <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-blue/10 rounded-full blur-3xl -z-10" />
         </motion.div>
       </div>
@@ -125,11 +159,17 @@ const Hero = () => (
 );
 
 const SectionHeading = ({ badge, title, subtitle, centered = false }: { badge: string, title: string, subtitle: string, centered?: boolean }) => (
-  <div className={`mb-16 ${centered ? 'text-center' : ''}`}>
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-100px" }}
+    transition={{ duration: 0.6 }}
+    className={`mb-16 ${centered ? 'text-center' : ''}`}
+  >
     <span className="text-brand-orange font-bold text-sm tracking-widest uppercase mb-4 block italic">{badge}</span>
     <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 text-balance">{title}</h2>
     <p className="text-lg text-slate-400 max-w-2xl mx-auto">{subtitle}</p>
-  </div>
+  </motion.div>
 );
 
 const Partners = () => (
@@ -164,7 +204,11 @@ const Partners = () => (
         ].map((item, i) => (
           <motion.div 
             key={i}
-            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            whileHover={{ y: -10 }}
             className="glass-card p-8 rounded-2xl hover:border-white/20 hover:bg-slate-800/60 transition-all group"
           >
             <div className={`w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
@@ -183,7 +227,13 @@ const Advertisers = () => (
   <section id="anunciantes" className="py-24 relative overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
-        <div className="relative order-2 lg:order-1">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative order-2 lg:order-1"
+        >
           <div className="relative z-10 glass-card p-2 rounded-[2.5rem] shadow-2xl overflow-hidden aspect-[4/5] lg:aspect-auto lg:h-[600px]">
              <img 
               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
@@ -193,14 +243,28 @@ const Advertisers = () => (
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 to-transparent" />
             <div className="absolute bottom-10 left-10 right-10">
-              <div className="flex items-center gap-3 bg-brand-blue/20 backdrop-blur-md border border-brand-blue/30 px-4 py-2 rounded-full w-fit mb-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-3 bg-brand-blue/20 backdrop-blur-md border border-brand-blue/30 px-4 py-2 rounded-full w-fit mb-4"
+              >
                 <Target className="w-4 h-4 text-brand-blue" />
                 <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">Interface Swipe</span>
-              </div>
-              <h4 className="text-white text-3xl font-bold">Descubra novos lares deslizando</h4>
+              </motion.div>
+              <motion.h4 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="text-white text-3xl font-bold"
+              >
+                Descubra novos lares deslizando
+              </motion.h4>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="order-1 lg:order-2">
           <SectionHeading 
@@ -216,12 +280,19 @@ const Advertisers = () => (
               "Chat criptografado para negociar diretamente",
               "Matches instantâneos com perfis verificados"
             ].map((text, i) => (
-              <li key={i} className="flex items-start gap-4">
+              <motion.li 
+                key={i}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="flex items-start gap-4"
+              >
                 <div className="mt-1 bg-brand-blue/10 p-1.5 rounded-full border border-brand-blue/20">
                   <CheckCircle2 className="w-5 h-5 text-brand-blue" />
                 </div>
                 <span className="text-lg text-slate-300 font-medium">{text}</span>
-              </li>
+              </motion.li>
             ))}
           </ul>
         </div>
@@ -233,10 +304,16 @@ const Advertisers = () => (
 const HowItWorks = () => (
   <section id="como-funciona" className="py-24 bg-brand-dark relative">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-20">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-20"
+      >
         <span className="text-brand-orange font-bold text-sm tracking-widest uppercase mb-4 block italic">Processo Simples</span>
         <h2 className="text-4xl lg:text-6xl font-bold mb-6">Explore, Escolha e Negocie.</h2>
-      </div>
+      </motion.div>
 
       <div className="grid md:grid-cols-3 gap-12">
         {[
@@ -259,7 +336,14 @@ const HowItWorks = () => (
             description: "Abra um canal de conversa seguro dentro do app para alinhar detalhes, agendar visitas e fechar a sua permuta."
           }
         ].map((item, i) => (
-          <div key={i} className="flex gap-6 items-start">
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.15 }}
+            className="flex gap-6 items-start"
+          >
             <span className="text-5xl font-display font-black text-white/10 italic">
               {item.step}
             </span>
@@ -270,7 +354,7 @@ const HowItWorks = () => (
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">{item.description}</p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -295,7 +379,13 @@ const ContactForm = () => {
   return (
     <section id="contato" className="py-24 bg-brand-dark relative overflow-hidden border-t border-white/5">
       <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="glass-card rounded-[2.5rem] shadow-2xl p-8 md:p-10 border-white/10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="glass-card rounded-[2.5rem] shadow-2xl p-8 md:p-10 border-white/10"
+        >
           {submitted ? (
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
@@ -369,7 +459,7 @@ const ContactForm = () => {
               </form>
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
