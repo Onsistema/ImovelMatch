@@ -89,7 +89,9 @@ const Hero = () => (
             className="flex flex-col sm:flex-row gap-4"
           >
             <motion.a 
-              href="#contato" 
+              href="https://drive.google.com/file/d/12SrVY6eqjQMwf-Jx_PwKCLp9kYuot29Y/view?usp=sharing" 
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05, backgroundColor: "#ea580c" }}
               whileTap={{ scale: 0.95 }}
               className="bg-brand-orange text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-brand-orange/20"
