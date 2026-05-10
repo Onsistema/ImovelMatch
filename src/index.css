@@ -7,7 +7,7 @@
 
   --color-brand-dark: #020617;
   --color-brand-blue: #3b82f6;
-  --color-brand-orange: #f97316;
+  --color-brand-gold: #C9971E;
   --color-brand-slate-card: rgba(30, 41, 59, 0.5);
 }
 
@@ -34,7 +34,7 @@
 }
 
 .accent-gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-orange;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-gold;
 }
 
 .text-balance {

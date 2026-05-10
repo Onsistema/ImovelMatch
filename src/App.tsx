@@ -18,16 +18,18 @@ import {
 } from "lucide-react";
 import { useState, FormEvent } from "react";
 
-const LOGO_URL = "https://lh3.googleusercontent.com/d/1s0hgQ316GB7xvwbRY1VRR49UmlcGmU33";
+const LOGO_URL = "https://lh3.googleusercontent.com/d/1DrM-x0JwGVKSMW6HKluFfY9qBmLwboVZ";
 
 const Navbar = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/50 backdrop-blur-xl border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <img src={LOGO_URL} alt="ImovelMatch Logo" className="h-14 w-auto" referrerPolicy="no-referrer" />
-        <span className="font-display text-2xl font-bold tracking-tight text-white">
-          Imovel<span className="text-brand-orange">Match</span>
-        </span>
+  <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-32 flex items-center justify-between">
+      <div className="flex items-center relative">
+        <img 
+          src={LOGO_URL} 
+          alt="ImovelMatch Logo" 
+          className="h-44 w-auto drop-shadow-[0_0_25px_rgba(59,130,246,0.5)] brightness-125 saturate-110 transition-all hover:scale-110 duration-500 relative z-10 -translate-y-2" 
+          referrerPolicy="no-referrer" 
+        />
       </div>
       <div className="hidden md:flex items-center gap-8">
         <a href="#parceiros" className="text-sm font-medium text-slate-400 hover:text-brand-blue transition-colors">Parceiros</a>
@@ -35,7 +37,7 @@ const Navbar = () => (
         <a href="#como-funciona" className="text-sm font-medium text-slate-400 hover:text-brand-blue transition-colors">Como Funciona</a>
         <a 
           href="#contato" 
-          className="bg-brand-orange text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-brand-orange/20"
+          className="bg-brand-gold text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20"
         >
           Seja um Parceiro
         </a>
@@ -45,10 +47,10 @@ const Navbar = () => (
 );
 
 const Hero = () => (
-  <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+  <section className="relative pt-44 pb-20 lg:pt-64 lg:pb-32 overflow-hidden">
     {/* Decorative Blobs */}
     <div className="absolute top-[-100px] right-[-100px] w-96 h-96 bg-brand-blue/10 rounded-full blur-[120px] -z-10" />
-    <div className="absolute bottom-[-50px] left-[-50px] w-80 h-80 bg-brand-orange/10 rounded-full blur-[100px] -z-10" />
+    <div className="absolute bottom-[-50px] left-[-50px] w-80 h-80 bg-brand-gold/10 rounded-full blur-[100px] -z-10" />
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -92,9 +94,9 @@ const Hero = () => (
               href="https://drive.google.com/file/d/12SrVY6eqjQMwf-Jx_PwKCLp9kYuot29Y/view?usp=sharing" 
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05, backgroundColor: "#ea580c" }}
+              whileHover={{ scale: 1.05, backgroundColor: "#A87D17" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-brand-orange text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-brand-orange/20"
+              className="bg-brand-gold text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-brand-gold/20"
             >
               Começar Agora <ArrowRight className="w-5 h-5" />
             </motion.a>
@@ -141,15 +143,15 @@ const Hero = () => (
                      </motion.div>
                      <motion.div 
                         whileHover={{ scale: 1.1, rotate: 180 }}
-                        className="w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center shadow-lg shadow-brand-orange/40"
+                        className="w-12 h-12 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40"
                       >
                         <Repeat className="w-6 h-6 text-white" />
                      </motion.div>
                   </div>
                </div>
             </div>
-            <div className="absolute top-6 left-6 glass-card px-3 py-1 rounded-full flex items-center gap-2 border-brand-orange/40">
-              <span className="w-2 h-2 rounded-full bg-brand-orange" />
+            <div className="absolute top-6 left-6 glass-card px-3 py-1 rounded-full flex items-center gap-2 border-brand-gold/40">
+              <span className="w-2 h-2 rounded-full bg-brand-gold" />
               <span className="text-[10px] font-bold text-white uppercase tracking-tighter">Interesse em Permuta</span>
             </div>
           </motion.div>
@@ -168,7 +170,7 @@ const SectionHeading = ({ badge, title, subtitle, centered = false }: { badge: s
     transition={{ duration: 0.6 }}
     className={`mb-16 ${centered ? 'text-center' : ''}`}
   >
-    <span className="text-brand-orange font-bold text-sm tracking-widest uppercase mb-4 block italic">{badge}</span>
+    <span className="text-brand-gold font-bold text-sm tracking-widest uppercase mb-4 block italic">{badge}</span>
     <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 text-balance">{title}</h2>
     <p className="text-lg text-slate-400 max-w-2xl mx-auto">{subtitle}</p>
   </motion.div>
@@ -187,7 +189,7 @@ const Partners = () => (
         {[
           {
             icon: BarChart3,
-            color: "text-brand-orange",
+            color: "text-brand-gold",
             title: "Giro Inteligente",
             description: "Encontre instantaneamente parceiros que possuem o perfil de imóvel ideal para a troca do seu cliente."
           },
@@ -199,7 +201,7 @@ const Partners = () => (
           },
           {
             icon: Zap,
-            color: "text-brand-orange",
+            color: "text-brand-gold",
             title: "Liquidez sob Demanda",
             description: "Reduza o tempo de espera no estoque transformando buscas passivas em matches ativos."
           }
@@ -313,7 +315,7 @@ const HowItWorks = () => (
         transition={{ duration: 0.6 }}
         className="text-center mb-20"
       >
-        <span className="text-brand-orange font-bold text-sm tracking-widest uppercase mb-4 block italic">Processo Simples</span>
+        <span className="text-brand-gold font-bold text-sm tracking-widest uppercase mb-4 block italic">Processo Simples</span>
         <h2 className="text-4xl lg:text-6xl font-bold mb-6">Explore, Escolha e Negocie.</h2>
       </motion.div>
 
@@ -401,7 +403,7 @@ const ContactForm = () => {
               <p className="text-slate-400 mb-8">Nossa equipe entrará em contato em breve para liberar seu acesso.</p>
               <button 
                 onClick={() => setSubmitted(false)}
-                className="text-brand-orange font-bold hover:underline"
+                className="text-brand-gold font-bold hover:underline"
               >
                 Enviar outra mensagem
               </button>
@@ -454,7 +456,7 @@ const ContactForm = () => {
 
                 <button 
                   type="submit" 
-                  className="w-full py-4 rounded-xl bg-brand-orange hover:bg-orange-600 text-white font-bold text-lg shadow-lg shadow-orange-500/20 transition-all mt-4 uppercase tracking-wide"
+                  className="w-full py-4 rounded-xl bg-brand-gold hover:opacity-90 text-white font-bold text-lg shadow-lg shadow-brand-gold/20 transition-all mt-4 uppercase tracking-wide"
                 >
                   Solicitar Acesso
                 </button>
@@ -471,13 +473,8 @@ const Footer = () => (
   <footer className="bg-brand-dark pt-12 pb-10 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:row items-center justify-between gap-8">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-brand-orange text-white">
-            <ArrowRightLeft className="w-5 h-5" />
-          </div>
-          <span className="font-display text-xl font-bold tracking-tight text-white">
-            Imovel<span className="text-brand-orange">Match</span>
-          </span>
+        <div className="flex items-center">
+          <img src={LOGO_URL} alt="ImovelMatch Logo" className="h-24 w-auto brightness-0 invert opacity-60 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
         </div>
         
         <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
