@@ -43,12 +43,12 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#B09D75]/50 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <div className="flex items-center relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between overflow-hidden">
+        <div className="flex items-center relative h-full overflow-hidden">
           <img 
             src={LOGO_URL} 
             alt="SwapHome Logo" 
-            className="h-16 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
+            className="h-24 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
             referrerPolicy="no-referrer" 
           />
         </div>
@@ -198,13 +198,19 @@ const Hero = () => (
                   </div>
                   <div className="flex gap-2">
                      <motion.div 
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.1, rotate: -10 }}
+                        whileInView={{ scale: [1, 1.1, 1], rotate: [0, -10, 0] }}
+                        viewport={{ once: false }}
+                        transition={{ duration: 0.5 }}
                         className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
                       >
                         <Users className="w-6 h-6 text-white" />
                      </motion.div>
                      <motion.div 
                         whileHover={{ scale: 1.1, rotate: 180 }}
+                        whileInView={{ scale: [1, 1.1, 1], rotate: [0, 180, 0] }}
+                        viewport={{ once: false }}
+                        transition={{ duration: 0.8 }}
                         className="w-12 h-12 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40"
                       >
                         <Repeat className="w-6 h-6 text-white" />
@@ -380,19 +386,36 @@ const ValueProp = () => (
                     <div className="text-brand-gold font-display font-black text-6xl mb-4 italic opacity-20">SWAP</div>
                     <h3 className="text-2xl font-bold text-white mb-6">Seu imóvel como <br/> moeda de troca direta.</h3>
                     <div className="flex items-center justify-center gap-6">
-                       <div className="text-center">
-                          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-white/10">
-                             <Building2 className="w-8 h-8 text-slate-400" />
-                          </div>
-                          <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Seu Imóvel</span>
-                       </div>
-                       <ArrowRightLeft className="w-8 h-8 text-brand-gold animate-pulse" />
-                       <div className="text-center">
-                          <div className="w-16 h-16 bg-brand-gold/10 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-brand-gold/20">
-                             <Target className="w-8 h-8 text-brand-gold" />
-                          </div>
-                          <span className="text-[10px] uppercase font-bold tracking-widest text-brand-gold">Seu Match</span>
-                       </div>
+                        <div className="text-center">
+                           <motion.div 
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              whileInView={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
+                              viewport={{ once: false }}
+                              transition={{ duration: 0.6 }}
+                              className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-white/10"
+                           >
+                              <Building2 className="w-8 h-8 text-slate-400" />
+                           </motion.div>
+                           <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Seu Imóvel</span>
+                        </div>
+                        <motion.div
+                           whileInView={{ scale: [1, 1.2, 1] }}
+                           transition={{ duration: 0.8 }}
+                        >
+                           <ArrowRightLeft className="w-8 h-8 text-brand-gold animate-pulse" />
+                        </motion.div>
+                        <div className="text-center">
+                           <motion.div 
+                              whileHover={{ scale: 1.1, rotate: -5 }}
+                              whileInView={{ scale: [1, 1.1, 1], rotate: [0, -5, 0] }}
+                              viewport={{ once: false }}
+                              transition={{ duration: 0.6 }}
+                              className="w-16 h-16 bg-brand-gold/10 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-brand-gold/20"
+                           >
+                              <Target className="w-8 h-8 text-brand-gold" />
+                           </motion.div>
+                           <span className="text-[10px] uppercase font-bold tracking-widest text-brand-gold">Seu Match</span>
+                        </div>
                     </div>
                  </div>
               </div>
