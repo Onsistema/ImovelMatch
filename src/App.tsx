@@ -201,7 +201,7 @@ const Hero = () => (
                         whileHover={{ scale: 1.1, rotate: -10 }}
                         whileInView={{ scale: [1, 1.1, 1], rotate: [0, -10, 0] }}
                         viewport={{ once: false }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.5, delay: 1.2 }}
                         className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
                       >
                         <Users className="w-6 h-6 text-white" />
@@ -210,7 +210,7 @@ const Hero = () => (
                         whileHover={{ scale: 1.1, rotate: 180 }}
                         whileInView={{ scale: [1, 1.1, 1], rotate: [0, 180, 0] }}
                         viewport={{ once: false }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.8, delay: 1.5 }}
                         className="w-12 h-12 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40"
                       >
                         <Repeat className="w-6 h-6 text-white" />
@@ -391,7 +391,7 @@ const ValueProp = () => (
                               whileHover={{ scale: 1.1, rotate: 5 }}
                               whileInView={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
                               viewport={{ once: false }}
-                              transition={{ duration: 0.6 }}
+                              transition={{ duration: 0.6, delay: 1.2 }}
                               className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-white/10"
                            >
                               <Building2 className="w-8 h-8 text-slate-400" />
@@ -400,7 +400,7 @@ const ValueProp = () => (
                         </div>
                         <motion.div
                            whileInView={{ scale: [1, 1.2, 1] }}
-                           transition={{ duration: 0.8 }}
+                           transition={{ duration: 0.8, delay: 1.4 }}
                         >
                            <ArrowRightLeft className="w-8 h-8 text-brand-gold animate-pulse" />
                         </motion.div>
@@ -409,7 +409,7 @@ const ValueProp = () => (
                               whileHover={{ scale: 1.1, rotate: -5 }}
                               whileInView={{ scale: [1, 1.1, 1], rotate: [0, -5, 0] }}
                               viewport={{ once: false }}
-                              transition={{ duration: 0.6 }}
+                              transition={{ duration: 0.6, delay: 1.6 }}
                               className="w-16 h-16 bg-brand-gold/10 rounded-2xl flex items-center justify-center mb-2 mx-auto border border-brand-gold/20"
                            >
                               <Target className="w-8 h-8 text-brand-gold" />
