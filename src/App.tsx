@@ -27,27 +27,27 @@ import {
 } from "lucide-react";
 import { useState, FormEvent } from "react";
 
-const LOGO_URL = "https://lh3.googleusercontent.com/d/1DrM-x0JwGVKSMW6HKluFfY9qBmLwboVZ";
+const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
 const Navbar = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-32 flex items-center justify-between">
+  <nav className="fixed top-0 left-0 right-0 z-50 bg-[#B09D75]/70 backdrop-blur-xl border-b border-black/5 shadow-xl">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
       <div className="flex items-center relative">
         <img 
           src={LOGO_URL} 
-          alt="ImovelMatch Logo" 
-          className="h-44 w-auto drop-shadow-[0_0_25px_rgba(59,130,246,0.5)] brightness-125 saturate-110 transition-all hover:scale-110 duration-500 relative z-10 -translate-y-2" 
+          alt="SwapHome Logo" 
+          className="h-20 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
           referrerPolicy="no-referrer" 
         />
       </div>
       <div className="hidden md:flex items-center gap-8">
-        <a href="#solucao" className="text-sm font-medium text-slate-400 hover:text-brand-gold transition-colors">Solução</a>
-        <a href="#beneficios" className="text-sm font-medium text-slate-400 hover:text-brand-gold transition-colors">Benefícios</a>
-        <a href="#planos" className="text-sm font-medium text-slate-400 hover:text-brand-gold transition-colors">Planos</a>
-        <a href="#faq" className="text-sm font-medium text-slate-400 hover:text-brand-gold transition-colors">FAQ</a>
+        <a href="#solucao" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Solução</a>
+        <a href="#beneficios" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Benefícios</a>
+        <a href="#planos" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Planos</a>
+        <a href="#faq" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">FAQ</a>
         <a 
           href="#contato" 
-          className="bg-brand-gold text-brand-dark px-6 py-2.5 rounded-full text-sm font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20"
+          className="bg-brand-gold text-brand-dark px-6 py-2.5 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
         >
           Cadastrar Grátis
         </a>
@@ -91,7 +91,7 @@ const Hero = () => (
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-lg lg:text-xl text-slate-400 mb-10 leading-relaxed text-balance"
           >
-            O ImovelMatch conecta você a proprietários que também querem trocar. Cadastre seu imóvel, encontre o match certo e feche negócio — em 3 passos simples, direto pelo celular.
+            O SwapHome conecta você a proprietários que também querem trocar. Cadastre seu imóvel, encontre o match certo e feche negócio — em 3 passos simples, direto pelo celular.
           </motion.p>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -254,7 +254,7 @@ const PainPoints = () => (
       <SectionHeading 
         badge="Realidade do Mercado"
         title="Por que trocar de imóvel precisa ser tão complicado?"
-        subtitle="O mercado imobiliário tradicional foi feito pra ser lento. O ImovelMatch foi feito pra ser diferente."
+        subtitle="O mercado imobiliário tradicional foi feito pra ser lento. O SwapHome foi feito pra ser diferente."
         centered
       />
       
@@ -300,7 +300,7 @@ const ValueProp = () => (
                  <p>Você tem um imóvel. Mas não é exatamente onde — ou o que — você quer pra sua vida agora.</p>
                  <p>Vender demora. Financiar pesa. E esperar o mercado "melhorar" pode custar anos.</p>
                  <p className="text-white font-medium">E se existisse uma forma de trocar seu imóvel diretamente com outro proprietário — sem precisar de dinheiro no meio, sem correr atrás de comprador, sem depender de banco?</p>
-                 <p>É isso que o <span className="text-brand-gold font-bold">ImovelMatch</span> faz. De forma rápida, simples e segura.</p>
+                 <p>É isso que o <span className="text-brand-gold font-bold">SwapHome</span> faz. De forma rápida, simples e segura.</p>
               </div>
            </div>
            <div className="relative">
@@ -346,7 +346,7 @@ const HowItWorks = () => (
       <SectionHeading 
         badge="Protocolo"
         title="Como funciona em 3 passos simples."
-        subtitle="O ImovelMatch é o primeiro SaaS de permuta imobiliária do Brasil. Simples assim."
+        subtitle="O SwapHome é o primeiro SaaS de permuta imobiliária do Brasil. Simples assim."
         centered
       />
 
@@ -526,7 +526,7 @@ const FAQ = () => {
   const faqs = [
     {
       q: "Mas os imóveis precisam ter o mesmo valor?",
-      a: "Não necessariamente. Na permuta é possível combinar uma diferença em dinheiro — chamada de 'torna'. O ImovelMatch conecta você a proprietários compatíveis e a negociação do valor fica entre as partes."
+      a: "Não necessariamente. Na permuta é possível combinar uma diferença em dinheiro — chamada de 'torna'. O SwapHome conecta você a proprietários compatíveis e a negociação do valor fica entre as partes."
     },
     {
       q: "Mas isso é seguro? E a parte jurídica?",
@@ -537,7 +537,7 @@ const FAQ = () => {
       a: "A plataforma está em expansão nacional. Quanto mais proprietários cadastram, mais matches surgem — e cada novo cadastro aumenta as chances de todo mundo."
     },
     {
-      q: "O ImovelMatch é para qualquer tipo de imóvel?",
+      q: "O SwapHome é para qualquer tipo de imóvel?",
       a: "Sim — apartamentos, casas, terrenos, imóveis comerciais e rurais. Se tem proprietário, tem match possível."
     },
     {
@@ -730,7 +730,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:row items-center justify-between gap-8">
         <div className="flex items-center">
-          <img src={LOGO_URL} alt="ImovelMatch Logo" className="h-24 w-auto brightness-0 invert opacity-60 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
+          <img src={LOGO_URL} alt="SwapHome Logo" className="h-24 w-auto opacity-70 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
         </div>
         
         <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
@@ -740,7 +740,7 @@ const Footer = () => (
         </nav>
 
         <div className="text-xs text-slate-600 font-medium">
-          © {new Date().getFullYear()} ImovelMatch — Transformando ativos em oportunidades.
+          © {new Date().getFullYear()} SwapHome — Transformando ativos em oportunidades.
         </div>
       </div>
     </div>
