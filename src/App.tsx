@@ -23,38 +23,100 @@ import {
   ShieldCheck,
   Smartphone,
   CheckCircle,
-  HelpCircle
+  HelpCircle,
+  Menu,
+  X
 } from "lucide-react";
 import { useState, FormEvent } from "react";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
-const Navbar = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 bg-[#B09D75]/70 backdrop-blur-xl border-b border-black/5 shadow-xl">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
-      <div className="flex items-center relative">
-        <img 
-          src={LOGO_URL} 
-          alt="SwapHome Logo" 
-          className="h-20 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
-          referrerPolicy="no-referrer" 
-        />
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems = [
+    { label: "Solução", href: "#solucao" },
+    { label: "Benefícios", href: "#beneficios" },
+    { label: "Planos", href: "#planos" },
+    { label: "FAQ", href: "#faq" },
+  ];
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#B09D75]/50 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="flex items-center relative">
+          <img 
+            src={LOGO_URL} 
+            alt="SwapHome Logo" 
+            className="h-16 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
+            referrerPolicy="no-referrer" 
+          />
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          {menuItems.map((item) => (
+            <a 
+              key={item.label} 
+              href={item.href} 
+              className="text-sm font-bold text-[#1B3E5F] hover:text-brand-gold transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+          <a 
+            href="#contato" 
+            className="bg-brand-gold text-brand-dark px-6 py-2 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
+          >
+            Cadastrar Grátis
+          </a>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-[#1B3E5F] p-2 hover:bg-black/5 rounded-lg transition-colors"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
-      <div className="hidden md:flex items-center gap-8">
-        <a href="#solucao" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Solução</a>
-        <a href="#beneficios" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Benefícios</a>
-        <a href="#planos" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">Planos</a>
-        <a href="#faq" className="text-sm font-bold text-slate-700 hover:text-brand-gold transition-colors">FAQ</a>
-        <a 
-          href="#contato" 
-          className="bg-brand-gold text-brand-dark px-6 py-2.5 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
-        >
-          Cadastrar Grátis
-        </a>
-      </div>
-    </div>
-  </nav>
-);
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-[#B09D75] border-t border-black/5 overflow-hidden"
+          >
+            <div className="px-4 py-6 space-y-4">
+              {menuItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-lg font-bold text-[#1B3E5F] hover:text-brand-dark transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href="#contato"
+                onClick={() => setIsMenuOpen(false)}
+                className="block w-full text-center bg-brand-gold text-brand-dark px-6 py-3 rounded-xl text-md font-black shadow-lg uppercase tracking-tight"
+              >
+                Cadastrar Grátis
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+};
 
 const Hero = () => (
   <section className="relative pt-44 pb-20 lg:pt-64 lg:pb-32 overflow-hidden">
