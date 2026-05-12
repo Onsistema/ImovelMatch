@@ -42,7 +42,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#B09D75]/50 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/40 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between overflow-hidden">
         <div className="flex items-center relative h-full overflow-hidden">
           <img 
@@ -90,7 +90,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#B09D75] border-t border-black/5 overflow-hidden"
+            className="md:hidden bg-white/80 border-t border-black/5 overflow-hidden"
           >
             <div className="px-4 py-6 space-y-4">
               {menuItems.map((item) => (
