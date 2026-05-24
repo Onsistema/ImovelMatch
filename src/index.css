@@ -40,3 +40,8 @@
 .text-balance {
   text-wrap: balance;
 }
+
+/* Adicione no final do arquivo src/index.css: */
+.animate-spin-slow {
+  animation: spin 6s linear infinite;
+}

@@ -36,6 +36,7 @@ const Navbar = () => {
 
   const menuItems = [
     { label: "Solução", href: "#solucao" },
+    { label: "Simulador", href: "#simulador" },
     { label: "Benefícios", href: "#beneficios" },
     { label: "Planos", href: "#planos" },
     { label: "FAQ", href: "#faq" },
@@ -65,7 +66,9 @@ const Navbar = () => {
             </a>
           ))}
           <a 
-            href="#contato" 
+            href="https://app.swaphome.com.br/" 
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-brand-gold text-brand-dark px-6 py-2 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
           >
             Cadastrar Grátis
@@ -104,7 +107,9 @@ const Navbar = () => {
                 </a>
               ))}
               <a
-                href="#contato"
+                href="https://app.swaphome.com.br/"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setIsMenuOpen(false)}
                 className="block w-full text-center bg-brand-gold text-brand-dark px-6 py-3 rounded-xl text-md font-black shadow-lg uppercase tracking-tight"
               >
@@ -119,7 +124,7 @@ const Navbar = () => {
 };
 
 const Hero = () => (
-  <section className="relative pt-44 pb-20 lg:pt-64 lg:pb-32 overflow-hidden">
+  <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
     <div className="absolute top-[-100px] right-[-100px] w-96 h-96 bg-brand-blue/10 rounded-full blur-[120px] -z-10" />
     <div className="absolute bottom-[-50px] left-[-50px] w-80 h-80 bg-brand-gold/10 rounded-full blur-[100px] -z-10" />
 
@@ -162,7 +167,9 @@ const Hero = () => (
             className="flex flex-col sm:flex-row gap-4"
           >
             <motion.a 
-              href="#contato" 
+              href="https://app.swaphome.com.br/" 
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05, backgroundColor: "#A87D17" }}
               whileTap={{ scale: 0.95 }}
               className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20"
@@ -543,60 +550,139 @@ const Pricing = () => (
                     <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cartão de crédito
                   </li>
                </ul>
-               <a href="#contato" className="block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all">Começar Agora</a>
+               <a 
+                 href="https://app.swaphome.com.br/" 
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all"
+               >
+                 Começar Agora
+               </a>
             </div>
 
             {/* CPF PRO */}
-            <div className="glass-card p-10 rounded-3xl border-brand-gold/30 bg-brand-gold/5 relative overflow-hidden">
-               <div className="absolute top-4 right-4 bg-brand-gold text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Popular</div>
-               <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Pro</h4>
-               <p className="text-4xl font-bold text-white mb-4">R$ 49,90 <span className="text-sm font-normal text-slate-500">/mês</span></p>
-               <p className="text-slate-400 text-sm mb-8">Visibilidade prioritária e curadoria assistida.</p>
-               <ul className="space-y-4 mb-10">
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Matches ilimitados
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Mensagens diretas
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Suporte prioritário
-                  </li>
-               </ul>
-               <a href="#contato" className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20">Assinar Pro</a>
+            <div className="glass-card p-10 rounded-3xl border-brand-gold/30 bg-brand-gold/5 relative overflow-hidden flex flex-col justify-between">
+               <div>
+                  <div className="absolute top-4 right-4 bg-brand-gold text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Popular</div>
+                  <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Pro</h4>
+                  <p className="text-4xl font-black mb-4 flex items-baseline gap-2 flex-wrap">
+                     <span className="line-through text-slate-500 text-2xl font-bold">R$ 49,90</span>
+                     <span className="text-white">R$ 0,00</span>
+                     <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                  </p>
+                  
+                  <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold mb-6 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5">
+                     <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
+                     <span>Qualquer plano grátis por 30 dias • Teste agora</span>
+                  </div>
+
+                  <p className="text-slate-400 text-sm mb-8">Visibilidade prioritária e curadoria assistida.</p>
+                  <ul className="space-y-4 mb-10">
+                     <li className="flex items-center gap-3 text-sm text-slate-300">
+                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados
+                     </li>
+                     <li className="flex items-center gap-3 text-sm text-slate-300">
+                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Matches ilimitados
+                     </li>
+                     <li className="flex items-center gap-3 text-sm text-slate-300">
+                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Mensagens diretas
+                     </li>
+                     <li className="flex items-center gap-3 text-sm text-slate-300">
+                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Suporte prioritário
+                     </li>
+                  </ul>
+               </div>
+               <a 
+                 href="https://app.swaphome.com.br/" 
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow"
+               >
+                 Assinar Pro
+               </a>
             </div>
          </div>
       </div>
 
       <div>
          <h3 className="text-2xl font-bold text-white mb-8 text-center bg-brand-gold/10 py-3 rounded-xl border border-brand-gold/20 max-w-sm mx-auto">Para Corretores & Imobiliárias (B2B)</h3>
-         <div className="grid md:grid-cols-3 gap-8">
+         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { name: "Starter", price: "149", items: "10", desc: "Para corretores individuais." },
-              { name: "Growth", price: "259", items: "30", desc: "Para equipes em expansão." },
-              { name: "Enterprise", price: "699", items: "100", desc: "Para grandes estoques." }
+              { 
+                name: "Starter", 
+                price: "149", 
+                desc: "Para corretores individuais.",
+                features: [
+                  "Até 10 imóveis",
+                  "Dashboard de gestão (em breve)"
+                ]
+              },
+              { 
+                name: "Growth", 
+                price: "259", 
+                desc: "Para equipes em expansão.",
+                features: [
+                  "Até 30 imóveis",
+                  "Dashboard de gestão (em breve)",
+                  "Relatórios de performance (em breve)"
+                ]
+              },
+              { 
+                name: "Enterprise", 
+                price: "699", 
+                desc: "Para grandes estoques.",
+                features: [
+                  "Até 100 imóveis",
+                  "Dashboard de gestão (em breve)",
+                  "Relatórios de performance (em breve)",
+                  "Aviso de novos imóveis no Telegram (em breve)",
+                  "IA para encontrar oportunidades (em breve)"
+                ]
+              },
+              { 
+                name: "Enterprise Pro", 
+                price: "Plano Personalizado", 
+                desc: "Para grandes empresas.",
+                features: [
+                  "Imóveis ilimitados",
+                  "Dashboard de gestão (em breve)",
+                  "Relatórios de performance (em breve)",
+                  "Aviso de novos imóveis no Telegram (em breve)",
+                  "IA para encontrar oportunidades (em breve)"
+                ]
+              }
             ].map((plan, i) => (
-              <div key={i} className="glass-card p-8 rounded-3xl border-white/5 bg-slate-900/20">
-                 <h4 className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-4">{plan.name}</h4>
-                 <p className="text-3xl font-bold text-white mb-4">R$ {plan.price} <span className="text-sm font-normal text-slate-500">/mês</span></p>
-                 <p className="text-slate-400 text-xs mb-6 leading-relaxed">{plan.desc}</p>
-                 <ul className="space-y-3 mb-8">
-                    <li className="flex items-center gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até {plan.items} imóveis
-                    </li>
-                    <li className="flex items-center gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Dashboard de gestão
-                    </li>
-                    {i > 0 && (
-                      <li className="flex items-center gap-2 text-xs text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Relatórios de performance
-                      </li>
-                    )}
-                 </ul>
-                 <a href="#contato" className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold transition-all">Solicitar Acesso</a>
+              <div key={i} className={`glass-card p-6 rounded-3xl flex flex-col justify-between ${plan.name === "Enterprise Pro" ? "border-brand-gold/30 bg-brand-gold/5" : "border-white/5 bg-slate-900/20"}`}>
+                 <div>
+                    <h4 className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-4">{plan.name}</h4>
+                    <p className="text-3xl font-extrabold mb-4 flex items-baseline gap-2 flex-wrap">
+                      {plan.price === "Plano Personalizado" ? (
+                        <span className="text-xl tracking-tight text-white">{plan.price}</span>
+                      ) : (
+                        <>
+                          <span className="line-through text-slate-500 text-lg font-bold">R$ {plan.price}</span>
+                          <span className="text-white">R$ 0</span>
+                          <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                        </>
+                      )}
+                    </p>
+                    
+                    <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold mb-4 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
+                      <span>Qualquer plano grátis por 30 dias • Teste agora</span>
+                    </div>
+
+                    <p className="text-slate-400 text-xs mb-6 leading-relaxed">{plan.desc}</p>
+                    <ul className="space-y-3 mb-8">
+                       {plan.features.map((feature, featureIdx) => (
+                         <li key={featureIdx} className="flex items-start gap-2 text-xs text-slate-300">
+                           <CheckCircle2 className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" /> 
+                           <span>{feature}</span>
+                         </li>
+                       ))}
+                    </ul>
+                 </div>
+                 <a href="https://app.swaphome.com.br/" target="_blank" rel="noopener noreferrer" className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold transition-all mt-auto">Solicitar Acesso</a>
               </div>
             ))}
          </div>
@@ -832,20 +918,351 @@ const Footer = () => (
   </footer>
 );
 
+const PermutaSimulator = () => {
+  const [step, setStep] = useState<"input" | "calculating" | "result">("input");
+  const [loadingText, setLoadingText] = useState("");
+  const [progress, setProgress] = useState(0);
+  // Estados para o que TEM
+  const [hasType, setHasType] = useState("Apartamento");
+  const [hasCity, setHasCity] = useState("São Paulo");
+  const [hasValue, setHasValue] = useState(500000);
+  // Estados para o que BUSCA
+  const [wantType, setWantType] = useState("Casa");
+  const [wantCity, setWantCity] = useState("Campinas");
+  const [wantValue, setWantValue] = useState(800000);
+  const [results, setResults] = useState({
+    matchScore: 0,
+    matchCount: 0,
+    tornaValue: 0,
+    tornaType: "none" as "receive" | "pay" | "none",
+  });
+  const handleSimulate = () => {
+    setStep("calculating");
+    setProgress(0);
+    
+    const steps = [
+      { text: "Cruzando dados regionais...", delay: 0 },
+      { text: "Analisando compatibilidade de valores...", delay: 800 },
+      { text: "Verificando ofertas de troca com torna...", delay: 1600 },
+      { text: "Gerando match score...", delay: 2400 },
+    ];
+    steps.forEach((s, index) => {
+      setTimeout(() => {
+        setLoadingText(s.text);
+        setProgress((index + 1) * 25);
+      }, s.delay);
+    });
+    setTimeout(() => {
+      const diff = hasValue - wantValue;
+      const tornaType = diff > 0 ? "receive" : diff < 0 ? "pay" : "none";
+      const tornaValue = Math.abs(diff);
+      
+      // Cálculo do score fictício
+      const isSameCity = hasCity.toLowerCase().trim() === wantCity.toLowerCase().trim();
+      const baseScore = isSameCity ? 92 : 85;
+      const randomModifier = Math.floor(Math.random() * 8); // 0-7
+      const matchScore = Math.min(baseScore + randomModifier, 98);
+      
+      const matchCount = Math.floor(Math.random() * 12) + 4; // 4 a 15 matches
+      setResults({
+        matchScore,
+        matchCount,
+        tornaValue,
+        tornaType,
+      });
+      setStep("result");
+    }, 3200);
+  };
+  const handleReset = () => {
+    setStep("input");
+  };
+  const scrollToContact = () => {
+    const el = document.getElementById("contato");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  const valueOptions = [
+    { label: "Até R$ 300.000", value: 250000 },
+    { label: "R$ 300.000 a R$ 500.000", value: 400000 },
+    { label: "R$ 500.000 a R$ 800.000", value: 650000 },
+    { label: "R$ 800.000 a R$ 1.200.000", value: 1000000 },
+    { label: "R$ 1.200.000 a R$ 2.000.000", value: 1600000 },
+    { label: "Acima de R$ 2.000.000", value: 2500000 },
+  ];
+  const propertyTypes = ["Apartamento", "Casa", "Terreno", "Comercial", "Chácara/Sítio"];
+  const cities = ["São Paulo", "Campinas", "Sorocaba", "Curitiba", "Rio de Janeiro", "Belo Horizonte", "Valinhos", "Indaiatuba", "Florianópolis", "Santos"];
+  return (
+    <section id="simulador" className="py-24 relative overflow-hidden bg-brand-dark/40 border-y border-white/5">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] -z-10" />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading 
+          badge="Simulação Grátis"
+          title="Simulador de Compatibilidade"
+          subtitle="Descubra se existem imóveis compatíveis para troca e veja uma estimativa de torna financeira."
+          centered
+        />
+        <div className="glass-card rounded-[2.5rem] border-white/10 shadow-2xl p-8 md:p-12 relative overflow-hidden min-h-[450px] flex flex-col justify-between">
+          <AnimatePresence mode="wait">
+            {step === "input" && (
+              <motion.div
+                key="input"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-8 flex-1 flex flex-col justify-between"
+              >
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+                  {/* Lado TEM */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 pb-2 border-b border-white/5">
+                      <div className="w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center border border-brand-blue/20">
+                        <Building2 className="w-4 h-4 text-brand-blue" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white">O que você TEM</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo de Imóvel</label>
+                        <select 
+                          value={hasType}
+                          onChange={(e) => setHasType(e.target.value)}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {propertyTypes.map((type) => (
+                            <option key={type} value={type} className="bg-slate-900">{type}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade do Imóvel</label>
+                        <select 
+                          value={hasCity}
+                          onChange={(e) => setHasCity(e.target.value)}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {cities.map((city) => (
+                            <option key={city} value={city} className="bg-slate-900">{city}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Estimado</label>
+                        <select 
+                          value={hasValue}
+                          onChange={(e) => setHasValue(Number(e.target.value))}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {valueOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value} className="bg-slate-900">{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Lado BUSCA */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 pb-2 border-b border-white/5">
+                      <div className="w-8 h-8 rounded-full bg-brand-gold/10 flex items-center justify-center border border-brand-gold/20">
+                        <Target className="w-4 h-4 text-brand-gold" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white">O que você BUSCA</h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo Desejado</label>
+                        <select 
+                          value={wantType}
+                          onChange={(e) => setWantType(e.target.value)}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {propertyTypes.map((type) => (
+                            <option key={type} value={type} className="bg-slate-900">{type}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade Desejada</label>
+                        <select 
+                          value={wantCity}
+                          onChange={(e) => setWantCity(e.target.value)}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {cities.map((city) => (
+                            <option key={city} value={city} className="bg-slate-900">{city}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Desejado</label>
+                        <select 
+                          value={wantValue}
+                          onChange={(e) => setWantValue(Number(e.target.value))}
+                          className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                        >
+                          {valueOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value} className="bg-slate-900">{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-6">
+                  <button
+                    onClick={handleSimulate}
+                    className="w-full py-4 rounded-xl bg-brand-gold hover:opacity-90 text-brand-dark font-bold text-lg shadow-lg shadow-brand-gold/20 transition-all flex items-center justify-center gap-2 uppercase tracking-wider active:scale-[0.98] cursor-pointer"
+                  >
+                    <Repeat className="w-5 h-5 animate-spin-slow" />
+                    Simular Compatibilidade
+                  </button>
+                </div>
+              </motion.div>
+            )}
+            {step === "calculating" && (
+              <motion.div
+                key="calculating"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="flex flex-col items-center justify-center py-12 flex-1 text-center space-y-8"
+              >
+                <div className="relative w-28 h-28 flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full border-4 border-slate-800 border-t-brand-gold animate-spin" />
+                  <div className="w-20 h-20 bg-brand-gold/10 rounded-full flex items-center justify-center border border-brand-gold/20 animate-pulse">
+                    <Repeat className="w-10 h-10 text-brand-gold" />
+                  </div>
+                </div>
+                <div className="space-y-3 max-w-sm w-full">
+                  <h3 className="text-xl font-bold text-white tracking-tight">{loadingText}</h3>
+                  <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-brand-gold rounded-full"
+                      animate={{ width: `${progress}%` }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Aguarde, calculando score...</p>
+                </div>
+              </motion.div>
+            )}
+            {step === "result" && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-8 flex-1 flex flex-col justify-between"
+              >
+                <div className="text-center space-y-2">
+                  <span className="text-brand-gold font-bold text-xs uppercase tracking-widest italic">Simulação Concluída</span>
+                  <h3 className="text-3xl font-extrabold text-white">Resultado do Match</h3>
+                </div>
+                <div className="grid md:grid-cols-3 gap-6 items-center">
+                  {/* Score de Match */}
+                  <div className="glass-card p-6 rounded-2xl border-white/5 text-center flex flex-col items-center justify-center min-h-[160px] bg-slate-950/20">
+                    <div className="relative w-24 h-24 flex items-center justify-center mb-3">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <circle 
+                          cx="50" cy="50" r="40" 
+                          stroke="rgba(255,255,255,0.05)" strokeWidth="8" fill="transparent" 
+                        />
+                        <motion.circle 
+                          cx="50" cy="50" r="40" 
+                          stroke="#C9971E" strokeWidth="8" fill="transparent" 
+                          strokeDasharray="251.2"
+                          initial={{ strokeDashoffset: 251.2 }}
+                          animate={{ strokeDashoffset: 251.2 - (251.2 * results.matchScore) / 100 }}
+                          transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+                        />
+                      </svg>
+                      <span className="absolute text-2xl font-black text-white italic">{results.matchScore}%</span>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 font-sans">Compatibilidade</span>
+                  </div>
+                  {/* Matches Encontrados */}
+                  <div className="glass-card p-6 rounded-2xl border-white/5 text-center flex flex-col items-center justify-center min-h-[160px] bg-slate-950/20">
+                    <div className="w-12 h-12 bg-brand-blue/10 rounded-full flex items-center justify-center border border-brand-blue/20 mb-3">
+                      <Building2 className="w-6 h-6 text-brand-blue animate-bounce" />
+                    </div>
+                    <div className="text-3xl font-black text-white italic mb-1">{results.matchCount}</div>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 font-sans">Imóveis Compatíveis</span>
+                  </div>
+                  {/* Cálculo da Torna */}
+                  <div className="glass-card p-6 rounded-2xl border-white/5 text-center flex flex-col items-center justify-center min-h-[160px] bg-slate-950/20">
+                    {results.tornaType === "none" ? (
+                      <>
+                        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/20 mb-3">
+                          <CheckCircle2 className="w-6 h-6 text-green-500" />
+                        </div>
+                        <div className="text-lg font-bold text-green-400 uppercase tracking-tight mb-1">Permuta Equivalente</div>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 font-sans">Sem Torna Financeira</span>
+                      </>
+                    ) : (
+                      <>
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center border mb-3 ${
+                          results.tornaType === "receive" 
+                            ? "bg-green-500/10 border-green-500/20" 
+                            : "bg-brand-gold/10 border-brand-gold/20"
+                        }`}>
+                          <ArrowRightLeft className={`w-6 h-6 ${results.tornaType === "receive" ? "text-green-500" : "text-brand-gold"}`} />
+                        </div>
+                        <div className="text-2xl font-black text-white italic mb-1">
+                          R$ {results.tornaValue.toLocaleString("pt-BR")}
+                        </div>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 font-sans">
+                          {results.tornaType === "receive" ? "Você Recebe de Torna" : "Você Paga de Torna"}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                {/* Botões do rodapé */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    onClick={handleReset}
+                    className="flex-1 py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white/5 transition-all text-sm uppercase tracking-wider active:scale-[0.98] cursor-pointer"
+                  >
+                    Nova Simulação
+                  </button>
+                  <a
+                    href="https://app.swaphome.com.br/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all text-sm uppercase tracking-wider shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer text-center"
+                  >
+                    Ver Imóveis Disponíveis
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen">
       <Navbar />
       <Hero />
+      <PermutaSimulator />
+      <HowItWorks />
       <Stats />
       <PainPoints />
       <ValueProp />
-      <HowItWorks />
       <Benefits />
       <Testimonials />
       <Pricing />
       <FAQ />
-      <ContactForm />
+      {/* <ContactForm /> */}
       <Footer />
     </div>
   );
