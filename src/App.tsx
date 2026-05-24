@@ -25,9 +25,11 @@ import {
   CheckCircle,
   HelpCircle,
   Menu,
-  X
+  X,
+  Settings,
+  Database
 } from "lucide-react";
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -66,7 +68,7 @@ const Navbar = () => {
             </a>
           ))}
           <a 
-            href="https://app.swaphome.com.br/" 
+            href="https://app.swaphome.com.br/"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-brand-gold text-brand-dark px-6 py-2 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
@@ -167,12 +169,12 @@ const Hero = () => (
             className="flex flex-col sm:flex-row gap-4"
           >
             <motion.a 
-              href="https://app.swaphome.com.br/" 
+              href="https://app.swaphome.com.br/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05, backgroundColor: "#A87D17" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20"
+              className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20 text-center w-full sm:w-auto"
             >
               <span className="flex items-center gap-2">Quero encontrar meu match agora <ArrowRight className="w-5 h-5" /></span>
               <span className="text-[10px] opacity-70 font-normal uppercase tracking-wider">Comece de graça · Leva menos de 3 minutos</span>
@@ -550,14 +552,12 @@ const Pricing = () => (
                     <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cartão de crédito
                   </li>
                </ul>
-               <a 
-                 href="https://app.swaphome.com.br/" 
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all"
+               <button 
+                 onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))}
+                 className="w-full block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all cursor-pointer"
                >
                  Começar Agora
-               </a>
+               </button>
             </div>
 
             {/* CPF PRO */}
@@ -596,7 +596,7 @@ const Pricing = () => (
                  href="https://app.swaphome.com.br/" 
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow"
+                 className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-check-modal")); }}
                >
                  Assinar Pro
                </a>
@@ -682,7 +682,7 @@ const Pricing = () => (
                        ))}
                     </ul>
                  </div>
-                 <a href="https://app.swaphome.com.br/" target="_blank" rel="noopener noreferrer" className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold transition-all mt-auto">Solicitar Acesso</a>
+                 <button onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))} className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold transition-all mt-auto cursor-pointer w-full">Solicitar Acesso</button>
               </div>
             ))}
          </div>
@@ -1233,7 +1233,7 @@ const PermutaSimulator = () => {
                     href="https://app.swaphome.com.br/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all text-sm uppercase tracking-wider shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer text-center"
+                    className="flex-1 py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all text-sm uppercase tracking-wider shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer text-center" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-check-modal")); }}
                   >
                     Ver Imóveis Disponíveis
                     <ArrowRight className="w-4 h-4" />
@@ -1248,7 +1248,396 @@ const PermutaSimulator = () => {
   );
 };
 
+const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "checking" | "found" | "new" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [countdown, setCountdown] = useState(3);
+  const [isSimulated, setIsSimulated] = useState(false);
+
+  // Supabase states with LocalStorage binding
+  const [supabaseUrl, setSupabaseUrl] = useState(() => localStorage.getItem("sb_url") || "");
+  const [supabaseKey, setSupabaseKey] = useState(() => localStorage.getItem("sb_key") || "");
+  const [tableName, setTableName] = useState(() => localStorage.getItem("sb_table") || "users");
+  const [emailColumn, setEmailColumn] = useState(() => localStorage.getItem("sb_column") || "email");
+  const [redirectRegistration, setRedirectRegistration] = useState(() => localStorage.getItem("sb_redirect_reg") || "https://app.swaphome.com.br/");
+  const [redirectCheckout, setRedirectCheckout] = useState(() => localStorage.getItem("sb_redirect_chk") || "https://app.swaphome.com.br/checkout");
+
+  const [showSettings, setShowSettings] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    // Reset state when modal is opened/closed
+    if (isOpen) {
+      setEmail("");
+      setStatus("idle");
+      setErrorMsg("");
+      setCountdown(3);
+      setIsSimulated(false);
+      setShowSettings(false);
+      setSaveSuccess(false);
+    }
+  }, [isOpen]);
+
+  // Handle Countdown for redirection
+  useEffect(() => {
+    if ((status === "found" || status === "new") && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown((c) => c - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [status, countdown]);
+
+  if (!isOpen) return null;
+
+  const handleSaveSettings = (e: FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem("sb_url", supabaseUrl.trim());
+    localStorage.setItem("sb_key", supabaseKey.trim());
+    localStorage.setItem("sb_table", tableName.trim());
+    localStorage.setItem("sb_column", emailColumn.trim());
+    localStorage.setItem("sb_redirect_reg", redirectRegistration.trim());
+    localStorage.setItem("sb_redirect_chk", redirectCheckout.trim());
+    
+    setSaveSuccess(true);
+    setTimeout(() => {
+      setSaveSuccess(false);
+      setShowSettings(false);
+    }, 1500);
+  };
+
+  const handleClearSettings = () => {
+    setSupabaseUrl("");
+    setSupabaseKey("");
+    setTableName("users");
+    setEmailColumn("email");
+    setRedirectRegistration("https://app.swaphome.com.br/");
+    setRedirectCheckout("https://app.swaphome.com.br/checkout");
+
+    localStorage.removeItem("sb_url");
+    localStorage.removeItem("sb_key");
+    localStorage.removeItem("sb_table");
+    localStorage.removeItem("sb_column");
+    localStorage.removeItem("sb_redirect_reg");
+    localStorage.removeItem("sb_redirect_chk");
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) {
+      setErrorMsg("Por favor, insira um endereço de e-mail válido.");
+      setStatus("error");
+      return;
+    }
+
+    setStatus("checking");
+    setErrorMsg("");
+
+    try {
+      const customCredentials = supabaseUrl && supabaseKey ? {
+        url: supabaseUrl,
+        key: supabaseKey,
+        tableName,
+        emailColumn,
+        redirectRegistration,
+        redirectCheckout
+      } : undefined;
+
+      const res = await fetch("/api/check-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, customCredentials }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha ao comunicar com o servidor.");
+      }
+
+      const data = await res.json();
+      setIsSimulated(!!data.simulation);
+
+      if (data.exists) {
+        setStatus("found");
+        setTimeout(() => {
+          window.location.href = data.redirectUrl;
+        }, 3000);
+      } else {
+        setStatus("new");
+        setTimeout(() => {
+          window.location.href = data.redirectUrl;
+        }, 3000);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.message || "E-mail não pôde ser verificado. Tente novamente.");
+      setStatus("error");
+    }
+  };
+
+  const isConfigured = !!(supabaseUrl && supabaseKey);
+
+  return (
+    <div className="fixed inset-0 bg-[#060a12]/85 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="glass-card max-w-lg w-full border border-brand-gold/30 bg-[#0d1525]/95 relative overflow-hidden p-8 rounded-3xl shadow-[0_0_50px_rgba(201,151,30,0.15)] flex flex-col max-h-[90vh]"
+      >
+        {/* Background gradient flares */}
+        <div className="absolute top-0 right-0 w-24 h-24 bg-brand-gold/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-gold/5 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 relative z-10 border-b border-white/5 pb-4">
+          <div className="flex items-center gap-2">
+            <Building2 className="w-5 h-5 text-brand-gold" />
+            <h3 className="text-white font-bold text-lg font-sans tracking-tight">Portal SwapHome</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setShowSettings(!showSettings);
+                setStatus("idle");
+              }}
+              title="Configurar Supabase"
+              className={`p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center ${
+                showSettings 
+                  ? "bg-brand-gold text-brand-dark" 
+                  : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10"
+              }`}
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={onClose}
+              className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content States */}
+        {showSettings ? (
+          <div className="relative z-10 flex flex-col h-full overflow-y-auto pr-1 max-h-[60vh] space-y-4 text-left scrollbar-thin">
+            <div>
+              <h4 className="text-white font-extrabold text-xl mb-1 flex items-center gap-2">
+                <Database className="w-5 h-5 text-brand-gold" />
+                Configurar Banco de Dados
+              </h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
+                Insira suas credenciais do Supabase para fazer consultas reais no seu banco. Elas serão salvas localmente neste navegador.
+              </p>
+            </div>
+
+            <form onSubmit={handleSaveSettings} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Supabase URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://your-project.supabase.co"
+                    value={supabaseUrl}
+                    onChange={(e) => setSupabaseUrl(e.target.value)}
+                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">API Key (Anon ou Service Role)</label>
+                  <input
+                    type="password"
+                    placeholder="eyJhbGciOi..."
+                    value={supabaseKey}
+                    onChange={(e) => setSupabaseKey(e.target.value)}
+                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nome da Tabela</label>
+                    <input
+                      type="text"
+                      placeholder="users"
+                      value={tableName}
+                      required
+                      onChange={(e) => setTableName(e.target.value)}
+                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Coluna de E-mail</label>
+                    <input
+                      type="text"
+                      placeholder="email"
+                      value={emailColumn}
+                      required
+                      onChange={(e) => setEmailColumn(e.target.value)}
+                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">URL se Não Cadastrado (Novo)</label>
+                  <input
+                    type="url"
+                    placeholder="https://app.swaphome.com.br/"
+                    value={redirectRegistration}
+                    required
+                    onChange={(e) => setRedirectRegistration(e.target.value)}
+                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">URL se Já Cadastrado (Checkout)</label>
+                  <input
+                    type="url"
+                    placeholder="https://app.swaphome.com.br/checkout"
+                    value={redirectCheckout}
+                    required
+                    onChange={(e) => setRedirectCheckout(e.target.value)}
+                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleClearSettings}
+                  className="flex-1 py-3 border border-red-500/20 hover:border-red-500/50 text-red-400 hover:bg-red-500/5 font-bold rounded-xl transition-all text-xs cursor-pointer focus:outline-none"
+                >
+                  Limpar Campos
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-xs uppercase tracking-wider cursor-pointer"
+                >
+                  {saveSuccess ? "Salvo com sucesso!" : "Salvar Dados"}
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="relative z-10 flex flex-col">
+            {status === "idle" && (
+              <div>
+                <h4 className="text-white font-extrabold text-xl mb-1 tracking-tight">Verificar Acesso à Plataforma</h4>
+                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                  Informe seu e-mail abaixo para verificarmos se você já possui cadastro e direcioná-lo corretamente.
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Seu E-mail</label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all font-sans text-sm"
+                      placeholder="seuemail@exemplo.com"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-4 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
+                  >
+                    Verificar Cadastro <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+
+                {/* Connection Status tag */}
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500">Mecanismo de Busca:</span>
+                  <div className="flex items-center gap-1.5 font-sans">
+                    <span className={`w-2 h-2 rounded-full ${isConfigured ? 'bg-green-400 animate-pulse' : 'bg-brand-gold animate-pulse'}`} />
+                    <span className={`font-mono font-bold uppercase transition-all ${isConfigured ? 'text-green-400' : 'text-brand-gold'}`}>
+                      {isConfigured ? "Supabase (Configurado pelo Usuário)" : "Simulação Local"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {status === "checking" && (
+              <div className="text-center py-8 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 rounded-full border-t-2 border-brand-gold animate-spin mb-6" />
+                <h4 className="text-white font-bold text-lg mb-2">Buscando Registro...</h4>
+                <p className="text-slate-400 text-sm">Validando seu registro no banco de dados {isConfigured ? "Supabase ativo" : "simulado"}.</p>
+              </div>
+            )}
+
+            {status === "found" && (
+              <div className="text-center py-6 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(34,197,94,0.2)] animate-pulse">
+                  <Check className="w-8 h-8 text-green-400" />
+                </div>
+                <h4 className="text-white font-extrabold text-xl mb-2">Cadastro Ativo Encontrado!</h4>
+                <p className="text-slate-400 text-sm mb-4">Escolha seu plano na próxima tela</p>
+                <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
+                  {isSimulated ? "Modo de Teste" : "Redirecionamento Seguro"}
+                </div>
+                <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+              </div>
+            )}
+
+            {status === "new" && (
+              <div className="text-center py-6 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(201,151,30,0.2)] animate-pulse">
+                  <Building2 className="w-8 h-8 text-brand-gold" />
+                </div>
+                <h4 className="text-white font-extrabold text-xl mb-2">E-mail não Encontrado</h4>
+                <p className="text-slate-400 text-sm mb-4">Faça o cadastro e volte para escolher seu plano</p>
+                <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
+                  Criar Cadastro Grátis
+                </div>
+                <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+              </div>
+            )}
+
+            {status === "error" && (
+              <div>
+                <div className="text-center py-4 flex flex-col items-center justify-center">
+                  <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mb-4">
+                    <AlertCircle className="w-7 h-7 text-red-500" />
+                  </div>
+                  <h4 className="text-white font-bold text-lg mb-2">Erro na Consulta</h4>
+                  <p className="text-red-400 text-sm mb-6 leading-relaxed">{errorMsg}</p>
+                </div>
+
+                <button
+                  onClick={() => setStatus("idle")}
+                  className="w-full py-4 border border-white/10 hover:border-brand-gold text-white font-bold rounded-xl transition-all text-sm uppercase tracking-wider flex items-center justify-center cursor-pointer"
+                >
+                  Tentar Novamente
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+};
+
 export default function App() {
+  const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setIsCheckModalOpen(true);
+    window.addEventListener("open-check-modal", handleOpen);
+    return () => {
+      window.removeEventListener("open-check-modal", handleOpen);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -1264,6 +1653,7 @@ export default function App() {
       <FAQ />
       {/* <ContactForm /> */}
       <Footer />
+      <CheckAccessModal isOpen={isCheckModalOpen} onClose={() => setIsCheckModalOpen(false)} />
     </div>
   );
 }
