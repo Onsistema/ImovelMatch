@@ -1255,17 +1255,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [countdown, setCountdown] = useState(3);
   const [isSimulated, setIsSimulated] = useState(false);
 
-  // Supabase states with LocalStorage binding
-  const [supabaseUrl, setSupabaseUrl] = useState(() => localStorage.getItem("sb_url") || "");
-  const [supabaseKey, setSupabaseKey] = useState(() => localStorage.getItem("sb_key") || "");
-  const [tableName, setTableName] = useState(() => localStorage.getItem("sb_table") || "users");
-  const [emailColumn, setEmailColumn] = useState(() => localStorage.getItem("sb_column") || "email");
-  const [redirectRegistration, setRedirectRegistration] = useState(() => localStorage.getItem("sb_redirect_reg") || "https://app.swaphome.com.br/");
-  const [redirectCheckout, setRedirectCheckout] = useState(() => localStorage.getItem("sb_redirect_chk") || "https://app.swaphome.com.br/checkout");
-
-  const [showSettings, setShowSettings] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
   useEffect(() => {
     // Reset state when modal is opened/closed
     if (isOpen) {
@@ -1274,8 +1263,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       setErrorMsg("");
       setCountdown(3);
       setIsSimulated(false);
-      setShowSettings(false);
-      setSaveSuccess(false);
     }
   }, [isOpen]);
 
@@ -1291,38 +1278,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
   if (!isOpen) return null;
 
-  const handleSaveSettings = (e: FormEvent) => {
-    e.preventDefault();
-    localStorage.setItem("sb_url", supabaseUrl.trim());
-    localStorage.setItem("sb_key", supabaseKey.trim());
-    localStorage.setItem("sb_table", tableName.trim());
-    localStorage.setItem("sb_column", emailColumn.trim());
-    localStorage.setItem("sb_redirect_reg", redirectRegistration.trim());
-    localStorage.setItem("sb_redirect_chk", redirectCheckout.trim());
-    
-    setSaveSuccess(true);
-    setTimeout(() => {
-      setSaveSuccess(false);
-      setShowSettings(false);
-    }, 1500);
-  };
-
-  const handleClearSettings = () => {
-    setSupabaseUrl("");
-    setSupabaseKey("");
-    setTableName("users");
-    setEmailColumn("email");
-    setRedirectRegistration("https://app.swaphome.com.br/");
-    setRedirectCheckout("https://app.swaphome.com.br/checkout");
-
-    localStorage.removeItem("sb_url");
-    localStorage.removeItem("sb_key");
-    localStorage.removeItem("sb_table");
-    localStorage.removeItem("sb_column");
-    localStorage.removeItem("sb_redirect_reg");
-    localStorage.removeItem("sb_redirect_chk");
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
@@ -1335,19 +1290,10 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setErrorMsg("");
 
     try {
-      const customCredentials = supabaseUrl && supabaseKey ? {
-        url: supabaseUrl,
-        key: supabaseKey,
-        tableName,
-        emailColumn,
-        redirectRegistration,
-        redirectCheckout
-      } : undefined;
-
       const res = await fetch("/api/check-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, customCredentials }),
+        body: JSON.stringify({ email }),
       });
 
       if (!res.ok) {
@@ -1376,8 +1322,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     }
   };
 
-  const isConfigured = !!(supabaseUrl && supabaseKey);
-
   return (
     <div className="fixed inset-0 bg-[#060a12]/85 backdrop-blur-md z-[100] flex items-center justify-center p-4">
       <motion.div
@@ -1396,20 +1340,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             <h3 className="text-white font-bold text-lg font-sans tracking-tight">Portal SwapHome</h3>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                setShowSettings(!showSettings);
-                setStatus("idle");
-              }}
-              title="Configurar Supabase"
-              className={`p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center ${
-                showSettings 
-                  ? "bg-brand-gold text-brand-dark" 
-                  : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10"
-              }`}
-            >
-              <Settings className="w-5 h-5" />
-            </button>
             <button 
               onClick={onClose}
               className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer"
@@ -1420,208 +1350,92 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         </div>
 
         {/* Content States */}
-        {showSettings ? (
-          <div className="relative z-10 flex flex-col h-full overflow-y-auto pr-1 max-h-[60vh] space-y-4 text-left scrollbar-thin">
+        <div className="relative z-10 flex flex-col">
+          {status === "idle" && (
             <div>
-              <h4 className="text-white font-extrabold text-xl mb-1 flex items-center gap-2">
-                <Database className="w-5 h-5 text-brand-gold" />
-                Configurar Banco de Dados
-              </h4>
-              <p className="text-slate-400 text-xs leading-relaxed">
-                Insira suas credenciais do Supabase para fazer consultas reais no seu banco. Elas serão salvas localmente neste navegador.
+              <h4 className="text-white font-extrabold text-xl mb-1 tracking-tight">Verificar Acesso à Plataforma</h4>
+              <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                Informe seu e-mail abaixo para verificarmos se você já possui cadastro e direcioná-lo corretamente.
               </p>
-            </div>
 
-            <form onSubmit={handleSaveSettings} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Supabase URL</label>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Seu E-mail</label>
                   <input
-                    type="url"
-                    placeholder="https://your-project.supabase.co"
-                    value={supabaseUrl}
-                    onChange={(e) => setSupabaseUrl(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">API Key (Anon ou Service Role)</label>
-                  <input
-                    type="password"
-                    placeholder="eyJhbGciOi..."
-                    value={supabaseKey}
-                    onChange={(e) => setSupabaseKey(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nome da Tabela</label>
-                    <input
-                      type="text"
-                      placeholder="users"
-                      value={tableName}
-                      required
-                      onChange={(e) => setTableName(e.target.value)}
-                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Coluna de E-mail</label>
-                    <input
-                      type="text"
-                      placeholder="email"
-                      value={emailColumn}
-                      required
-                      onChange={(e) => setEmailColumn(e.target.value)}
-                      className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">URL se Não Cadastrado (Novo)</label>
-                  <input
-                    type="url"
-                    placeholder="https://app.swaphome.com.br/"
-                    value={redirectRegistration}
+                    type="email"
                     required
-                    onChange={(e) => setRedirectRegistration(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all font-sans text-sm"
+                    placeholder="seuemail@exemplo.com"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">URL se Já Cadastrado (Checkout)</label>
-                  <input
-                    type="url"
-                    placeholder="https://app.swaphome.com.br/checkout"
-                    value={redirectCheckout}
-                    required
-                    onChange={(e) => setRedirectCheckout(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-white/10 bg-white/5 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={handleClearSettings}
-                  className="flex-1 py-3 border border-red-500/20 hover:border-red-500/50 text-red-400 hover:bg-red-500/5 font-bold rounded-xl transition-all text-xs cursor-pointer focus:outline-none"
-                >
-                  Limpar Campos
-                </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-xs uppercase tracking-wider cursor-pointer"
+                  className="w-full py-4 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
                 >
-                  {saveSuccess ? "Salvo com sucesso!" : "Salvar Dados"}
+                  Verificar Cadastro <ArrowRight className="w-4 h-4" />
                 </button>
+              </form>
+            </div>
+          )}
+
+          {status === "checking" && (
+            <div className="text-center py-8 flex flex-col items-center justify-center">
+              <div className="w-16 h-16 rounded-full border-t-2 border-brand-gold animate-spin mb-6" />
+              <h4 className="text-white font-bold text-lg mb-2">Buscando Registro...</h4>
+              <p className="text-slate-400 text-sm">Validando seu registro na plataforma.</p>
+            </div>
+          )}
+
+          {status === "found" && (
+            <div className="text-center py-6 flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(34,197,94,0.2)] animate-pulse">
+                <Check className="w-8 h-8 text-green-400" />
               </div>
-            </form>
-          </div>
-        ) : (
-          <div className="relative z-10 flex flex-col">
-            {status === "idle" && (
-              <div>
-                <h4 className="text-white font-extrabold text-xl mb-1 tracking-tight">Verificar Acesso à Plataforma</h4>
-                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                  Informe seu e-mail abaixo para verificarmos se você já possui cadastro e direcioná-lo corretamente.
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Seu E-mail</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full p-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all font-sans text-sm"
-                      placeholder="seuemail@exemplo.com"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
-                  >
-                    Verificar Cadastro <ArrowRight className="w-4 h-4" />
-                  </button>
-                </form>
-
-                {/* Connection Status tag */}
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500">Mecanismo de Busca:</span>
-                  <div className="flex items-center gap-1.5 font-sans">
-                    <span className={`w-2 h-2 rounded-full ${isConfigured ? 'bg-green-400 animate-pulse' : 'bg-brand-gold animate-pulse'}`} />
-                    <span className={`font-mono font-bold uppercase transition-all ${isConfigured ? 'text-green-400' : 'text-brand-gold'}`}>
-                      {isConfigured ? "Supabase (Configurado pelo Usuário)" : "Simulação Local"}
-                    </span>
-                  </div>
-                </div>
+              <h4 className="text-white font-extrabold text-xl mb-2">Cadastro Ativo Encontrado!</h4>
+              <p className="text-slate-400 text-sm mb-4">Redirecionando para a plataforma...</p>
+              <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
+                Redirecionamento Seguro
               </div>
-            )}
+              <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+            </div>
+          )}
 
-            {status === "checking" && (
-              <div className="text-center py-8 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 rounded-full border-t-2 border-brand-gold animate-spin mb-6" />
-                <h4 className="text-white font-bold text-lg mb-2">Buscando Registro...</h4>
-                <p className="text-slate-400 text-sm">Validando seu registro no banco de dados {isConfigured ? "Supabase ativo" : "simulado"}.</p>
+          {status === "new" && (
+            <div className="text-center py-6 flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(201,151,30,0.2)] animate-pulse">
+                <Building2 className="w-8 h-8 text-brand-gold" />
               </div>
-            )}
-
-            {status === "found" && (
-              <div className="text-center py-6 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(34,197,94,0.2)] animate-pulse">
-                  <Check className="w-8 h-8 text-green-400" />
-                </div>
-                <h4 className="text-white font-extrabold text-xl mb-2">Cadastro Ativo Encontrado!</h4>
-                <p className="text-slate-400 text-sm mb-4">Escolha seu plano na próxima tela</p>
-                <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
-                  {isSimulated ? "Modo de Teste" : "Redirecionamento Seguro"}
-                </div>
-                <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+              <h4 className="text-white font-extrabold text-xl mb-2">E-mail não Encontrado</h4>
+              <p className="text-slate-400 text-sm mb-4">Redirecionando para criar seu cadastro...</p>
+              <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
+                Criar Cadastro Grátis
               </div>
-            )}
+              <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+            </div>
+          )}
 
-            {status === "new" && (
-              <div className="text-center py-6 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(201,151,30,0.2)] animate-pulse">
-                  <Building2 className="w-8 h-8 text-brand-gold" />
+          {status === "error" && (
+            <div>
+              <div className="text-center py-4 flex flex-col items-center justify-center">
+                <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mb-4">
+                  <AlertCircle className="w-7 h-7 text-red-500" />
                 </div>
-                <h4 className="text-white font-extrabold text-xl mb-2">E-mail não Encontrado</h4>
-                <p className="text-slate-400 text-sm mb-4">Faça o cadastro e volte para escolher seu plano</p>
-                <div className="text-xs text-brand-gold font-bold uppercase tracking-widest bg-brand-gold/10 px-3 py-1.5 rounded-full inline-block mb-4">
-                  Criar Cadastro Grátis
-                </div>
-                <p className="text-slate-500 text-xs">Aguarde... {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+                <h4 className="text-white font-bold text-lg mb-2">Erro na Consulta</h4>
+                <p className="text-red-400 text-sm mb-6 leading-relaxed">{errorMsg}</p>
               </div>
-            )}
 
-            {status === "error" && (
-              <div>
-                <div className="text-center py-4 flex flex-col items-center justify-center">
-                  <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mb-4">
-                    <AlertCircle className="w-7 h-7 text-red-500" />
-                  </div>
-                  <h4 className="text-white font-bold text-lg mb-2">Erro na Consulta</h4>
-                  <p className="text-red-400 text-sm mb-6 leading-relaxed">{errorMsg}</p>
-                </div>
-
-                <button
-                  onClick={() => setStatus("idle")}
-                  className="w-full py-4 border border-white/10 hover:border-brand-gold text-white font-bold rounded-xl transition-all text-sm uppercase tracking-wider flex items-center justify-center cursor-pointer"
-                >
-                  Tentar Novamente
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+              <button
+                onClick={() => setStatus("idle")}
+                className="w-full py-4 border border-white/10 hover:border-brand-gold text-white font-bold rounded-xl transition-all text-sm uppercase tracking-wider flex items-center justify-center cursor-pointer"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          )}
+        </div>
       </motion.div>
     </div>
   );
