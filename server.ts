@@ -39,7 +39,11 @@ async function startServer() {
 
   // API Endpoints
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
+    res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      supabaseConfigured: !!getSupabaseClient()
+    });
   });
 
   // Check user registration endpoint
