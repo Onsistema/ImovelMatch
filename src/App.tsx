@@ -1640,10 +1640,10 @@ export default function App() {
       <PermutaSimulator />
       <HowItWorks />
       <Stats />
-      <PainPoints />
       <ValueProp />
       <Benefits />
       <Testimonials />
+      <PainPoints />
       <Pricing />
       <FAQ />
       {/* <ContactForm /> */}
