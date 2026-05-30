@@ -153,7 +153,7 @@ const Hero = () => (
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 text-balance"
           >
-            Troque seu imóvel <span className="accent-gradient-text">sem vender</span>, sem financiar e sem burocracia.
+            Troque seu imóvel <span className="accent-gradient-text">sem burocracia</span>.
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
