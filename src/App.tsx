@@ -239,7 +239,7 @@ const Hero = () => (
   </section>
 );
 
-const SectionHeading = ({ badge, title, subtitle, centered = false }: { badge: string, title: string, subtitle: string, centered?: boolean }) => (
+const SectionHeading = ({ badge, title, subtitle, centered = false }: { badge?: string, title: string, subtitle?: string, centered?: boolean }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -247,9 +247,9 @@ const SectionHeading = ({ badge, title, subtitle, centered = false }: { badge: s
     transition={{ duration: 0.6 }}
     className={`mb-16 ${centered ? 'text-center' : ''}`}
   >
-    <span className="text-brand-gold font-bold text-sm tracking-widest uppercase mb-4 block italic">{badge}</span>
+    {badge && <span className="text-brand-gold font-bold text-sm tracking-widest uppercase mb-4 block italic">{badge}</span>}
     <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 text-balance">{title}</h2>
-    <p className="text-lg text-slate-400 max-w-2xl mx-auto">{subtitle}</p>
+    {subtitle && <p className="text-lg text-slate-400 max-w-2xl mx-auto">{subtitle}</p>}
   </motion.div>
 );
 
@@ -280,7 +280,6 @@ const Testimonials = () => (
   <section className="py-24 bg-brand-dark/50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
-        badge="Prova Social"
         title="O que dizem sobre nós."
         subtitle="Transformando a vida de proprietários e o negócio de corretores em todo o Brasil."
         centered
@@ -329,7 +328,6 @@ const PainPoints = () => (
   <section className="py-24 bg-brand-dark">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
-        badge="Realidade do Mercado"
         title="Por que trocar de imóvel precisa ser tão complicado?"
         subtitle="O mercado imobiliário tradicional foi feito pra ser lento. O SwapHome foi feito pra ser diferente."
         centered
@@ -369,7 +367,6 @@ const ValueProp = () => (
         <div className="grid lg:grid-cols-2 gap-20 items-center">
            <div>
               <SectionHeading 
-                badge="Proposta de Valor"
                 title="A plataforma que conecta quem quer trocar imóvel."
                 subtitle=""
               />
@@ -438,7 +435,6 @@ const HowItWorks = () => (
   <section id="como-funciona" className="py-24 bg-brand-dark/50 relative">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
-        badge="Protocolo"
         title="Como funciona em 3 passos simples."
         subtitle="O SwapHome é o primeiro SaaS de permuta imobiliária do Brasil. Simples assim."
         centered
@@ -488,7 +484,6 @@ const Benefits = () => (
   <section id="beneficios" className="py-24">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
-        badge="Diferenciais"
         title="O match é o negócio da sua vida."
         subtitle="Sem depender de banco. Sem perder patrimônio. Sem anos de espera."
         centered
@@ -527,7 +522,6 @@ const Pricing = () => (
   <section id="planos" className="py-24 bg-brand-dark/30 relative overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
-        badge="Nossas Ofertas"
         title="Escolha o plano que faz sentido para você."
         subtitle="Comece grátis, faça upgrade quando quiser. Sem pegadinhas."
         centered
@@ -721,8 +715,7 @@ const FAQ = () => {
     <section id="faq" className="py-24 relative overflow-hidden bg-brand-dark/20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
-          badge="Dúvidas Recentes"
-          title="Quebra de Objeções"
+          title="Perguntas Frequentes"
           subtitle="Tudo o que você precisa saber para fechar o negócio da sua vida."
           centered
         />
@@ -785,7 +778,6 @@ const ContactForm = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
            <div>
               <SectionHeading 
-                badge="Contato"
                 title="Sua próxima casa já está aqui."
                 subtitle="O imóvel que você quer pode estar cadastrado agora mesmo — esperando exatamente pelo imóvel que você tem."
               />
@@ -998,7 +990,6 @@ const PermutaSimulator = () => {
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
-          badge="Simulação Grátis"
           title="Simulador de Compatibilidade"
           subtitle="Descubra se existem imóveis compatíveis para troca e veja uma estimativa de torna financeira."
           centered
