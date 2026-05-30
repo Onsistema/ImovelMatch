@@ -1,0 +1,97 @@
+.border-glow-card {
+  position: relative;
+  border-radius: var(--border-radius, 28px);
+  padding: var(--border-width, 2.5px);
+  background: conic-gradient(
+    from var(--cursor-angle, 0deg) at 50% 50%,
+    #ffffff 0deg,
+    var(--glow-color, #ffda37) 12deg,
+    var(--glow-color-60, var(--glow-color, #ffda37)) 35deg,
+    transparent 70deg,
+    transparent 290deg,
+    var(--glow-color-60, var(--glow-color, #ffda37)) 325deg,
+    var(--glow-color, #ffda37) 348deg,
+    #ffffff 360deg
+  );
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
+}
+
+.border-glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  background: conic-gradient(
+    from var(--cursor-angle, 0deg) at 50% 50%,
+    var(--glow-color, #c084fc) 0deg,
+    var(--glow-color-60, var(--glow-color, #c084fc)) 30deg,
+    transparent 60deg,
+    transparent 300deg,
+    var(--glow-color-60, var(--glow-color, #c084fc)) 330deg,
+    var(--glow-color, #c084fc) 360deg
+  );
+  filter: blur(12px);
+  opacity: calc(var(--edge-proximity, 0) / 100 * var(--fill-opacity, 0.5) * 0.15);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.2s ease;
+}
+
+.edge-light {
+  position: absolute;
+  inset: 0.5px;
+  border-radius: calc(var(--border-radius, 28px) - 1px);
+  pointer-events: none;
+  z-index: 1;
+  background: conic-gradient(
+    from var(--cursor-angle, 0deg) at 50% 50%,
+    rgba(255, 255, 255, 1) 0deg,
+    var(--glow-color, rgba(255, 215, 0, 0.95)) 12deg,
+    transparent 45deg,
+    transparent 315deg,
+    var(--glow-color, rgba(255, 215, 0, 0.95)) 348deg,
+    rgba(255, 255, 255, 1) 360deg
+  );
+  opacity: calc(var(--edge-proximity, 0) / 100 * 1.5);
+  mix-blend-mode: screen;
+  transition: opacity 0.2s ease;
+}
+
+.border-glow-inner {
+  position: relative;
+  z-index: 2;
+  border-radius: calc(var(--border-radius, 28px) - 1px);
+  background-color: var(--card-bg, #120F17);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-image: 
+    var(--gradient-one),
+    var(--gradient-two),
+    var(--gradient-three),
+    var(--gradient-four),
+    var(--gradient-five),
+    var(--gradient-six),
+    var(--gradient-seven);
+}
+
+.border-glow-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--card-bg, #120F17);
+  opacity: calc(1 - var(--fill-opacity, 0.5) * 0.12);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.border-glow-card:hover {
+  box-shadow: 0 0 12px var(--glow-color, rgba(212, 175, 55, 0.25)), 0 12px 30px rgba(0, 0, 0, 0.75);
+  transform: scale(1.02);
+}

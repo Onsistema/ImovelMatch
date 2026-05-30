@@ -30,6 +30,7 @@ import {
   Database
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
+import BorderGlow from "./components/BorderGlow";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -191,46 +192,61 @@ const Hero = () => (
           <motion.div 
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="relative z-10 glass-card p-2 rounded-3xl shadow-2xl overflow-hidden max-w-[400px] mx-auto"
+            className="relative z-10 max-w-[400px] mx-auto"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
-              alt="Imóvel em destaque" 
-              className="rounded-2xl w-full h-[500px] object-cover opacity-90"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/40 to-transparent">
-               <div className="flex justify-between items-end">
-                  <div>
-                    <h4 className="text-white text-2xl font-extrabold">Casa em Alphaville</h4>
-                    <p className="text-slate-300 text-sm">Pode ser sua via Permuta Direta</p>
-                  </div>
-                  <div className="flex gap-2">
-                     <motion.div 
-                        whileHover={{ scale: 1.1, rotate: -10 }}
-                        whileInView={{ scale: [1, 1.1, 1], rotate: [0, -10, 0] }}
-                        viewport={{ once: false }}
-                        transition={{ duration: 0.5, delay: 1.2 }}
-                        className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
-                      >
-                        <Users className="w-6 h-6 text-white" />
-                     </motion.div>
-                     <motion.div 
-                        whileHover={{ scale: 1.1, rotate: 180 }}
-                        whileInView={{ scale: [1, 1.1, 1], rotate: [0, 180, 0] }}
-                        viewport={{ once: false }}
-                        transition={{ duration: 0.8, delay: 1.5 }}
-                        className="w-12 h-12 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40"
-                      >
-                        <Repeat className="w-6 h-6 text-white" />
-                     </motion.div>
-                  </div>
-               </div>
-            </div>
-            <div className="absolute top-6 left-6 glass-card px-3 py-1 rounded-full flex items-center gap-2 border-brand-gold/40">
-              <span className="w-2 h-2 rounded-full bg-brand-gold" />
-              <span className="text-[10px] font-bold text-white uppercase tracking-tighter">Match Inteligente</span>
-            </div>
+            <BorderGlow
+              animated={true}
+              glowIntensity={2.0}
+              glowColor="45 95 65"
+              colors={['#FFD700', '#FFA500', '#FF8C00']}
+              backgroundColor="#050811"
+              borderRadius={28}
+              glowRadius={80}
+              fillOpacity={0.65}
+              borderWidth={3.5}
+              className="glass-card shadow-2xl p-[1px]"
+            >
+              <div className="relative w-full h-full p-1 rounded-[27px] overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                  alt="Imóvel em destaque" 
+                  className="rounded-2xl w-full h-[500px] object-cover opacity-90"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/40 to-transparent">
+                   <div className="flex justify-between items-end">
+                      <div>
+                        <h4 className="text-white text-2xl font-extrabold">Casa em Alphaville</h4>
+                        <p className="text-slate-300 text-sm">Pode ser sua via Permuta Direta</p>
+                      </div>
+                      <div className="flex gap-2">
+                         <motion.div 
+                            whileHover={{ scale: 1.1, rotate: -10 }}
+                            whileInView={{ scale: [1, 1.1, 1], rotate: [0, -10, 0] }}
+                            viewport={{ once: false }}
+                            transition={{ duration: 0.5, delay: 1.2 }}
+                            className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
+                          >
+                            <Users className="w-6 h-6 text-white" />
+                         </motion.div>
+                         <motion.div 
+                            whileHover={{ scale: 1.1, rotate: 180 }}
+                            whileInView={{ scale: [1, 1.1, 1], rotate: [0, 180, 0] }}
+                            viewport={{ once: false }}
+                            transition={{ duration: 0.8, delay: 1.5 }}
+                            className="w-12 h-12 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40"
+                          >
+                            <Repeat className="w-6 h-6 text-white" />
+                         </motion.div>
+                      </div>
+                   </div>
+                </div>
+                <div className="absolute top-6 left-6 glass-card px-3 py-1 rounded-full flex items-center gap-2 border-brand-gold/40">
+                  <span className="w-2 h-2 rounded-full bg-brand-gold" />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-tighter">Match Inteligente</span>
+                </div>
+              </div>
+            </BorderGlow>
           </motion.div>
           <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-blue/10 rounded-full blur-3xl -z-10" />
         </motion.div>
