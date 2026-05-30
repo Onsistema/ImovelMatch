@@ -1,0 +1,123 @@
+/* src/components/PillNav.css */
+
+.pn-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pn-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.pn-logo {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.pn-logo img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+.pn-nav-items {
+  display: flex;
+  align-items: center;
+}
+
+.pn-list {
+  display: flex;
+  flex-direction: row !important; /* Forces row layout explicitly */
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+}
+
+.pn-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--pill-text, #1B3E5F);
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+/* Liquid bubble background circle created inside each pill */
+.pn-hover-circle {
+  position: absolute;
+  left: 50%;
+  border-radius: 50%;
+  background-color: var(--pill-bg, #1B3E5F);
+  pointer-events: none;
+  z-index: -1;
+  display: block;
+}
+
+.pn-label-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  height: 1.25rem;
+  overflow: hidden;
+}
+
+.pn-label {
+  display: inline-block;
+  transform: translateY(0);
+  transition: color 0.3s ease;
+  color: var(--pill-text, #1B3E5F);
+}
+
+.pn-label-hover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: inline-block;
+  text-align: center;
+  opacity: 0;
+  color: var(--hover-text, #ffffff);
+}
+
+/* Fallback/Hover helper for safety */
+.pn-pill:hover .pn-label-hover {
+  font-weight: 700;
+}
+
+/* Responsive constraints as requested */
+@media (max-width: 1023px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+}

@@ -32,97 +32,43 @@ import {
 import { useState, useEffect, FormEvent } from "react";
 import BorderGlow from "./components/BorderGlow";
 import BlurText from "./components/BlurText";
+import BubbleMenu from "./components/BubbleMenu";
+import PillNav from "./components/PillNav";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const menuItems = [
     { label: "Solução", href: "#solucao" },
     { label: "Simulador", href: "#simulador" },
     { label: "Benefícios", href: "#beneficios" },
     { label: "Planos", href: "#planos" },
     { label: "FAQ", href: "#faq" },
+    { label: "Cadastrar Grátis", href: "https://app.swaphome.com.br/" },
   ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/40 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <div className="flex items-center relative h-full">
-          <img 
-            src={LOGO_URL} 
-            alt="SwapHome Logo" 
-            className="h-14 sm:h-16 w-auto transition-all hover:scale-105 duration-500 relative z-10" 
-            referrerPolicy="no-referrer" 
+        <div className="flex-1 flex items-center justify-between">
+          <PillNav
+            logo={LOGO_URL}
+            logoAlt="SwapHome Logo"
+            items={menuItems}
+            baseColor="#1B3E5F"
+            pillColor="#C9971E"
+            hoveredPillTextColor="#ffffff"
           />
         </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          {menuItems.map((item) => (
-            <a 
-              key={item.label} 
-              href={item.href} 
-              className="text-sm font-bold text-[#1B3E5F] hover:text-brand-gold transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-          <a 
-            href="https://app.swaphome.com.br/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-brand-gold text-brand-dark px-6 py-2 rounded-full text-sm font-black hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-gold/20 uppercase tracking-tight"
-          >
-            Cadastrar Grátis
-          </a>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-[#1B3E5F] p-2 hover:bg-black/5 rounded-lg transition-colors"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+        {/* Mobile Menu Button - BubbleMenu Integration */}
+        <div className="lg:hidden flex items-center ml-4">
+          <BubbleMenu 
+            menuContentColor="#1B3E5F"
+            menuBg="rgba(255, 255, 255, 0.85)"
+          />
         </div>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/80 border-t border-black/5 overflow-hidden"
-          >
-            <div className="px-4 py-6 space-y-4">
-              {menuItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-lg font-bold text-[#1B3E5F] hover:text-brand-dark transition-colors"
-                >
-                  {item.label}
-                </a>
-              ))}
-              <a
-                href="https://app.swaphome.com.br/"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="block w-full text-center bg-brand-gold text-brand-dark px-6 py-3 rounded-xl text-md font-black shadow-lg uppercase tracking-tight"
-              >
-                Cadastrar Grátis
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 };
