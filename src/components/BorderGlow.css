@@ -2,6 +2,19 @@
   position: relative;
   border-radius: var(--border-radius, 28px);
   padding: var(--border-width, 2.5px);
+  background: transparent;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
+}
+
+.border-glow-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   background: conic-gradient(
     from var(--cursor-angle, 0deg) at 50% 50%,
     #ffffff 0deg,
@@ -13,11 +26,11 @@
     var(--glow-color, #ffda37) 348deg,
     #ffffff 360deg
   );
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  isolation: isolate;
+  /* Make the thin border light up from ~30% resting visibility to 100% on active hover proximity */
+  opacity: calc(0.3 + (var(--edge-proximity, 50) / 100) * 0.7);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .border-glow-card::before {

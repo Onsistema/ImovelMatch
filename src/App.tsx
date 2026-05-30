@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
 import BorderGlow from "./components/BorderGlow";
+import BlurText from "./components/BlurText";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -147,14 +148,14 @@ const Hero = () => (
             <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
             <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">A Evolução Inteligente da Permuta Imobiliária</span>
           </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+          <BlurText 
+            text="Troque seu imóvel sem burocracia."
+            delay={300}
+            stepDuration={0.6}
+            animateBy="words"
+            direction="top"
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 text-balance"
-          >
-            Troque seu imóvel <span className="accent-gradient-text">sem burocracia</span>.
-          </motion.h1>
+          />
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

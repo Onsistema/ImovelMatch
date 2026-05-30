@@ -72,6 +72,7 @@ export interface BorderGlowProps {
   colors?: string[];
   fillOpacity?: number;
   borderWidth?: number;
+  animationSpeed?: number;
 }
 
 const BorderGlow = ({
@@ -88,6 +89,7 @@ const BorderGlow = ({
   colors = ['#c084fc', '#f472b6', '#38bdf8'],
   fillOpacity = 0.5,
   borderWidth = 2.5,
+  animationSpeed = 1.2,
 }: BorderGlowProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isHovered = useRef(false);
@@ -164,18 +166,6 @@ const BorderGlow = ({
     const card = cardRef.current;
     if (!card) return;
 
-    // Detect mobile or touch devices
-    const isMobile = window.matchMedia('(max-width: 1024px)').matches || 
-                     window.matchMedia('(pointer: coarse)').matches || 
-                     ('ontouchstart' in window);
-
-    if (isMobile) {
-      // Set static optimal values for mobile to guarantee ZERO continuous layout calculation or CPU usage
-      card.style.setProperty('--cursor-angle', '135deg');
-      card.style.setProperty('--edge-proximity', '70');
-      return;
-    }
-
     let animationFrameId: number;
     let angle = Math.random() * 360;
     let currentProximity = 0;
@@ -184,7 +174,7 @@ const BorderGlow = ({
     const startTime = performance.now();
     let isVisible = true;
 
-    // Use IntersectionObserver on desktops to completely pause loop when card is scrolled out of viewport
+    // Use IntersectionObserver on all devices to completely pause loop when card is scrolled out of viewport
     let observer: IntersectionObserver | null = null;
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       observer = new IntersectionObserver(([entry]) => {
@@ -229,8 +219,8 @@ const BorderGlow = ({
         }
       } else {
         if (!isHovered.current) {
-          // Ambient rotation loop
-          angle = (angle + 0.4) % 360;
+          // Ambient rotation loop - using customizable animationSpeed
+          angle = (angle + animationSpeed) % 360;
           
           // Smooth interpolation to high-visibility idle proximity (70%)
           const targetProximity = 70;
@@ -262,7 +252,7 @@ const BorderGlow = ({
         observer.disconnect();
       }
     };
-  }, [animated]);
+  }, [animated, animationSpeed]);
 
   const glowVars = buildGlowVars(glowColor, glowIntensity);
 
