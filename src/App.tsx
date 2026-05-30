@@ -47,12 +47,12 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/40 backdrop-blur-xl border-b border-black/5 shadow-xl transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between overflow-hidden">
-        <div className="flex items-center relative h-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="flex items-center relative h-full">
           <img 
             src={LOGO_URL} 
             alt="SwapHome Logo" 
-            className="h-24 w-auto transition-all hover:scale-110 duration-500 relative z-10" 
+            className="h-14 sm:h-16 w-auto transition-all hover:scale-105 duration-500 relative z-10" 
             referrerPolicy="no-referrer" 
           />
         </div>
@@ -128,8 +128,8 @@ const Navbar = () => {
 
 const Hero = () => (
   <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
-    <div className="absolute top-[-100px] right-[-100px] w-96 h-96 bg-brand-blue/10 rounded-full blur-[120px] -z-10" />
-    <div className="absolute bottom-[-50px] left-[-50px] w-80 h-80 bg-brand-gold/10 rounded-full blur-[100px] -z-10" />
+    <div className="absolute top-[-100px] right-[-100px] w-72 h-72 md:w-96 md:h-96 bg-brand-blue/10 rounded-full blur-[60px] md:blur-[120px] -z-10" />
+    <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 md:w-80 md:h-80 bg-brand-gold/10 rounded-full blur-[50px] md:blur-[100px] -z-10" />
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -151,7 +151,7 @@ const Hero = () => (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 text-balance"
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-6 text-balance"
           >
             Troque seu imóvel <span className="accent-gradient-text">sem vender</span>, sem financiar e sem burocracia.
           </motion.h1>
@@ -210,7 +210,7 @@ const Hero = () => (
                 <img 
                   src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
                   alt="Imóvel em destaque" 
-                  className="rounded-2xl w-full h-[500px] object-cover opacity-90"
+                  className="rounded-2xl w-full h-[320px] sm:h-[400px] md:h-[500px] object-cover opacity-90"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/40 to-transparent">
@@ -394,7 +394,7 @@ const ValueProp = () => (
               </div>
            </div>
            <div className="relative">
-              <div className="glass-card py-24 px-12 rounded-[3rem] border-brand-gold/15 relative overflow-hidden group min-h-[500px] flex items-center justify-center">
+              <div className="glass-card py-12 md:py-24 px-6 md:px-12 rounded-3xl md:rounded-[3rem] border-brand-gold/15 relative overflow-hidden group min-h-[350px] md:min-h-[500px] flex items-center justify-center">
                  {/* Background Image */}
                  <img 
                     src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1080" 
@@ -480,7 +480,7 @@ const HowItWorks = () => (
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.15 }}
-            className="flex gap-6 items-start glass-card p-8 rounded-3xl border-white/5"
+            className="flex gap-4 sm:gap-6 items-start glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl border-white/5"
           >
             <span className="text-4xl font-display font-black text-brand-gold italic opacity-30">
               {item.step}
@@ -1010,7 +1010,7 @@ const PermutaSimulator = () => {
           subtitle="Descubra se existem imóveis compatíveis para troca e veja uma estimativa de torna financeira."
           centered
         />
-        <div className="glass-card rounded-[2.5rem] border-white/10 shadow-2xl p-8 md:p-12 relative overflow-hidden min-h-[450px] flex flex-col justify-between">
+        <div className="glass-card rounded-2xl md:rounded-[2.5rem] border-white/10 shadow-2xl p-5 md:p-12 relative overflow-hidden min-h-[450px] flex flex-col justify-between">
           <AnimatePresence mode="wait">
             {step === "input" && (
               <motion.div
@@ -1021,7 +1021,7 @@ const PermutaSimulator = () => {
                 transition={{ duration: 0.4 }}
                 className="space-y-8 flex-1 flex flex-col justify-between"
               >
-                <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div className="grid md:grid-cols-2 gap-6 md:gap-12">
                   {/* Lado TEM */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 pb-2 border-b border-white/5">

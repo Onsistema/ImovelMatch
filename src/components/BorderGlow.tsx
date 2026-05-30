@@ -120,6 +120,12 @@ const BorderGlow = ({
   }, [getCenterOfElement]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // Disable continuous style updates on touch/mobile devices to prevent stutters
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches || 
+                     window.matchMedia('(pointer: coarse)').matches || 
+                     ('ontouchstart' in window);
+    if (isMobile) return;
+
     isHovered.current = true;
     const card = cardRef.current;
     if (!card) return;
@@ -139,24 +145,62 @@ const BorderGlow = ({
   }, [getEdgeProximity, getCursorAngle]);
 
   const handlePointerEnter = useCallback(() => {
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches || 
+                     window.matchMedia('(pointer: coarse)').matches || 
+                     ('ontouchstart' in window);
+    if (isMobile) return;
     isHovered.current = true;
   }, []);
 
   const handlePointerLeave = useCallback(() => {
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches || 
+                     window.matchMedia('(pointer: coarse)').matches || 
+                     ('ontouchstart' in window);
+    if (isMobile) return;
     isHovered.current = false;
   }, []);
 
   useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    // Detect mobile or touch devices
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches || 
+                     window.matchMedia('(pointer: coarse)').matches || 
+                     ('ontouchstart' in window);
+
+    if (isMobile) {
+      // Set static optimal values for mobile to guarantee ZERO continuous layout calculation or CPU usage
+      card.style.setProperty('--cursor-angle', '135deg');
+      card.style.setProperty('--edge-proximity', '70');
+      return;
+    }
+
     let animationFrameId: number;
     let angle = Math.random() * 360;
     let currentProximity = 0;
     let isSweeping = animated;
     const sweepDuration = 4000;
     const startTime = performance.now();
+    let isVisible = true;
+
+    // Use IntersectionObserver on desktops to completely pause loop when card is scrolled out of viewport
+    let observer: IntersectionObserver | null = null;
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+      }, { threshold: 0.05 });
+      observer.observe(card);
+    }
 
     const tick = () => {
-      const card = cardRef.current;
-      if (!card) {
+      if (!isVisible) {
+        animationFrameId = requestAnimationFrame(tick);
+        return;
+      }
+
+      const cardElement = cardRef.current;
+      if (!cardElement) {
         animationFrameId = requestAnimationFrame(tick);
         return;
       }
@@ -176,8 +220,8 @@ const BorderGlow = ({
             proximity = 100 - fadeProgress * 30; // Settle back to 70% resting proximity
           }
           
-          card.style.setProperty('--cursor-angle', `${currentAngle.toFixed(2)}deg`);
-          card.style.setProperty('--edge-proximity', `${proximity.toFixed(2)}`);
+          cardElement.style.setProperty('--cursor-angle', `${currentAngle.toFixed(2)}deg`);
+          cardElement.style.setProperty('--edge-proximity', `${proximity.toFixed(2)}`);
           currentProximity = proximity;
           angle = currentAngle % 360;
         } else {
@@ -196,12 +240,12 @@ const BorderGlow = ({
             currentProximity = targetProximity;
           }
           
-          card.style.setProperty('--cursor-angle', `${angle.toFixed(2)}deg`);
-          card.style.setProperty('--edge-proximity', `${currentProximity.toFixed(2)}`);
+          cardElement.style.setProperty('--cursor-angle', `${angle.toFixed(2)}deg`);
+          cardElement.style.setProperty('--edge-proximity', `${currentProximity.toFixed(2)}`);
         } else {
           // Retain state from mouse coordinates to prevent visual snapping on leave
-          const proxStr = card.style.getPropertyValue('--edge-proximity');
-          const angStr = card.style.getPropertyValue('--cursor-angle');
+          const proxStr = cardElement.style.getPropertyValue('--edge-proximity');
+          const angStr = cardElement.style.getPropertyValue('--cursor-angle');
           if (proxStr) currentProximity = parseFloat(proxStr);
           if (angStr) angle = parseFloat(angStr) || angle;
         }
@@ -214,6 +258,9 @@ const BorderGlow = ({
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      if (observer) {
+        observer.disconnect();
+      }
     };
   }, [animated]);
 
