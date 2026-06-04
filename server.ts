@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 
@@ -129,8 +130,12 @@ async function startServer() {
     }
   });
 
-  // Vite integration middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  // Robustly determine if we are in production by checking if the compiled "dist" folder exists.
+  const distPath = path.join(process.cwd(), "dist");
+  const isProduction = process.env.NODE_ENV === "production" || fs.existsSync(distPath);
+
+  if (!isProduction) {
+    console.log("🛠️ Starting server in DEVELOPMENT mode with Vite dev middleware...");
     const { createServer } = await import("vite");
     const vite = await createServer({
       server: { middlewareMode: true },
@@ -138,8 +143,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // Serve static files in production
-    const distPath = path.join(process.cwd(), "dist");
+    console.log("🚀 Starting server in PRODUCTION mode. Serving static assets from /dist...");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
