@@ -1307,15 +1307,16 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     const sanitizedEmail = email.trim().toLowerCase();
 
     try {
-      // Only send custom credentials if the server does NOT have a pre-configured database in .env
-      const customCredentials = (supabaseUrl && supabaseKey && !isServerConfigured) ? {
-        url: supabaseUrl,
-        key: supabaseKey,
-        tableName,
-        emailColumn,
-        redirectRegistration,
-        redirectCheckout
-      } : undefined;
+      // Send custom table configuration and routing targets from user settings,
+      // and send custom Supabase keys of dynamic database if they exist.
+      const customCredentials = {
+        url: supabaseUrl ? supabaseUrl.trim() : undefined,
+        key: supabaseKey ? supabaseKey.trim() : undefined,
+        tableName: tableName ? tableName.trim() : undefined,
+        emailColumn: emailColumn ? emailColumn.trim() : undefined,
+        redirectRegistration: redirectRegistration ? redirectRegistration.trim() : undefined,
+        redirectCheckout: redirectCheckout ? redirectCheckout.trim() : undefined,
+      };
 
       let data: any = null;
 
@@ -1323,7 +1324,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         const res = await fetch("/api/check-user", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, customCredentials }),
+          body: JSON.stringify({ email: sanitizedEmail, customCredentials }),
         });
 
         if (res.ok) {
@@ -1366,10 +1367,11 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         const name = tableName.trim() || "users";
         const col = emailColumn.trim() || "email";
 
+        // Use case-insensitive .ilike for more robust matching of existing emails
         const { data: dbData, error: dbError } = await clientSupa
           .from(name)
           .select(col)
-          .eq(col, sanitizedEmail);
+          .ilike(col, sanitizedEmail);
 
         if (dbError) {
           console.error("Direct client-side query error:", dbError);

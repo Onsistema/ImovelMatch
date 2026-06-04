@@ -102,7 +102,7 @@ async function startServer() {
       const { data, error } = await supabase
         .from(tableName)
         .select(emailColumn)
-        .eq(emailColumn, sanitizedEmail);
+        .ilike(emailColumn, sanitizedEmail);
 
       if (error) {
         console.error("Supabase query error:", error);
