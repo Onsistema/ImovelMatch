@@ -1221,6 +1221,8 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [showSettings, setShowSettings] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isServerConfigured, setIsServerConfigured] = useState(false);
+  const [queryLog, setQueryLog] = useState<string[]>([]);
+  const [showLog, setShowLog] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -1303,8 +1305,16 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
     setStatus("checking");
     setErrorMsg("");
+    setQueryLog([]);
+    const logs: string[] = [];
+    const addLog = (msg: string) => {
+      console.log(msg);
+      logs.push(msg);
+      setQueryLog([...logs]);
+    };
 
     const sanitizedEmail = email.trim().toLowerCase();
+    addLog(`🔍 Iniciando validação para o e-mail: "${sanitizedEmail}"`);
 
     try {
       // Send custom table configuration and routing targets from user settings,
@@ -1321,6 +1331,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       let data: any = null;
 
       try {
+        addLog(`📡 Enviando requisição para API do servidor (/api/check-user)...`);
         const res = await fetch("/api/check-user", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1329,16 +1340,27 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
         if (res.ok) {
           data = await res.json();
+          addLog("🟢 Servidor respondeu com sucesso.");
         } else {
-          console.warn("API returned non-ok response. Trying client-side fallback...");
+          const errText = await res.text();
+          addLog(`⚠️ Servidor retornou código de erro: ${res.status}. Detalhes: ${errText}`);
         }
-      } catch (fetchError) {
-        console.error("API call failed completely. Trying client-side fallback...", fetchError);
+      } catch (fetchError: any) {
+        addLog(`❌ Falha de comunicação com o servidor: ${fetchError.message || fetchError}`);
       }
 
       // If we got a successful response from the server api, use it!
       if (data) {
         setIsSimulated(!!data.simulation);
+        if (data.simulation) {
+          addLog("💡 O servidor está em MODO SIMULAÇÃO (banco de dados global não configurado em variáveis .env do backend).");
+          addLog(`👉 Resultado da simulação: Usuário ${data.exists ? "CADASTRADO" : "NÃO CADASTRADO"}`);
+        } else {
+          addLog("✨ Servidor utilizou banco de dados Supabase.");
+          addLog(`👉 Resultado da consulta: Usuário ${data.exists ? "CADASTRADO" : "NÃO CADASTRADO"}`);
+        }
+        addLog(`📍 Redirecionando para: ${data.redirectUrl}`);
+
         if (data.exists) {
           setStatus("found");
           setTimeout(() => {
@@ -1356,16 +1378,18 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       // -- CLIENT-SIDE FAILSAFE FALLBACK --
       // If we reached here, the server is either offline, returned a 404/500, or has connection issues.
       // We will perform the query DIRECTLY from the browser!
+      addLog("⚡ Executando plano de contingência: consulta direta pelo navegador (client-side)...");
       const activeUrl = supabaseUrl.trim();
       const activeKey = supabaseKey.trim();
       const targetReg = redirectRegistration.trim() || "https://app.swaphome.com.br/";
       const targetChk = redirectCheckout.trim() || "https://app.swaphome.com.br/checkout";
 
       if (activeUrl && activeKey) {
-        console.log("Executing fail-safe: Direct client-side lookup to Supabase...");
+        addLog(`🔌 Inicializando cliente Supabase diretamente com URL: "${activeUrl}"`);
         const clientSupa = createClient(activeUrl, activeKey);
         const name = tableName.trim() || "users";
         const col = emailColumn.trim() || "email";
+        addLog(`🔎 Consultando tabela: "${name}" buscando na coluna: "${col}" por: "%${sanitizedEmail}%"`);
 
         // Use case-insensitive .ilike for more robust matching of existing emails
         const { data: dbData, error: dbError } = await clientSupa
@@ -1374,14 +1398,21 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           .ilike(col, `%${sanitizedEmail}%`);
 
         if (dbError) {
-          console.error("Direct client-side query error:", dbError);
+          addLog(`❌ Erro na consulta direta do banco: ${dbError.message}`);
           throw new Error("Erro na consulta direta ao banco: " + dbError.message);
+        }
+
+        addLog(`📈 Registros encontrados com correspondência parcial: ${dbData ? dbData.length : 0}`);
+        if (dbData && dbData.length > 0) {
+          addLog(`📋 Registros retornados: ${JSON.stringify(dbData)}`);
         }
 
         const exists = Array.isArray(dbData) && dbData.some(row => {
           const value = String(row[col] || "").trim().toLowerCase();
           return value === sanitizedEmail;
         });
+
+        addLog(`👥 Encontrou correspondência exata de e-mail? ${exists ? "SIM (Redirecionando para Checkout)" : "NÃO (Redirecionando para Registro)"}`);
         const redirectUrl = exists ? targetChk : targetReg;
 
         setIsSimulated(false);
@@ -1389,17 +1420,22 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           setStatus("found");
           setTimeout(() => {
             window.location.href = redirectUrl;
-          }, 3000);
+          }, 3500);
         } else {
           setStatus("new");
           setTimeout(() => {
             window.location.href = redirectUrl;
-          }, 3000);
+          }, 3500);
         }
       } else {
         // Fallback to local simulation when no database credentials are input
-        console.log("Executing fail-safe: Local simulation lookup...");
+        addLog("⚠️ Nenhuma credencial do Supabase configurada. Executando simulação offline local.");
+        addLog('💡 Dica: Usuários simulados válidos precisam conter "ja-cadastrado", "admin" ou ser "test@example.com"');
+        
         const exists = sanitizedEmail.includes("ja-cadastrado") || sanitizedEmail.includes("admin") || sanitizedEmail === "test@example.com";
+        addLog(`🔎 Resultado da simulação offline: ${exists ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
+        addLog(`📍 Redirecionando para: ${exists ? targetChk : targetReg}`);
+
         const redirectUrl = exists ? targetChk : targetReg;
 
         setIsSimulated(true);
@@ -1407,15 +1443,16 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           setStatus("found");
           setTimeout(() => {
             window.location.href = redirectUrl;
-          }, 3000);
+          }, 3500);
         } else {
           setStatus("new");
           setTimeout(() => {
             window.location.href = redirectUrl;
-          }, 3000);
+          }, 3500);
         }
       }
     } catch (err: any) {
+      addLog(`❌ Erro fatal durante a validação: ${err.message || err}`);
       console.error(err);
       setErrorMsg(err.message || "E-mail não pôde ser verificado. Tente novamente.");
       setStatus("error");
@@ -1453,8 +1490,19 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           </div>
           <div className="flex items-center gap-2">
             <button 
+              onClick={() => setShowSettings(!showSettings)}
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                showSettings 
+                  ? "text-brand-gold bg-brand-gold/10 border-brand-gold/20" 
+                  : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border-transparent"
+              }`}
+              title="Configurar Banco de Dados"
+            >
+              <Settings className="w-5 h-5 animate-pulse" />
+            </button>
+            <button 
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+              className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer border border-transparent"
             >
               <X className="w-5 h-5" />
             </button>
@@ -1566,7 +1614,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </form>
           </div>
         ) : (
-          <div className="relative z-10 flex flex-col">
+          <div className="relative z-10 flex flex-col max-h-[64vh] overflow-y-auto pr-1 scrollbar-thin">
             {status === "idle" && (
               <div>
                 <h4 className="text-white font-extrabold text-xl mb-1 tracking-tight">Verificar Acesso à Plataforma</h4>
@@ -1594,6 +1642,35 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     Verificar Cadastro <ArrowRight className="w-4 h-4" />
                   </button>
                 </form>
+
+                {/* Connection Status Pill */}
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500 font-medium">Status da Conexão:</span>
+                  {isServerConfigured ? (
+                    <span className="text-green-400 font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded-md border border-green-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      Banco Global Conectado
+                    </span>
+                  ) : (supabaseUrl && supabaseKey) ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowSettings(true)}
+                      className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded-md border border-emerald-500/20 transition-all cursor-pointer text-[11px]"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Banco Personalizado Ativo: {tableName}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowSettings(true)}
+                      className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/20 transition-all cursor-pointer text-[11px]"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      Simulação Local (Configurar Engenho ⚙️)
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -1611,19 +1688,19 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   <Check className="w-8 h-8 text-green-400" />
                 </div>
                 <h4 className="text-white font-extrabold text-xl mb-2">Cadastro Ativo Encontrado!</h4>
-                <p className="text-slate-400 text-sm mb-4">Escolha seu plano na próxima tela</p>
-                <p className="text-slate-500 text-xs">Redirecionando em {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+                <p className="text-slate-400 text-sm mb-4">Redirecionando para o painel de pagamento...</p>
+                <p className="text-slate-500 text-xs">Aguarde {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
               </div>
             )}
 
             {status === "new" && (
               <div className="text-center py-6 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(201,151,30,0.2)] animate-pulse">
-                  <Building2 className="w-8 h-8 text-brand-gold" />
+                <div className="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(245,158,11,0.2)] animate-pulse">
+                  <Building2 className="w-8 h-8 text-amber-400" />
                 </div>
                 <h4 className="text-white font-extrabold text-xl mb-2">E-mail não Encontrado</h4>
-                <p className="text-slate-400 text-sm mb-4">Faça o cadastro e volte para escolher seu plano</p>
-                <p className="text-slate-500 text-xs">Redirecionando em {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+                <p className="text-slate-400 text-sm mb-4">Você ainda não possui cadastro ou as credenciais inseridas não retornaram este e-mail.</p>
+                <p className="text-slate-500 text-xs">Redirecionando para página de cadastro em {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
               </div>
             )}
 
@@ -1634,15 +1711,44 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     <AlertCircle className="w-7 h-7 text-red-500" />
                   </div>
                   <h4 className="text-white font-bold text-lg mb-2">Erro na Consulta</h4>
-                  <p className="text-red-400 text-sm mb-6 leading-relaxed">{errorMsg}</p>
+                  <p className="text-red-400 text-xs mb-6 leading-relaxed max-w-sm mx-auto">{errorMsg}</p>
                 </div>
 
                 <button
                   onClick={() => setStatus("idle")}
-                  className="w-full py-4 border border-white/10 hover:border-brand-gold text-white font-bold rounded-xl transition-all text-sm uppercase tracking-wider flex items-center justify-center cursor-pointer"
+                  className="w-full py-4 border border-white/10 hover:border-brand-gold text-white font-bold rounded-xl transition-all text-sm uppercase tracking-wider flex items-center justify-center cursor-pointer mb-2"
                 >
                   Tentar Novamente
                 </button>
+              </div>
+            )}
+
+            {/* Render Collapsible Diagnostic Connection Logs */}
+            {queryLog.length > 0 && (
+              <div className="mt-6 border-t border-white/5 pt-4 text-left">
+                <button
+                  type="button"
+                  onClick={() => setShowLog(!showLog)}
+                  className="text-[11px] text-slate-400 hover:text-brand-gold flex items-center gap-1 cursor-pointer font-bold focus:outline-none"
+                >
+                  {showLog ? "▼ Ocultar Logs de Diagnóstico" : "▶ Mostrar Logs de Diagnóstico (Consulta Supabase)"}
+                </button>
+                {showLog && (
+                  <div className="mt-2 p-3 bg-black/40 border border-white/5 rounded-xl text-[10px] font-mono text-slate-300 max-h-[140px] overflow-y-auto space-y-1.5 scrollbar-thin">
+                    {queryLog.map((logStr, idx) => (
+                      <div key={idx} className="whitespace-pre-wrap leading-relaxed border-b border-white/[0.03] pb-1 last:border-0 font-sans">
+                        {logStr}
+                      </div>
+                    ))}
+                    {!isSimulated && status === "new" && (
+                      <div className="text-amber-400 text-[10px] p-2 bg-amber-500/10 rounded-lg mt-2 font-sans border border-amber-500/20">
+                        💡 <strong>Caso o e-mail exista no banco de dados e mesmo assim não foi encontrado:</strong><br/>
+                        1. Verifique se o nome da <strong>Tabela</strong> e o nome da <strong>Coluna</strong> estão corretos e correspondem ao Supabase.<br/>
+                        2. Verifique se a política do <strong>Row Level Security (RLS)</strong> do Supabase permite que a chave anônima (ou de serviço) consulte essa tabela de forma pública. Se RLS estiver habilitado sem uma directiva de leitura (SELECT), a busca retorna 0 linhas silenciosamente.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
