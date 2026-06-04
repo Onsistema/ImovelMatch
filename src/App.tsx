@@ -1371,14 +1371,17 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         const { data: dbData, error: dbError } = await clientSupa
           .from(name)
           .select(col)
-          .ilike(col, sanitizedEmail);
+          .ilike(col, `%${sanitizedEmail}%`);
 
         if (dbError) {
           console.error("Direct client-side query error:", dbError);
           throw new Error("Erro na consulta direta ao banco: " + dbError.message);
         }
 
-        const exists = Array.isArray(dbData) && dbData.length > 0;
+        const exists = Array.isArray(dbData) && dbData.some(row => {
+          const value = String(row[col] || "").trim().toLowerCase();
+          return value === sanitizedEmail;
+        });
         const redirectUrl = exists ? targetChk : targetReg;
 
         setIsSimulated(false);

@@ -102,14 +102,17 @@ async function startServer() {
       const { data, error } = await supabase
         .from(tableName)
         .select(emailColumn)
-        .ilike(emailColumn, sanitizedEmail);
+        .ilike(emailColumn, `%${sanitizedEmail}%`);
 
       if (error) {
         console.error("Supabase query error:", error);
         throw error;
       }
 
-      const exists = Array.isArray(data) && data.length > 0;
+      const exists = Array.isArray(data) && data.some(row => {
+        const value = String(row[emailColumn] || "").trim().toLowerCase();
+        return value === sanitizedEmail;
+      });
       const redirectUrl = exists ? redirectionCheckout : redirectionRegistration;
 
       return res.json({
