@@ -2,5 +2,7 @@
   "name": "SwapHome | Seu novo imóvel está aqui",
   "description": "Seu novo imóvel está aqui. A maior plataforma de permuta imobiliária do Brasil.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
