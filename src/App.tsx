@@ -30,6 +30,7 @@ import {
   Database
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
+import { createClient } from "@supabase/supabase-js";
 import BorderGlow from "./components/BorderGlow";
 import BlurText from "./components/BlurText";
 import BubbleMenu from "./components/BubbleMenu";
@@ -1303,6 +1304,8 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setStatus("checking");
     setErrorMsg("");
 
+    const sanitizedEmail = email.trim().toLowerCase();
+
     try {
       // Only send custom credentials if the server does NOT have a pre-configured database in .env
       const customCredentials = (supabaseUrl && supabaseKey && !isServerConfigured) ? {
@@ -1314,30 +1317,98 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         redirectCheckout
       } : undefined;
 
-      const res = await fetch("/api/check-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, customCredentials }),
-      });
+      let data: any = null;
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha ao comunicar com o servidor.");
+      try {
+        const res = await fetch("/api/check-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, customCredentials }),
+        });
+
+        if (res.ok) {
+          data = await res.json();
+        } else {
+          console.warn("API returned non-ok response. Trying client-side fallback...");
+        }
+      } catch (fetchError) {
+        console.error("API call failed completely. Trying client-side fallback...", fetchError);
       }
 
-      const data = await res.json();
-      setIsSimulated(!!data.simulation);
+      // If we got a successful response from the server api, use it!
+      if (data) {
+        setIsSimulated(!!data.simulation);
+        if (data.exists) {
+          setStatus("found");
+          setTimeout(() => {
+            window.location.href = data.redirectUrl;
+          }, 3000);
+        } else {
+          setStatus("new");
+          setTimeout(() => {
+            window.location.href = data.redirectUrl;
+          }, 3000);
+        }
+        return;
+      }
 
-      if (data.exists) {
-        setStatus("found");
-        setTimeout(() => {
-          window.location.href = data.redirectUrl;
-        }, 3000);
+      // -- CLIENT-SIDE FAILSAFE FALLBACK --
+      // If we reached here, the server is either offline, returned a 404/500, or has connection issues.
+      // We will perform the query DIRECTLY from the browser!
+      const activeUrl = supabaseUrl.trim();
+      const activeKey = supabaseKey.trim();
+      const targetReg = redirectRegistration.trim() || "https://app.swaphome.com.br/";
+      const targetChk = redirectCheckout.trim() || "https://app.swaphome.com.br/checkout";
+
+      if (activeUrl && activeKey) {
+        console.log("Executing fail-safe: Direct client-side lookup to Supabase...");
+        const clientSupa = createClient(activeUrl, activeKey);
+        const name = tableName.trim() || "users";
+        const col = emailColumn.trim() || "email";
+
+        const { data: dbData, error: dbError } = await clientSupa
+          .from(name)
+          .select(col)
+          .eq(col, sanitizedEmail);
+
+        if (dbError) {
+          console.error("Direct client-side query error:", dbError);
+          throw new Error("Erro na consulta direta ao banco: " + dbError.message);
+        }
+
+        const exists = Array.isArray(dbData) && dbData.length > 0;
+        const redirectUrl = exists ? targetChk : targetReg;
+
+        setIsSimulated(false);
+        if (exists) {
+          setStatus("found");
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 3000);
+        } else {
+          setStatus("new");
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 3000);
+        }
       } else {
-        setStatus("new");
-        setTimeout(() => {
-          window.location.href = data.redirectUrl;
-        }, 3000);
+        // Fallback to local simulation when no database credentials are input
+        console.log("Executing fail-safe: Local simulation lookup...");
+        const exists = sanitizedEmail.includes("ja-cadastrado") || sanitizedEmail.includes("admin") || sanitizedEmail === "test@example.com";
+        const redirectUrl = exists ? targetChk : targetReg;
+
+        setIsSimulated(true);
+        if (exists) {
+          setStatus("found");
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 3000);
+        } else {
+          setStatus("new");
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 3000);
+        }
       }
     } catch (err: any) {
       console.error(err);
