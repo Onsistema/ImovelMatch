@@ -10,6 +10,20 @@ dotenv.config();
 let supabaseClient: any = null;
 const CONFIG_FILE = path.join(process.cwd(), "supabase-config.json");
 
+// Helper to get environment variables with fallback for visually truncated names in the platform
+function getEnvVar(fullKey: string, truncatedKeys: string[]): string | undefined {
+  if (process.env[fullKey]) {
+    return process.env[fullKey];
+  }
+  for (const truncatedKey of truncatedKeys) {
+    if (process.env[truncatedKey]) {
+      console.log(`ℹ️ Environment variable "${fullKey}" resolved from truncated replica "${truncatedKey}"`);
+      return process.env[truncatedKey];
+    }
+  }
+  return undefined;
+}
+
 function getSavedConfig() {
   if (fs.existsSync(CONFIG_FILE)) {
     try {
@@ -28,7 +42,11 @@ function getSupabaseClient() {
 
   const config = getSavedConfig();
   const url = process.env.SUPABASE_URL || config?.supabaseUrl;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || config?.supabaseKey;
+  
+  // Use fallbacks for truncated names: SUPABASE_SERVICE / SUPABASE_ANON_K
+  const serviceRoleKey = getEnvVar("SUPABASE_SERVICE_ROLE_KEY", ["SUPABASE_SERVICE"]);
+  const anonKey = getEnvVar("SUPABASE_ANON_KEY", ["SUPABASE_ANON_K"]);
+  const key = serviceRoleKey || anonKey || config?.supabaseKey;
 
   if (!url || !key) {
     console.warn("⚠️ Supabase credentials are not fully configured in your environment variables (.env) or supabase-config.json.");
@@ -113,8 +131,8 @@ async function startServer() {
     const config = getSavedConfig();
     
     // Choose redirection targets from custom credentials, configuration file, or environment variables
-    const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || process.env.REDIRECT_REGISTRATION_URL || "https://app.swaphome.com.br/";
-    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || process.env.REDIRECT_CHECKOUT_URL || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
+    const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR"]) || "https://app.swaphome.com.br/";
+    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
     let supabase: any = null;
     let isCustom = false;
@@ -150,8 +168,8 @@ async function startServer() {
     }
 
     try {
-      const tableName = customCredentials?.tableName || config?.tableName || process.env.SUPABASE_TABLE_NAME || "users";
-      const emailColumn = customCredentials?.emailColumn || config?.emailColumn || process.env.SUPABASE_EMAIL_COLUMN || "email";
+      const tableName = customCredentials?.tableName || config?.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_N"]) || "users";
+      const emailColumn = customCredentials?.emailColumn || config?.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_C"]) || "email";
 
       console.log(`Checking Supabase table "${tableName}" where "${emailColumn}" = "${sanitizedEmail}"`);
 
