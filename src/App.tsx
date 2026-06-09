@@ -1237,14 +1237,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [queryLog, setQueryLog] = useState<string[]>([]);
   const [showLog, setShowLog] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [isAdminUnlocked, setIsAdminUnlocked] = useState(() => {
-    try {
-      const isParam = window.location.search.includes("config=true") || window.location.search.includes("admin=true");
-      return isParam || localStorage.getItem("sb_unlocked") === "true";
-    } catch {
-      return false;
-    }
-  });
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(true);
 
   const handleLockAdmin = () => {
     localStorage.removeItem("sb_unlocked");
@@ -1416,11 +1409,23 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           data = await res.json();
           addLog("🟢 Servidor respondeu com sucesso.");
         } else {
-          const errText = await res.text();
+          let errText = "";
+          try {
+            const errJson = await res.clone().json();
+            errText = errJson.details || errJson.error || "";
+          } catch {
+            errText = await res.text();
+          }
           addLog(`⚠️ Servidor retornou código de erro: ${res.status}. Detalhes: ${errText}`);
+          if (isServerConfigured) {
+            throw new Error(errText || `Erro ${res.status} retornado pelo servidor.`);
+          }
         }
       } catch (fetchError: any) {
         addLog(`❌ Falha de comunicação com o servidor: ${fetchError.message || fetchError}`);
+        if (isServerConfigured) {
+          throw fetchError;
+        }
       }
 
       // If we got a successful response from the server api, use it!
@@ -1497,6 +1502,9 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             window.location.href = redirectUrl;
           }, 3500);
         }
+      } else if (isServerConfigured) {
+        // Since server IS configured, we shouldn't quietly run offline local simulation
+        throw new Error("A consulta a Supabase do servidor falhou. Verifique as configurações ou desative o banco de dados.");
       } else {
         // Fallback to local simulation when no database credentials are input
         addLog("⚠️ Nenhuma credencial do Supabase configurada. Executando simulação offline local.");

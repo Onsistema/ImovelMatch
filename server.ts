@@ -113,7 +113,16 @@ async function startServer() {
 
   app.get("/api/get-settings", (req, res) => {
     const config = getSavedConfig() || {};
-    res.json(config);
+    const response = {
+      supabaseUrl: config.supabaseUrl || getEnvVar("SUPABASE_URL") || "",
+      // Mask key for safety but show it is configured
+      supabaseKey: config.supabaseKey || (getEnvVar("SUPABASE_SERVICE_ROLE_KEY") || getEnvVar("SUPABASE_ANON_KEY") ? "••••••••••••••••••••" : ""),
+      tableName: config.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_", "SUPABASE_TABLE_N", "SUPABASE_TABLE"]) || "users",
+      emailColumn: config.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_", "SUPABASE_EMAIL_C", "SUPABASE_EMAIL"]) || "email",
+      redirectRegistration: config.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/",
+      redirectCheckout: config.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96"
+    };
+    res.json(response);
   });
 
   app.post("/api/save-settings", (req, res) => {
@@ -179,15 +188,13 @@ async function startServer() {
       supabase = getSupabaseClient();
     }
     
-    // Choose redirection targets: client-provied (only if isCustom), configuration file, or environment variables
-    const redirectionRegistration = (isCustom ? customCredentials?.redirectRegistration : undefined) || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/";
-    const redirectionCheckout = (isCustom ? customCredentials?.redirectCheckout : undefined) || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
+    // Choose redirection targets: from form custom input, dynamic config, env variables, or defaults
+    const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/";
+    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
     // If Supabase is not configured, fallback to simulation mode to keep preview functional
     if (!supabase) {
       console.log(`[Simulation] Checking email: ${sanitizedEmail}`);
-      // Simple logic for the demo/simulation:
-      // If the email contains "ja-cadastrado" or starts with "admin", "teste", or matches common mock accounts, mark as existing.
       const exists = sanitizedEmail.includes("ja-cadastrado") || sanitizedEmail.includes("admin") || sanitizedEmail === "test@example.com";
       const redirectUrl = exists ? redirectionCheckout : redirectionRegistration;
 
@@ -201,19 +208,35 @@ async function startServer() {
     }
 
     try {
-      const tableName = (isCustom ? customCredentials?.tableName : undefined) || config?.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_", "SUPABASE_TABLE_N", "SUPABASE_TABLE"]) || "users";
-      const emailColumn = (isCustom ? customCredentials?.emailColumn : undefined) || config?.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_", "SUPABASE_EMAIL_C", "SUPABASE_EMAIL"]) || "email";
+      const tableName = customCredentials?.tableName || config?.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_", "SUPABASE_TABLE_N", "SUPABASE_TABLE"]) || "users";
+      const emailColumn = customCredentials?.emailColumn || config?.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_", "SUPABASE_EMAIL_C", "SUPABASE_EMAIL"]) || "email";
 
       console.log(`Checking Supabase table "${tableName}" where "${emailColumn}" = "${sanitizedEmail}"`);
 
-      const { data, error } = await supabase
+      // Try exact case-insensitive match first (more performant and clean)
+      let { data, error } = await supabase
         .from(tableName)
         .select(emailColumn)
-        .ilike(emailColumn, `%${sanitizedEmail}%`);
+        .ilike(emailColumn, sanitizedEmail);
 
       if (error) {
-        console.error("Supabase query error:", error);
+        console.error("Supabase exact match error:", error);
         throw error;
+      }
+
+      // If exact query returns nothing, try wildcard match as a fallback (handles spaces or partial entry checks)
+      if (!data || data.length === 0) {
+        console.log(`No exact match for "${sanitizedEmail}". Retrying with partial wildcard matching...`);
+        const wildcardResult = await supabase
+          .from(tableName)
+          .select(emailColumn)
+          .ilike(emailColumn, `%${sanitizedEmail}%`);
+
+        if (wildcardResult.error) {
+          console.error("Supabase wildcard match error:", wildcardResult.error);
+        } else if (wildcardResult.data && wildcardResult.data.length > 0) {
+          data = wildcardResult.data;
+        }
       }
 
       const exists = Array.isArray(data) && data.some(row => {
