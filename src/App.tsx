@@ -27,7 +27,8 @@ import {
   Menu,
   X,
   Settings,
-  Database
+  Database,
+  Lock
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -1216,13 +1217,40 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [tableName, setTableName] = useState(() => localStorage.getItem("sb_table") || "users");
   const [emailColumn, setEmailColumn] = useState(() => localStorage.getItem("sb_column") || "email");
   const [redirectRegistration, setRedirectRegistration] = useState(() => localStorage.getItem("sb_redirect_reg") || "https://app.swaphome.com.br/");
-  const [redirectCheckout, setRedirectCheckout] = useState(() => localStorage.getItem("sb_redirect_chk") || "https://app.swaphome.com.br/checkout");
+  const [redirectCheckout, setRedirectCheckout] = useState(() => localStorage.getItem("sb_redirect_chk") || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96");
+
+  const [activeCheckoutUrl, setActiveCheckoutUrl] = useState("");
+
+  const handleOpenCheckout = () => {
+    if (activeCheckoutUrl) {
+      window.open(
+        activeCheckoutUrl,
+        "CheckoutSwapHome",
+        "width=580,height=820,top=100,left=200,scrollbars=yes,resizable=yes"
+      );
+    }
+  };
 
   const [showSettings, setShowSettings] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isServerConfigured, setIsServerConfigured] = useState(false);
   const [queryLog, setQueryLog] = useState<string[]>([]);
   const [showLog, setShowLog] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(() => {
+    try {
+      const isParam = window.location.search.includes("config=true") || window.location.search.includes("admin=true");
+      return isParam || localStorage.getItem("sb_unlocked") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const handleLockAdmin = () => {
+    localStorage.removeItem("sb_unlocked");
+    setIsAdminUnlocked(false);
+    setShowSettings(false);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -1235,6 +1263,21 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           }
         })
         .catch((err) => console.error("Error checking database status:", err));
+
+      // Fetch persistent config from server to sync with frontend states
+      fetch("/api/get-settings")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && Object.keys(data).length > 0) {
+            if (data.supabaseUrl) setSupabaseUrl(data.supabaseUrl);
+            if (data.supabaseKey) setSupabaseKey(data.supabaseKey);
+            if (data.tableName) setTableName(data.tableName);
+            if (data.emailColumn) setEmailColumn(data.emailColumn);
+            if (data.redirectRegistration) setRedirectRegistration(data.redirectRegistration);
+            if (data.redirectCheckout) setRedirectCheckout(data.redirectCheckout);
+          }
+        })
+        .catch((err) => console.error("Error fetching settings:", err));
     }
   }, [isOpen]);
 
@@ -1248,6 +1291,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       setIsSimulated(false);
       setShowSettings(false);
       setSaveSuccess(false);
+      setActiveCheckoutUrl("");
     }
   }, [isOpen]);
 
@@ -1265,13 +1309,36 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
   const handleSaveSettings = (e: FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("sb_url", supabaseUrl.trim());
-    localStorage.setItem("sb_key", supabaseKey.trim());
-    localStorage.setItem("sb_table", tableName.trim());
-    localStorage.setItem("sb_column", emailColumn.trim());
-    localStorage.setItem("sb_redirect_reg", redirectRegistration.trim());
-    localStorage.setItem("sb_redirect_chk", redirectCheckout.trim());
+    const configData = {
+      supabaseUrl: supabaseUrl.trim(),
+      supabaseKey: supabaseKey.trim(),
+      tableName: tableName.trim(),
+      emailColumn: emailColumn.trim(),
+      redirectRegistration: redirectRegistration.trim(),
+      redirectCheckout: redirectCheckout.trim(),
+    };
+
+    localStorage.setItem("sb_url", configData.supabaseUrl);
+    localStorage.setItem("sb_key", configData.supabaseKey);
+    localStorage.setItem("sb_table", configData.tableName);
+    localStorage.setItem("sb_column", configData.emailColumn);
+    localStorage.setItem("sb_redirect_reg", configData.redirectRegistration);
+    localStorage.setItem("sb_redirect_chk", configData.redirectCheckout);
     
+    // Save to backend server persistently
+    fetch("/api/save-settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(configData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success) {
+          setIsServerConfigured(!!configData.supabaseUrl);
+        }
+      })
+      .catch((err) => console.error("Error saving settings on server:", err));
+
     setSaveSuccess(true);
     setTimeout(() => {
       setSaveSuccess(false);
@@ -1285,7 +1352,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setTableName("users");
     setEmailColumn("email");
     setRedirectRegistration("https://app.swaphome.com.br/");
-    setRedirectCheckout("https://app.swaphome.com.br/checkout");
+    setRedirectCheckout("https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96");
 
     localStorage.removeItem("sb_url");
     localStorage.removeItem("sb_key");
@@ -1293,6 +1360,13 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     localStorage.removeItem("sb_column");
     localStorage.removeItem("sb_redirect_reg");
     localStorage.removeItem("sb_redirect_chk");
+
+    // Also clear settings on the backend server
+    fetch("/api/clear-settings", { method: "POST" })
+      .then(() => {
+        setIsServerConfigured(false);
+      })
+      .catch((err) => console.error("Error clearing settings on server:", err));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -1363,9 +1437,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
         if (data.exists) {
           setStatus("found");
-          setTimeout(() => {
-            window.location.href = data.redirectUrl;
-          }, 3000);
+          setActiveCheckoutUrl(data.redirectUrl);
         } else {
           setStatus("new");
           setTimeout(() => {
@@ -1382,7 +1454,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       const activeUrl = supabaseUrl.trim();
       const activeKey = supabaseKey.trim();
       const targetReg = redirectRegistration.trim() || "https://app.swaphome.com.br/";
-      const targetChk = redirectCheckout.trim() || "https://app.swaphome.com.br/checkout";
+      const targetChk = redirectCheckout.trim() || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
       if (activeUrl && activeKey) {
         addLog(`🔌 Inicializando cliente Supabase diretamente com URL: "${activeUrl}"`);
@@ -1412,15 +1484,13 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           return value === sanitizedEmail;
         });
 
-        addLog(`👥 Encontrou correspondência exata de e-mail? ${exists ? "SIM (Redirecionando para Checkout)" : "NÃO (Redirecionando para Registro)"}`);
+        addLog(`👥 Encontrou correspondência exata de e-mail? ${exists ? "SIM (Carregando Painel de Pagamento)" : "NÃO (Redirecionando para Registro)"}`);
         const redirectUrl = exists ? targetChk : targetReg;
 
         setIsSimulated(false);
         if (exists) {
           setStatus("found");
-          setTimeout(() => {
-            window.location.href = redirectUrl;
-          }, 3500);
+          setActiveCheckoutUrl(redirectUrl);
         } else {
           setStatus("new");
           setTimeout(() => {
@@ -1441,9 +1511,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         setIsSimulated(true);
         if (exists) {
           setStatus("found");
-          setTimeout(() => {
-            window.location.href = redirectUrl;
-          }, 3500);
+          setActiveCheckoutUrl(redirectUrl);
         } else {
           setStatus("new");
           setTimeout(() => {
@@ -1476,7 +1544,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="glass-card max-w-lg w-full border border-brand-gold/30 bg-[#0d1525]/95 relative overflow-hidden p-8 rounded-3xl shadow-[0_0_50px_rgba(201,151,30,0.15)] flex flex-col max-h-[90vh]"
+        className="glass-card w-full max-w-lg p-8 h-auto max-h-[90vh] border border-brand-gold/30 bg-[#0d1525]/95 relative overflow-hidden rounded-3xl shadow-[0_0_50px_rgba(201,151,30,0.15)] flex flex-col"
       >
         {/* Background gradient flares */}
         <div className="absolute top-0 right-0 w-24 h-24 bg-brand-gold/10 rounded-full blur-2xl pointer-events-none" />
@@ -1484,33 +1552,48 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 relative z-10 border-b border-white/5 pb-4">
-          <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-brand-gold" />
-            <h3 className="text-white font-bold text-lg font-sans tracking-tight">Portal SwapHome</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setShowSettings(!showSettings)}
-              className={`p-2 rounded-xl border transition-all cursor-pointer ${
-                showSettings 
-                  ? "text-brand-gold bg-brand-gold/10 border-brand-gold/20" 
-                  : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border-transparent"
-              }`}
-              title="Configurar Banco de Dados"
-            >
-              <Settings className="w-5 h-5 animate-pulse" />
-            </button>
-            <button 
-              onClick={onClose}
-              className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer border border-transparent"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+              <div 
+                className="flex items-center gap-2 cursor-pointer select-none"
+                onClick={() => {
+                  setClickCount(prev => {
+                    const next = prev + 1;
+                    if (next >= 5) {
+                      setIsAdminUnlocked(true);
+                      localStorage.setItem("sb_unlocked", "true");
+                      return 0;
+                    }
+                    return next;
+                  });
+                }}
+              >
+                <Building2 className="w-5 h-5 text-brand-gold" />
+                <h3 className="text-white font-bold text-lg font-sans tracking-tight">Portal SwapHome</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                {isAdminUnlocked && (
+                  <button 
+                    onClick={() => setShowSettings(!showSettings)}
+                    className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                      showSettings 
+                        ? "text-brand-gold bg-brand-gold/10 border-brand-gold/20" 
+                        : "text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border-transparent"
+                    }`}
+                    title="Configurar Banco de Dados"
+                  >
+                    <Settings className="w-5 h-5 animate-pulse" />
+                  </button>
+                )}
+                <button 
+                  onClick={onClose}
+                  className="text-slate-400 hover:text-white p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all cursor-pointer border border-transparent"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
 
-        {/* Content States */}
-        {showSettings ? (
+            {/* Content States */}
+            {showSettings ? (
           <div className="relative z-10 flex flex-col h-full overflow-y-auto pr-1 max-h-[60vh] space-y-4 text-left scrollbar-thin">
             <div>
               <h4 className="text-white font-extrabold text-xl mb-1 flex items-center gap-2">
@@ -1611,6 +1694,14 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   {saveSuccess ? "Salvo com sucesso!" : "Salvar Dados"}
                 </button>
               </div>
+
+              <button
+                type="button"
+                onClick={handleLockAdmin}
+                className="w-full mt-2 py-3 border border-white/10 hover:border-white/20 text-slate-400 hover:text-white hover:bg-white/5 font-bold rounded-xl transition-all text-[11px] cursor-pointer flex items-center justify-center gap-1.5 focus:outline-none"
+              >
+                <Lock className="w-3.5 h-3.5 text-slate-400" /> Bloquear Painel Admin (Ocultar Engrenagem)
+              </button>
             </form>
           </div>
         ) : (
@@ -1644,33 +1735,35 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 </form>
 
                 {/* Connection Status Pill */}
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500 font-medium">Status da Conexão:</span>
-                  {isServerConfigured ? (
-                    <span className="text-green-400 font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded-md border border-green-500/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      Banco Global Conectado
-                    </span>
-                  ) : (supabaseUrl && supabaseKey) ? (
-                    <button
-                      type="button"
-                      onClick={() => setShowSettings(true)}
-                      className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded-md border border-emerald-500/20 transition-all cursor-pointer text-[11px]"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      Banco Personalizado Ativo: {tableName}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setShowSettings(true)}
-                      className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/20 transition-all cursor-pointer text-[11px]"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                      Simulação Local (Configurar Engenho ⚙️)
-                    </button>
-                  )}
-                </div>
+                {isAdminUnlocked && (
+                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500 font-medium">Status da Conexão:</span>
+                    {isServerConfigured ? (
+                      <span className="text-green-400 font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded-md border border-green-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                        Banco Global Conectado
+                      </span>
+                    ) : (supabaseUrl && supabaseKey) ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowSettings(true)}
+                        className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded-md border border-emerald-500/20 transition-all cursor-pointer text-[11px]"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Banco Personalizado Ativo: {tableName}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowSettings(true)}
+                        className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/20 transition-all cursor-pointer text-[11px]"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                        Simulação Local (Configurar Engenho ⚙️)
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -1683,13 +1776,60 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             )}
 
             {status === "found" && (
-              <div className="text-center py-6 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(34,197,94,0.2)] animate-pulse">
-                  <Check className="w-8 h-8 text-green-400" />
+              <div className="text-center py-4 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(34,197,94,0.2)] shrink-0">
+                  <ShieldCheck className="w-8 h-8 text-green-400" />
                 </div>
-                <h4 className="text-white font-extrabold text-xl mb-2">Cadastro Ativo Encontrado!</h4>
-                <p className="text-slate-400 text-sm mb-4">Redirecionando para o painel de pagamento...</p>
-                <p className="text-slate-500 text-xs">Aguarde {countdown} segundo{countdown !== 1 ? "s" : ""}...</p>
+                
+                <h4 className="text-white font-extrabold text-xl mb-1.5 tracking-tight">Cadastro Encontrado!</h4>
+                
+                <div className="mb-4 inline-flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  {email}
+                </div>
+
+                <p className="text-slate-300 text-xs leading-relaxed mb-5 max-w-xs text-center">
+                  Sua conta está ativa. Clique no botão abaixo para abrir o seu checkout de pagamento em um ambiente seguro e criptografado.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleOpenCheckout}
+                  className="w-full py-4 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-95 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 hover:shadow-brand-gold/30 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                >
+                  <Lock className="w-4 h-4 text-brand-dark" /> Acessar Checkout Seguro <ArrowRight className="w-4 h-4 text-brand-dark" />
+                </button>
+
+                <div className="mt-4 w-full p-3 bg-white/[0.03] border border-white/5 rounded-xl text-left flex gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <h5 className="text-[10px] text-slate-300 font-extrabold">Corte de Iframe Ativo (SSL)</h5>
+                    <p className="text-[9px] text-slate-500 leading-normal">
+                      A abertura em janela embutida pode ser bloqueada por políticas de iframe do checkout. Use o botão acima para garantir uma transição limpa e 100% segura.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStatus("idle");
+                      setEmail("");
+                    }}
+                    className="text-[10px] text-slate-400 hover:text-white underline font-bold focus:outline-none cursor-pointer"
+                  >
+                    Verificar outro e-mail
+                  </button>
+                  <a
+                    href={activeCheckoutUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[9px] text-brand-gold hover:underline mt-1 font-medium"
+                  >
+                    Não conseguiu abrir? Clique aqui para acessar diretamente em nova aba
+                  </a>
+                </div>
               </div>
             )}
 
@@ -1724,7 +1864,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             )}
 
             {/* Render Collapsible Diagnostic Connection Logs */}
-            {queryLog.length > 0 && (
+            {isAdminUnlocked && queryLog.length > 0 && (
               <div className="mt-6 border-t border-white/5 pt-4 text-left">
                 <button
                   type="button"

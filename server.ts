@@ -8,16 +8,30 @@ import { createClient } from "@supabase/supabase-js";
 dotenv.config();
 
 let supabaseClient: any = null;
+const CONFIG_FILE = path.join(process.cwd(), "supabase-config.json");
+
+function getSavedConfig() {
+  if (fs.existsSync(CONFIG_FILE)) {
+    try {
+      const content = fs.readFileSync(CONFIG_FILE, "utf-8");
+      return JSON.parse(content);
+    } catch (e) {
+      console.error("Error reading supabase-config.json:", e);
+    }
+  }
+  return null;
+}
 
 // Lazy initialize Supabase Client to prevent crashes on startup if keys are missing
 function getSupabaseClient() {
   if (supabaseClient) return supabaseClient;
 
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  const config = getSavedConfig();
+  const url = process.env.SUPABASE_URL || config?.supabaseUrl;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || config?.supabaseKey;
 
   if (!url || !key) {
-    console.warn("⚠️ Supabase credentials are not fully configured in your environment variables (.env).");
+    console.warn("⚠️ Supabase credentials are not fully configured in your environment variables (.env) or supabase-config.json.");
     return null;
   }
 
@@ -46,6 +60,47 @@ async function startServer() {
     });
   });
 
+  app.get("/api/get-settings", (req, res) => {
+    const config = getSavedConfig() || {};
+    res.json(config);
+  });
+
+  app.post("/api/save-settings", (req, res) => {
+    try {
+      const { supabaseUrl, supabaseKey, tableName, emailColumn, redirectRegistration, redirectCheckout } = req.body;
+      const config = {
+        supabaseUrl: supabaseUrl?.trim() || "",
+        supabaseKey: supabaseKey?.trim() || "",
+        tableName: tableName?.trim() || "users",
+        emailColumn: emailColumn?.trim() || "email",
+        redirectRegistration: redirectRegistration?.trim() || "https://app.swaphome.com.br/",
+        redirectCheckout: redirectCheckout?.trim() || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96"
+      };
+
+      fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), "utf-8");
+      
+      // Reset the lazy client to force reconnection with new keys next time
+      supabaseClient = null;
+
+      res.json({ success: true, message: "Configurações persistidas com sucesso no servidor!" });
+    } catch (err: any) {
+      console.error("Error writing settings:", err);
+      res.status(500).json({ error: "Erro ao salvar configurações no servidor.", details: err.message });
+    }
+  });
+
+  app.post("/api/clear-settings", (req, res) => {
+    try {
+      if (fs.existsSync(CONFIG_FILE)) {
+        fs.unlinkSync(CONFIG_FILE);
+      }
+      supabaseClient = null;
+      res.json({ success: true, message: "Configurações removidas com sucesso no servidor!" });
+    } catch (err: any) {
+      res.status(500).json({ error: "Erro ao limpar configurações no servidor." });
+    }
+  });
+
   // Check user registration endpoint
   app.post("/api/check-user", async (req, res) => {
     const { email, customCredentials } = req.body;
@@ -55,10 +110,11 @@ async function startServer() {
     }
 
     const sanitizedEmail = email.trim().toLowerCase();
+    const config = getSavedConfig();
     
-    // Choose redirection targets from custom credentials or environment variables
-    const redirectionRegistration = customCredentials?.redirectRegistration || process.env.REDIRECT_REGISTRATION_URL || "https://app.swaphome.com.br/";
-    const redirectionCheckout = customCredentials?.redirectCheckout || process.env.REDIRECT_CHECKOUT_URL || "https://app.swaphome.com.br/checkout";
+    // Choose redirection targets from custom credentials, configuration file, or environment variables
+    const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || process.env.REDIRECT_REGISTRATION_URL || "https://app.swaphome.com.br/";
+    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || process.env.REDIRECT_CHECKOUT_URL || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
     let supabase: any = null;
     let isCustom = false;
@@ -94,8 +150,8 @@ async function startServer() {
     }
 
     try {
-      const tableName = customCredentials?.tableName || process.env.SUPABASE_TABLE_NAME || "users";
-      const emailColumn = customCredentials?.emailColumn || process.env.SUPABASE_EMAIL_COLUMN || "email";
+      const tableName = customCredentials?.tableName || config?.tableName || process.env.SUPABASE_TABLE_NAME || "users";
+      const emailColumn = customCredentials?.emailColumn || config?.emailColumn || process.env.SUPABASE_EMAIL_COLUMN || "email";
 
       console.log(`Checking Supabase table "${tableName}" where "${emailColumn}" = "${sanitizedEmail}"`);
 
