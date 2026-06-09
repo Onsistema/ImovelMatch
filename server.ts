@@ -10,17 +10,45 @@ dotenv.config();
 let supabaseClient: any = null;
 const CONFIG_FILE = path.join(process.cwd(), "supabase-config.json");
 
-// Helper to get environment variables with fallback for visually truncated names in the platform
-function getEnvVar(fullKey: string, truncatedKeys: string[]): string | undefined {
+// Helper to get environment variables with robust fallback for visually truncated, case-insensitive, or partial names
+function getEnvVar(fullKey: string, truncatedKeys: string[] = []): string | undefined {
+  // 1. Direct match (exact case)
   if (process.env[fullKey]) {
     return process.env[fullKey];
   }
-  for (const truncatedKey of truncatedKeys) {
-    if (process.env[truncatedKey]) {
-      console.log(`ℹ️ Environment variable "${fullKey}" resolved from truncated replica "${truncatedKey}"`);
-      return process.env[truncatedKey];
-    }
+
+  const upperFullKey = fullKey.toUpperCase();
+
+  // 2. Direct case-insensitive match
+  const exactCaseInsensitiveKey = Object.keys(process.env).find(
+    (k) => k.toUpperCase() === upperFullKey
+  );
+  if (exactCaseInsensitiveKey && process.env[exactCaseInsensitiveKey]) {
+    return process.env[exactCaseInsensitiveKey];
   }
+
+  // 3. Match from predefined list of truncated keys (case-insensitive)
+  const upperTruncatedKeys = truncatedKeys.map((k) => k.toUpperCase());
+  const predefinedTruncatedKey = Object.keys(process.env).find((k) => {
+    const uk = k.toUpperCase();
+    return upperTruncatedKeys.includes(uk) || uk.startsWith(upperFullKey.substring(0, 15));
+  });
+  if (predefinedTruncatedKey && process.env[predefinedTruncatedKey]) {
+    console.log(`ℹ️ Environment variable "${fullKey}" resolved from replica "${predefinedTruncatedKey}"`);
+    return process.env[predefinedTruncatedKey];
+  }
+
+  // 4. Dynamic prefix match (case-insensitive)
+  // If we have an environment variable whose name is a prefix of fullKey of length >= 10
+  const dynamicMatchedKey = Object.keys(process.env).find((k) => {
+    const uk = k.toUpperCase();
+    return (upperFullKey.startsWith(uk) && uk.length >= 10) || (uk.startsWith(upperFullKey.substring(0, 12)));
+  });
+  if (dynamicMatchedKey && process.env[dynamicMatchedKey]) {
+    console.log(`ℹ️ Environment variable "${fullKey}" dynamically resolved from prefix/part "${dynamicMatchedKey}"`);
+    return process.env[dynamicMatchedKey];
+  }
+
   return undefined;
 }
 
@@ -41,11 +69,11 @@ function getSupabaseClient() {
   if (supabaseClient) return supabaseClient;
 
   const config = getSavedConfig();
-  const url = process.env.SUPABASE_URL || config?.supabaseUrl;
+  const url = getEnvVar("SUPABASE_URL") || config?.supabaseUrl;
   
   // Use fallbacks for truncated names: SUPABASE_SERVICE / SUPABASE_ANON_K
-  const serviceRoleKey = getEnvVar("SUPABASE_SERVICE_ROLE_KEY", ["SUPABASE_SERVICE"]);
-  const anonKey = getEnvVar("SUPABASE_ANON_KEY", ["SUPABASE_ANON_K"]);
+  const serviceRoleKey = getEnvVar("SUPABASE_SERVICE_ROLE_KEY", ["SUPABASE_SERVICE", "SUPABASE_SERVIC"]);
+  const anonKey = getEnvVar("SUPABASE_ANON_KEY", ["SUPABASE_ANON_K", "SUPABASE_ANON_KE"]);
   const key = serviceRoleKey || anonKey || config?.supabaseKey;
 
   if (!url || !key) {
@@ -71,10 +99,15 @@ async function startServer() {
 
   // API Endpoints
   app.get("/api/health", (req, res) => {
+    // Get list of secret keys for debugging configuration (names only, never values)
+    const envKeys = Object.keys(process.env).filter(
+      k => k.startsWith("SUPABASE") || k.includes("REDIRECT")
+    );
     res.json({ 
       status: "ok", 
       timestamp: new Date().toISOString(),
-      supabaseConfigured: !!getSupabaseClient()
+      supabaseConfigured: !!getSupabaseClient(),
+      envKeys
     });
   });
 
