@@ -14,7 +14,7 @@ const CONFIG_FILE = path.join(process.cwd(), "supabase-config.json");
 function getEnvVar(fullKey: string, truncatedKeys: string[] = []): string | undefined {
   // 1. Direct match (exact case)
   if (process.env[fullKey]) {
-    return process.env[fullKey];
+    return process.env[fullKey].trim();
   }
 
   const upperFullKey = fullKey.toUpperCase();
@@ -24,7 +24,7 @@ function getEnvVar(fullKey: string, truncatedKeys: string[] = []): string | unde
     (k) => k.toUpperCase() === upperFullKey
   );
   if (exactCaseInsensitiveKey && process.env[exactCaseInsensitiveKey]) {
-    return process.env[exactCaseInsensitiveKey];
+    return process.env[exactCaseInsensitiveKey].trim();
   }
 
   // 3. Match from predefined list of truncated keys (case-insensitive)
@@ -35,7 +35,7 @@ function getEnvVar(fullKey: string, truncatedKeys: string[] = []): string | unde
   });
   if (predefinedTruncatedKey && process.env[predefinedTruncatedKey]) {
     console.log(`ℹ️ Environment variable "${fullKey}" resolved from replica "${predefinedTruncatedKey}"`);
-    return process.env[predefinedTruncatedKey];
+    return process.env[predefinedTruncatedKey].trim();
   }
 
   // 4. Dynamic prefix match (case-insensitive)
@@ -46,7 +46,7 @@ function getEnvVar(fullKey: string, truncatedKeys: string[] = []): string | unde
   });
   if (dynamicMatchedKey && process.env[dynamicMatchedKey]) {
     console.log(`ℹ️ Environment variable "${fullKey}" dynamically resolved from prefix/part "${dynamicMatchedKey}"`);
-    return process.env[dynamicMatchedKey];
+    return process.env[dynamicMatchedKey].trim();
   }
 
   return undefined;
@@ -71,9 +71,9 @@ function getSupabaseClient() {
   const config = getSavedConfig();
   const url = getEnvVar("SUPABASE_URL") || config?.supabaseUrl;
   
-  // Use fallbacks for truncated names: SUPABASE_SERVICE / SUPABASE_ANON_K
-  const serviceRoleKey = getEnvVar("SUPABASE_SERVICE_ROLE_KEY", ["SUPABASE_SERVICE", "SUPABASE_SERVIC"]);
-  const anonKey = getEnvVar("SUPABASE_ANON_KEY", ["SUPABASE_ANON_K", "SUPABASE_ANON_KE"]);
+  // Use fallbacks for truncated names: SUPABASE_SERVICE / SUPABASE_SERVIC / SUPABASE_ANON_ / SUPABASE_ANON_K
+  const serviceRoleKey = getEnvVar("SUPABASE_SERVICE_ROLE_KEY", ["SUPABASE_SERVICE", "SUPABASE_SERVIC", "SUPABASE_SERVI", "SUPABASE_SERV"]);
+  const anonKey = getEnvVar("SUPABASE_ANON_KEY", ["SUPABASE_ANON_K", "SUPABASE_ANON_KE", "SUPABASE_ANON_KEY", "SUPABASE_ANON_", "SUPABASE_ANON"]);
   const key = serviceRoleKey || anonKey || config?.supabaseKey;
 
   if (!url || !key) {
@@ -162,10 +162,6 @@ async function startServer() {
 
     const sanitizedEmail = email.trim().toLowerCase();
     const config = getSavedConfig();
-    
-    // Choose redirection targets from custom credentials, configuration file, or environment variables
-    const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR"]) || "https://app.swaphome.com.br/";
-    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
     let supabase: any = null;
     let isCustom = false;
@@ -182,6 +178,10 @@ async function startServer() {
     } else {
       supabase = getSupabaseClient();
     }
+    
+    // Choose redirection targets: client-provied (only if isCustom), configuration file, or environment variables
+    const redirectionRegistration = (isCustom ? customCredentials?.redirectRegistration : undefined) || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/";
+    const redirectionCheckout = (isCustom ? customCredentials?.redirectCheckout : undefined) || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
 
     // If Supabase is not configured, fallback to simulation mode to keep preview functional
     if (!supabase) {
@@ -201,8 +201,8 @@ async function startServer() {
     }
 
     try {
-      const tableName = customCredentials?.tableName || config?.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_N"]) || "users";
-      const emailColumn = customCredentials?.emailColumn || config?.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_C"]) || "email";
+      const tableName = (isCustom ? customCredentials?.tableName : undefined) || config?.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_", "SUPABASE_TABLE_N", "SUPABASE_TABLE"]) || "users";
+      const emailColumn = (isCustom ? customCredentials?.emailColumn : undefined) || config?.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_", "SUPABASE_EMAIL_C", "SUPABASE_EMAIL"]) || "email";
 
       console.log(`Checking Supabase table "${tableName}" where "${emailColumn}" = "${sanitizedEmail}"`);
 
