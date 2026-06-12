@@ -120,7 +120,10 @@ async function startServer() {
       tableName: config.tableName || getEnvVar("SUPABASE_TABLE_NAME", ["SUPABASE_TABLE_", "SUPABASE_TABLE_N", "SUPABASE_TABLE"]) || "users",
       emailColumn: config.emailColumn || getEnvVar("SUPABASE_EMAIL_COLUMN", ["SUPABASE_EMAIL_", "SUPABASE_EMAIL_C", "SUPABASE_EMAIL"]) || "email",
       redirectRegistration: config.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/",
-      redirectCheckout: config.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96"
+      redirectCheckout: (() => {
+        const url = config.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
+        return url.includes("swaphome.com.br/checkout") ? "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96" : url;
+      })()
     };
     res.json(response);
   });
@@ -190,7 +193,10 @@ async function startServer() {
     
     // Choose redirection targets: from form custom input, dynamic config, env variables, or defaults
     const redirectionRegistration = customCredentials?.redirectRegistration || config?.redirectRegistration || getEnvVar("REDIRECT_REGISTRATION_URL", ["REDIRECT_REGISTR", "REDIRECT_REGIST", "REDIRECT_REGISTRATION"]) || "https://app.swaphome.com.br/";
-    const redirectionCheckout = customCredentials?.redirectCheckout || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
+    const redirectionCheckoutRaw = customCredentials?.redirectCheckout || config?.redirectCheckout || getEnvVar("REDIRECT_CHECKOUT_URL", ["REDIRECT_CHECKO", "REDIRECT_CHECKOU", "REDIRECT_CHECKOUT"]) || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96";
+    const redirectionCheckout = redirectionCheckoutRaw.includes("swaphome.com.br/checkout")
+      ? "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96"
+      : redirectionCheckoutRaw;
 
     // If Supabase is not configured, fallback to simulation mode to keep preview functional
     if (!supabase) {

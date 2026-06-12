@@ -28,7 +28,8 @@ import {
   X,
   Settings,
   Database,
-  Lock
+  Lock,
+  FileText
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -1206,7 +1207,7 @@ const PermutaSimulator = () => {
 
 const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "checking" | "found" | "new" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "checking" | "found" | "new" | "error" | "checkEmail">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [countdown, setCountdown] = useState(3);
   const [isSimulated, setIsSimulated] = useState(false);
@@ -1217,7 +1218,12 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [tableName, setTableName] = useState(() => localStorage.getItem("sb_table") || "users");
   const [emailColumn, setEmailColumn] = useState(() => localStorage.getItem("sb_column") || "email");
   const [redirectRegistration, setRedirectRegistration] = useState(() => localStorage.getItem("sb_redirect_reg") || "https://app.swaphome.com.br/");
-  const [redirectCheckout, setRedirectCheckout] = useState(() => localStorage.getItem("sb_redirect_chk") || "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96");
+  const [redirectCheckout, setRedirectCheckout] = useState(() => {
+    const saved = localStorage.getItem("sb_redirect_chk") || "";
+    return (!saved || saved.includes("swaphome.com.br/checkout")) 
+      ? "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96" 
+      : saved;
+  });
 
   const [activeCheckoutUrl, setActiveCheckoutUrl] = useState("");
 
@@ -1237,7 +1243,14 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   const [queryLog, setQueryLog] = useState<string[]>([]);
   const [showLog, setShowLog] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [isAdminUnlocked, setIsAdminUnlocked] = useState(true);
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(() => {
+    try {
+      const isParam = window.location.search.includes("config=true") || window.location.search.includes("admin=true");
+      return isParam || localStorage.getItem("sb_unlocked") === "true";
+    } catch {
+      return false;
+    }
+  });
 
   const handleLockAdmin = () => {
     localStorage.removeItem("sb_unlocked");
@@ -1267,7 +1280,10 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             if (data.tableName) setTableName(data.tableName);
             if (data.emailColumn) setEmailColumn(data.emailColumn);
             if (data.redirectRegistration) setRedirectRegistration(data.redirectRegistration);
-            if (data.redirectCheckout) setRedirectCheckout(data.redirectCheckout);
+            if (data.redirectCheckout) {
+              const url = data.redirectCheckout;
+              setRedirectCheckout(url.includes("swaphome.com.br/checkout") ? "https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96" : url);
+            }
           }
         })
         .catch((err) => console.error("Error fetching settings:", err));
@@ -1602,7 +1618,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
             {/* Content States */}
             {showSettings ? (
-          <div className="relative z-10 flex flex-col h-full overflow-y-auto pr-1 max-h-[60vh] space-y-4 text-left scrollbar-thin">
+          <div className="relative z-10 flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar pr-1 max-h-[60vh] space-y-4 text-left">
             <div>
               <h4 className="text-white font-extrabold text-xl mb-1 flex items-center gap-2">
                 <Database className="w-5 h-5 text-brand-gold" />
@@ -1713,65 +1729,40 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </form>
           </div>
         ) : (
-          <div className="relative z-10 flex flex-col max-h-[64vh] overflow-y-auto pr-1 scrollbar-thin">
+          <div className="relative z-10 flex flex-col max-h-[64vh] overflow-y-auto overflow-x-hidden no-scrollbar pr-1">
             {status === "idle" && (
-              <div>
-                <h4 className="text-white font-extrabold text-xl mb-1 tracking-tight">Verificar Acesso à Plataforma</h4>
-                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                  Informe seu e-mail abaixo para verificarmos se você já possui cadastro e direcioná-lo corretamente.
-                </p>
+              <div className="space-y-4">
+                <div className="text-center mb-6">
+                  <h4 id="check-modal-title" className="text-white font-extrabold text-base sm:text-lg tracking-tight leading-relaxed uppercase">
+                    PARA TER ACESSO AO PERÍODO GRÁTIS É NECESSÁRIO TER UMA CONTA
+                  </h4>
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Seu E-mail</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full p-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/50 transition-all font-sans text-sm"
-                      placeholder="seuemail@exemplo.com"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-brand-gold text-brand-dark font-black rounded-xl hover:opacity-90 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
+                <div className="flex flex-col gap-3.5">
+                  <motion.button
+                    id="check-btn-quick-have-account"
+                    whileHover={{ scale: 1.02, backgroundColor: "#E0AF26" }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      window.open("https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96", "_blank");
+                    }}
+                    className="w-full py-4 px-6 rounded-xl bg-brand-gold text-brand-dark font-extrabold text-center cursor-pointer transition-all shadow-lg shadow-brand-gold/10 flex items-center justify-center gap-2 text-sm"
                   >
-                    Verificar Cadastro <ArrowRight className="w-4 h-4" />
-                  </button>
-                </form>
+                    Já tenho cadastro <ArrowRight className="w-4 h-4" />
+                  </motion.button>
 
-                {/* Connection Status Pill */}
-                {isAdminUnlocked && (
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-500 font-medium">Status da Conexão:</span>
-                    {isServerConfigured ? (
-                      <span className="text-green-400 font-bold flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded-md border border-green-500/20">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                        Banco Global Conectado
-                      </span>
-                    ) : (supabaseUrl && supabaseKey) ? (
-                      <button
-                        type="button"
-                        onClick={() => setShowSettings(true)}
-                        className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 px-2 py-1 rounded-md border border-emerald-500/20 transition-all cursor-pointer text-[11px]"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        Banco Personalizado Ativo: {tableName}
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setShowSettings(true)}
-                        className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-1 rounded-md border border-amber-500/20 transition-all cursor-pointer text-[11px]"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                        Simulação Local (Configurar Engenho ⚙️)
-                      </button>
-                    )}
-                  </div>
-                )}
+                  <motion.button
+                    id="check-btn-quick-create-account"
+                    whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      window.open("https://app.swaphome.com.br/", "_blank");
+                    }}
+                    className="w-full py-4 px-6 rounded-xl border border-white/10 text-white font-extrabold text-center cursor-pointer transition-all bg-white/5 flex items-center justify-center gap-2 text-sm"
+                  >
+                    Criar conta <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                </div>
               </div>
             )}
 
