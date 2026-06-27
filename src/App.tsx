@@ -37,6 +37,8 @@ import BorderGlow from "./components/BorderGlow";
 import BlurText from "./components/BlurText";
 import BubbleMenu from "./components/BubbleMenu";
 import PillNav from "./components/PillNav";
+import SleekLineCursor from "./components/SleekLineCursor";
+import AnimatedModal from "./components/AnimatedModal";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -1314,8 +1316,6 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     }
   }, [status, countdown]);
 
-  if (!isOpen) return null;
-
   const handleSaveSettings = (e: FormEvent) => {
     e.preventDefault();
     const configData = {
@@ -1564,12 +1564,8 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   };
 
   return (
-    <div className="fixed inset-0 bg-[#060a12]/85 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="glass-card w-full max-w-lg p-8 h-auto max-h-[90vh] border border-brand-gold/30 bg-[#0d1525]/95 relative overflow-hidden rounded-3xl shadow-[0_0_50px_rgba(201,151,30,0.15)] flex flex-col"
-      >
+    <AnimatedModal isOpen={isOpen} onClose={onClose}>
+      <div className="glass-card w-full max-w-lg p-8 h-auto max-h-[90vh] border border-brand-gold/30 bg-[#0d1525]/95 relative overflow-hidden rounded-3xl shadow-[0_0_50px_rgba(201,151,30,0.15)] flex flex-col">
         {/* Background gradient flares */}
         <div className="absolute top-0 right-0 w-24 h-24 bg-brand-gold/10 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-gold/5 rounded-full blur-3xl pointer-events-none" />
@@ -1892,8 +1888,8 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             )}
           </div>
         )}
-      </motion.div>
-    </div>
+      </div>
+    </AnimatedModal>
   );
 };
 
@@ -1910,6 +1906,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      <SleekLineCursor />
       <Navbar />
       <Hero />
       <PermutaSimulator />
