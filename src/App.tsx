@@ -39,6 +39,7 @@ import BubbleMenu from "./components/BubbleMenu";
 import PillNav from "./components/PillNav";
 import SleekLineCursor from "./components/SleekLineCursor";
 import AnimatedModal from "./components/AnimatedModal";
+import ExitIntentModal from "./components/ExitIntentModal";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -1895,12 +1896,30 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
 export default function App() {
   const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
+  const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
 
   useEffect(() => {
     const handleOpen = () => setIsCheckModalOpen(true);
     window.addEventListener("open-check-modal", handleOpen);
     return () => {
       window.removeEventListener("open-check-modal", handleOpen);
+    };
+  }, []);
+
+  useEffect(() => {
+    let triggered = false;
+
+    const handleMouseLeave = (e: MouseEvent) => {
+      // Trigger when cursor leaves the top of the viewport (indicating tab close / address bar focus)
+      if (e.clientY < 30 && !triggered) {
+        triggered = true;
+        setIsExitIntentModalOpen(true);
+      }
+    };
+
+    document.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
@@ -1921,6 +1940,7 @@ export default function App() {
       {/* <ContactForm /> */}
       <Footer />
       <CheckAccessModal isOpen={isCheckModalOpen} onClose={() => setIsCheckModalOpen(false)} />
+      <ExitIntentModal isOpen={isExitIntentModalOpen} onClose={() => setIsExitIntentModalOpen(false)} />
     </div>
   );
 }
