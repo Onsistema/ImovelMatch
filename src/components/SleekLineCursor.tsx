@@ -11,6 +11,7 @@ export const SleekLineCursor: React.FC = () => {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Track history of mouse coordinates
   const pointsRef = useRef<Point[]>([]);
@@ -18,13 +19,23 @@ export const SleekLineCursor: React.FC = () => {
   const ringRef = useRef({ x: 0, y: 0 });
   const currentRingRef = useRef({ x: 0, y: 0 });
 
-  // Only run on client-side
+  // Only run on client-side and check for mobile/touch capabilities
   useEffect(() => {
     setIsMounted(true);
+    const checkMobile = () => {
+      const isTouch = window.matchMedia("(pointer: coarse)").matches || 
+                      "ontouchstart" in window || 
+                      navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouch || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || isMobile) return;
 
     // Apply cursor-none class to the body
     document.body.classList.add("cursor-none");
@@ -93,11 +104,11 @@ export const SleekLineCursor: React.FC = () => {
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [isMounted]);
+  }, [isMounted, isMobile]);
 
   // Handle Canvas Resizing with Retina/High-DPI Support
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || isMobile) return;
 
     const resizeCanvas = () => {
       const canvas = canvasRef.current;
@@ -121,11 +132,11 @@ export const SleekLineCursor: React.FC = () => {
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [isMounted]);
+  }, [isMounted, isMobile]);
 
   // Animation Frame Loop
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || isMobile) return;
 
     let animationFrameId: number;
 
@@ -230,9 +241,9 @@ export const SleekLineCursor: React.FC = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isMounted, isVisible, coords]);
+  }, [isMounted, isMobile, isVisible, coords]);
 
-  if (!isMounted) return null;
+  if (!isMounted || isMobile) return null;
 
   return (
     <canvas

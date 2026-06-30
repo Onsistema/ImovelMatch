@@ -1909,18 +1909,35 @@ export default function App() {
   useEffect(() => {
     let triggered = false;
 
-    const handleMouseLeave = (e: MouseEvent) => {
-      // Trigger when cursor leaves the top of the viewport (indicating tab close / address bar focus)
-      if (e.clientY < 30 && !triggered) {
-        triggered = true;
-        setIsExitIntentModalOpen(true);
-      }
-    };
+    // Detect if mobile or touch screen
+    const isMobile = window.matchMedia("(pointer: coarse)").matches || 
+                     window.innerWidth < 768 ||
+                     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    document.addEventListener("mouseleave", handleMouseLeave);
-    return () => {
-      document.removeEventListener("mouseleave", handleMouseLeave);
-    };
+    if (isMobile) {
+      // For mobile: trigger automatically after 5 seconds
+      const timer = setTimeout(() => {
+        if (!triggered) {
+          triggered = true;
+          setIsExitIntentModalOpen(true);
+        }
+      }, 5000);
+      return () => clearTimeout(timer);
+    } else {
+      // For desktop: standard exit-intent mouseleave trigger
+      const handleMouseLeave = (e: MouseEvent) => {
+        // Trigger when cursor leaves the top of the viewport (indicating tab close / address bar focus)
+        if (e.clientY < 30 && !triggered) {
+          triggered = true;
+          setIsExitIntentModalOpen(true);
+        }
+      };
+
+      document.addEventListener("mouseleave", handleMouseLeave);
+      return () => {
+        document.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }
   }, []);
 
   return (
