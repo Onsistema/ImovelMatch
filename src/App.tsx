@@ -1037,7 +1037,7 @@ const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
           <img src={LOGO_URL} alt="SwapHome Logo" className="h-24 w-auto opacity-70 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
         </div>
         
-        <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
+        <nav className="flex flex-wrap gap-6 md:gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
           <a href="#" onClick={(e) => { e.preventDefault(); }} className="hover:text-brand-blue transition-colors">Termos</a>
           <a 
             href="/privacidade" 
@@ -1053,6 +1053,21 @@ const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
             className="hover:text-brand-blue transition-colors cursor-pointer"
           >
             Privacidade
+          </a>
+          <a 
+            href="/excluir-conta" 
+            onClick={(e) => { 
+              e.preventDefault(); 
+              if (onNavigate) {
+                onNavigate("/excluir-conta");
+              } else {
+                window.history.pushState({}, "", "/excluir-conta");
+                window.dispatchEvent(new PopStateEvent("popstate"));
+              }
+            }} 
+            className="hover:text-brand-blue transition-colors cursor-pointer"
+          >
+            Excluir Conta
           </a>
           <a href="#" onClick={(e) => { e.preventDefault(); }} className="hover:text-brand-blue transition-colors">Cookies</a>
         </nav>
