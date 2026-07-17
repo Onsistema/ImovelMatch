@@ -281,6 +281,22 @@ async function startServer() {
       appType: "spa",
     });
     app.use(vite.middlewares);
+
+    // Serve index.html as fallback for SPA routing in development
+    app.get("*", async (req, res, next) => {
+      if (req.originalUrl.startsWith("/api") || req.originalUrl.includes(".")) {
+        return next();
+      }
+      try {
+        const url = req.originalUrl;
+        let html = fs.readFileSync(path.join(process.cwd(), "index.html"), "utf-8");
+        html = await vite.transformIndexHtml(url, html);
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
   } else {
     console.log("🚀 Starting server in PRODUCTION mode. Serving static assets from /dist...");
     app.use(express.static(distPath));
