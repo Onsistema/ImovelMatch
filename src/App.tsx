@@ -43,6 +43,7 @@ import SleekLineCursor from "./components/SleekLineCursor";
 import AnimatedModal from "./components/AnimatedModal";
 import ExitIntentModal from "./components/ExitIntentModal";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import DeleteAccount from "./components/DeleteAccount";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -2094,6 +2095,15 @@ export default function App() {
     ) {
       return "/privacidade";
     }
+    if (
+      path === "/excluir-conta" ||
+      searchParams.get("p") === "excluir-conta" || 
+      searchParams.get("path") === "excluir-conta" ||
+      window.location.hash === "#/excluir-conta" || 
+      window.location.hash === "#excluir-conta"
+    ) {
+      return "/excluir-conta";
+    }
     return path;
   };
 
@@ -2136,7 +2146,7 @@ export default function App() {
     if (isMobile) {
       // For mobile: trigger automatically after 5 seconds
       const timer = setTimeout(() => {
-        if (!triggered && currentPath !== "/privacidade") {
+        if (!triggered && currentPath !== "/privacidade" && currentPath !== "/excluir-conta") {
           triggered = true;
           setIsExitIntentModalOpen(true);
         }
@@ -2146,7 +2156,7 @@ export default function App() {
       // For desktop: standard exit-intent mouseleave trigger
       const handleMouseLeave = (e: MouseEvent) => {
         // Trigger when cursor leaves the top of the viewport (indicating tab close / address bar focus)
-        if (e.clientY < 30 && !triggered && currentPath !== "/privacidade") {
+        if (e.clientY < 30 && !triggered && currentPath !== "/privacidade" && currentPath !== "/excluir-conta") {
           triggered = true;
           setIsExitIntentModalOpen(true);
         }
@@ -2161,6 +2171,10 @@ export default function App() {
 
   if (currentPath === "/privacidade") {
     return <PrivacyPolicy onBack={() => handleNavigate("/")} />;
+  }
+
+  if (currentPath === "/excluir-conta") {
+    return <DeleteAccount onBack={() => handleNavigate("/")} />;
   }
 
   return (
