@@ -29,7 +29,9 @@ import {
   Settings,
   Database,
   Lock,
-  FileText
+  FileText,
+  Gift,
+  Sparkles
 } from "lucide-react";
 import { useState, useEffect, FormEvent } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -40,6 +42,7 @@ import PillNav from "./components/PillNav";
 import SleekLineCursor from "./components/SleekLineCursor";
 import AnimatedModal from "./components/AnimatedModal";
 import ExitIntentModal from "./components/ExitIntentModal";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -487,172 +490,340 @@ const Benefits = () => (
   </section>
 );
 
-const Pricing = () => (
-  <section id="planos" className="py-24 bg-brand-dark/30 relative overflow-hidden">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionHeading 
-        title="Escolha o plano que faz sentido para você."
-        subtitle="Comece grátis, faça upgrade quando quiser. Sem pegadinhas."
-        centered
-      />
+const Pricing = () => {
+  const [billingCycle, setBillingCycle] = useState<"mensal" | "anual">("mensal");
 
-      <div className="mb-16">
-         <h3 className="text-2xl font-bold text-white mb-8 text-center bg-brand-blue/10 py-3 rounded-xl border border-brand-blue/20 max-w-sm mx-auto">Para Proprietários (PF)</h3>
-         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* CPF FREE */}
-            <div className="glass-card p-10 rounded-3xl border-white/5 relative overflow-hidden">
-               <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Free</h4>
-               <p className="text-4xl font-bold text-white mb-4">Grátis <span className="text-sm font-normal text-slate-500">/para sempre</span></p>
-               <p className="text-slate-400 text-sm mb-8">Para quem busca um match único e direto.</p>
-               <ul className="space-y-4 mb-10">
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> 1 imóvel cadastrado
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Acesso ao matching
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cartão de crédito
-                  </li>
-               </ul>
-               <button 
-                 onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))}
-                 className="w-full block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all cursor-pointer"
-               >
-                 Começar Agora
-               </button>
-            </div>
+  const b2bPlans = [
+    { 
+      name: "Starter", 
+      desc: "Para corretores individuais.",
+      limit: "Limite de 10 imóveis",
+      features: [
+        "Até 10 imóveis cadastrados",
+        "Dashboard de gestão (em breve)",
+        "Suporte por e-mail"
+      ],
+      mensal: {
+        regularPrice: "149,90",
+        period: "/mês"
+      },
+      anual: {
+        installment: "119,92",
+        fullPrice: "1.798,80",
+        discountAmount: "359,76",
+        totalAnnual: "1.439,04",
+        period: "/mês (em 12x)"
+      }
+    },
+    { 
+      name: "Growth", 
+      desc: "Para equipes em expansão.",
+      limit: "Limite de 30 imóveis",
+      features: [
+        "Até 30 imóveis cadastrados",
+        "Dashboard de gestão (em breve)",
+        "Relatórios de performance (em breve)",
+        "Suporte prioritário"
+      ],
+      mensal: {
+        regularPrice: "289,90",
+        period: "/mês"
+      },
+      anual: {
+        installment: "231,92",
+        fullPrice: "3.478,80",
+        discountAmount: "695,76",
+        totalAnnual: "2.783,04",
+        period: "/mês (em 12x)"
+      }
+    },
+    { 
+      name: "Enterprise", 
+      desc: "Para grandes estoques.",
+      limit: "Limite de 100 imóveis",
+      features: [
+        "Até 100 imóveis cadastrados",
+        "Dashboard de gestão (em breve)",
+        "Relatórios de performance (em breve)",
+        "Aviso de novos imóveis no Telegram (em breve)",
+        "IA para encontrar oportunidades (em breve)",
+        "Gerente de conta exclusivo"
+      ],
+      mensal: {
+        regularPrice: "799,90",
+        period: "/mês"
+      },
+      anual: {
+        installment: "639,92",
+        fullPrice: "9.598,80",
+        discountAmount: "1.919,76",
+        totalAnnual: "7.679,04",
+        period: "/mês (em 12x)"
+      }
+    },
+    { 
+      name: "Enterprise Pro", 
+      desc: "Para grandes empresas.",
+      limit: "Personalizado",
+      features: [
+        "Imóveis ilimitados",
+        "Dashboard de gestão (em breve)",
+        "Relatórios de performance (em breve)",
+        "Integração via API dedicada",
+        "Aviso de novos imóveis no Telegram (em breve)",
+        "IA para encontrar oportunidades (em breve)"
+      ],
+      custom: true
+    }
+  ];
 
-            {/* CPF PRO */}
-            <div className="glass-card p-10 rounded-3xl border-brand-gold/30 bg-brand-gold/5 relative overflow-hidden flex flex-col justify-between">
-               <div>
-                  <div className="absolute top-4 right-4 bg-brand-gold text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Popular</div>
-                  <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Pro</h4>
-                  <p className="text-4xl font-black mb-4 flex items-baseline gap-2 flex-wrap">
-                     <span className="line-through text-slate-500 text-2xl font-bold">R$ 49,90</span>
-                     <span className="text-white">R$ 0,00</span>
-                     <span className="text-xs font-normal text-slate-500">/30 dias</span>
-                  </p>
-                  
-                  <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold mb-6 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5">
-                     <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
-                     <span>Qualquer plano grátis por 30 dias • Teste agora</span>
-                  </div>
+  return (
+    <section id="planos" className="py-24 bg-brand-dark/30 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading 
+          title="Escolha o plano que faz sentido para você."
+          subtitle="Comece grátis, faça upgrade quando quiser. Sem pegadinhas."
+          centered
+        />
 
-                  <p className="text-slate-400 text-sm mb-8">Visibilidade prioritária e curadoria assistida.</p>
-                  <ul className="space-y-4 mb-10">
-                     <li className="flex items-center gap-3 text-sm text-slate-300">
-                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados
-                     </li>
-                     <li className="flex items-center gap-3 text-sm text-slate-300">
-                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Matches ilimitados
-                     </li>
-                     <li className="flex items-center gap-3 text-sm text-slate-300">
-                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Mensagens diretas
-                     </li>
-                     <li className="flex items-center gap-3 text-sm text-slate-300">
-                       <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Suporte prioritário
-                     </li>
-                  </ul>
-               </div>
-               <a 
-                 href="https://app.swaphome.com.br/" 
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-check-modal")); }}
-               >
-                 Assinar Pro
-               </a>
-            </div>
-         </div>
-      </div>
+        {/* Global Billing Switcher */}
+        <div className="flex flex-col items-center justify-center mb-16">
+          <div className="bg-slate-900/80 p-1.5 rounded-2xl border border-white/10 flex items-center gap-1 shadow-2xl relative z-10">
+            <button
+              onClick={() => setBillingCycle("mensal")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                billingCycle === "mensal"
+                  ? "bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/10"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              Faturamento Mensal
+            </button>
+            <button
+              onClick={() => setBillingCycle("anual")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                billingCycle === "anual"
+                  ? "bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/10"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              Faturamento Anual
+              <span className="bg-emerald-500/20 text-emerald-400 font-extrabold text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                Salvar 20%
+              </span>
+            </button>
+          </div>
+          <p className="text-slate-400 text-xs mt-3 text-center">
+            {billingCycle === "anual" 
+              ? "⚡ Desconto de 20% e bônus aplicados nos planos Pro, Starter, Growth e Enterprise!" 
+              : "Economize até R$ 1.919,76 assinando os planos anuais"}
+          </p>
+        </div>
 
-      <div>
-         <h3 className="text-2xl font-bold text-white mb-8 text-center bg-brand-gold/10 py-3 rounded-xl border border-brand-gold/20 max-w-sm mx-auto">Para Corretores & Imobiliárias (B2B)</h3>
-         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { 
-                name: "Starter", 
-                price: "149", 
-                desc: "Para corretores individuais.",
-                features: [
-                  "Até 10 imóveis",
-                  "Dashboard de gestão (em breve)"
-                ]
-              },
-              { 
-                name: "Growth", 
-                price: "259", 
-                desc: "Para equipes em expansão.",
-                features: [
-                  "Até 30 imóveis",
-                  "Dashboard de gestão (em breve)",
-                  "Relatórios de performance (em breve)"
-                ]
-              },
-              { 
-                name: "Enterprise", 
-                price: "699", 
-                desc: "Para grandes estoques.",
-                features: [
-                  "Até 100 imóveis",
-                  "Dashboard de gestão (em breve)",
-                  "Relatórios de performance (em breve)",
-                  "Aviso de novos imóveis no Telegram (em breve)",
-                  "IA para encontrar oportunidades (em breve)"
-                ]
-              },
-              { 
-                name: "Enterprise Pro", 
-                price: "Plano Personalizado", 
-                desc: "Para grandes empresas.",
-                features: [
-                  "Imóveis ilimitados",
-                  "Dashboard de gestão (em breve)",
-                  "Relatórios de performance (em breve)",
-                  "Aviso de novos imóveis no Telegram (em breve)",
-                  "IA para encontrar oportunidades (em breve)"
-                ]
-              }
-            ].map((plan, i) => (
-              <div key={i} className={`glass-card p-6 rounded-3xl flex flex-col justify-between ${plan.name === "Enterprise Pro" ? "border-brand-gold/30 bg-brand-gold/5" : "border-white/5 bg-slate-900/20"}`}>
+        {/* CPF Plans Section */}
+        <div className="mb-20">
+           <div className="flex items-center justify-center gap-2 mb-8">
+             <div className="h-px w-8 bg-brand-blue/30" />
+             <h3 className="text-xl font-bold text-white text-center bg-brand-blue/10 px-6 py-2.5 rounded-full border border-brand-blue/20">
+               Para Proprietários (PF)
+             </h3>
+             <div className="h-px w-8 bg-brand-blue/30" />
+           </div>
+
+           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {/* CPF FREE */}
+              <div className="glass-card p-10 rounded-3xl border-white/5 relative overflow-hidden flex flex-col justify-between bg-slate-900/10">
                  <div>
-                    <h4 className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-4">{plan.name}</h4>
-                    <p className="text-3xl font-extrabold mb-4 flex items-baseline gap-2 flex-wrap">
-                      {plan.price === "Plano Personalizado" ? (
-                        <span className="text-xl tracking-tight text-white">{plan.price}</span>
-                      ) : (
-                        <>
-                          <span className="line-through text-slate-500 text-lg font-bold">R$ {plan.price}</span>
-                          <span className="text-white">R$ 0</span>
-                          <span className="text-xs font-normal text-slate-500">/30 dias</span>
-                        </>
-                      )}
-                    </p>
-                    
-                    <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold mb-4 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
-                      <span>Qualquer plano grátis por 30 dias • Teste agora</span>
-                    </div>
-
-                    <p className="text-slate-400 text-xs mb-6 leading-relaxed">{plan.desc}</p>
-                    <ul className="space-y-3 mb-8">
-                       {plan.features.map((feature, featureIdx) => (
-                         <li key={featureIdx} className="flex items-start gap-2 text-xs text-slate-300">
-                           <CheckCircle2 className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" /> 
-                           <span>{feature}</span>
-                         </li>
-                       ))}
+                    <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Free</h4>
+                    <p className="text-4xl font-bold text-white mb-4">Grátis <span className="text-sm font-normal text-slate-500">/para sempre</span></p>
+                    <p className="text-slate-400 text-sm mb-8">Para quem busca um match único e direto.</p>
+                    <ul className="space-y-4 mb-10">
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> 1 imóvel cadastrado (Limite de 1 imóvel)
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Acesso ao matching inteligente
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cartão de crédito necessário
+                       </li>
                     </ul>
                  </div>
-                 <button onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))} className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold transition-all mt-auto cursor-pointer w-full">Solicitar Acesso</button>
+                 <button 
+                   onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))}
+                   className="w-full block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all cursor-pointer mt-auto"
+                 >
+                   Começar Agora
+                 </button>
               </div>
-            ))}
-         </div>
+
+              {/* CPF PRO */}
+              <div className="glass-card p-10 rounded-3xl border-brand-gold/30 bg-brand-gold/5 relative overflow-hidden flex flex-col justify-between">
+                 <div>
+                    <div className="absolute top-4 right-4 bg-brand-gold text-brand-dark text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Popular</div>
+                    <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Pro</h4>
+                    
+                    {billingCycle === "mensal" ? (
+                      <div className="mb-6">
+                        <p className="text-4xl font-black mb-1 flex items-baseline gap-2 flex-wrap">
+                           <span className="line-through text-slate-500 text-2xl font-bold">R$ 29,90</span>
+                           <span className="text-white">R$ 0,00</span>
+                           <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                        </p>
+                        <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5 mt-2">
+                           <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
+                           <span>Teste grátis por 30 dias • Comece agora</span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-2">Após os 30 dias grátis, apenas R$ 29,90/mês</p>
+                      </div>
+                    ) : (
+                      <div className="mb-6">
+                        <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
+                           <span className="text-white text-3xl font-extrabold">12x R$ 23,92</span>
+                           <span className="text-xs font-normal text-slate-500">/mês</span>
+                        </p>
+                        <div className="bg-slate-900/60 p-3 rounded-xl border border-brand-gold/20 text-xs space-y-1 mt-2">
+                          <div className="flex justify-between text-slate-400">
+                            <span>Anual sem desconto:</span>
+                            <span className="line-through">R$ 358,80</span>
+                          </div>
+                          <div className="flex justify-between text-white font-bold">
+                            <span>Total Anual (-20%):</span>
+                            <span className="text-brand-gold">R$ 287,04</span>
+                          </div>
+                          <div className="flex justify-between text-emerald-400 font-bold text-[11px] pt-1 border-t border-white/5">
+                            <span>Você economiza:</span>
+                            <span>R$ 71,76/ano</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <p className="text-slate-400 text-sm mb-6">Visibilidade prioritária e curadoria assistida para até 3 imóveis.</p>
+                    <ul className="space-y-4 mb-10">
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados (Limite de 3 imóveis)
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Matches ilimitados com proprietários
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Chat direto com interessados
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Suporte prioritário via WhatsApp
+                       </li>
+                    </ul>
+                 </div>
+                 <a 
+                   href="https://app.swaphome.com.br/" 
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-check-modal")); }}
+                 >
+                   Assinar Pro
+                 </a>
+              </div>
+           </div>
+        </div>
+
+        {/* B2B Plans Section */}
+        <div>
+           <div className="flex items-center justify-center gap-2 mb-8">
+             <div className="h-px w-8 bg-brand-gold/30" />
+             <h3 className="text-xl font-bold text-white text-center bg-brand-gold/10 px-6 py-2.5 rounded-full border border-brand-gold/20">
+               Para Corretores & Imobiliárias (B2B)
+             </h3>
+             <div className="h-px w-8 bg-brand-gold/30" />
+           </div>
+
+           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {b2bPlans.map((plan, i) => (
+                <div key={i} className={`glass-card p-6 rounded-3xl flex flex-col justify-between relative overflow-hidden transition-all duration-300 hover:scale-[1.02] ${
+                  plan.custom 
+                    ? "border-brand-gold/30 bg-brand-gold/5 shadow-[0_0_30px_rgba(201,151,30,0.05)]" 
+                    : "border-white/5 bg-slate-900/20"
+                }`}>
+                   <div>
+                      <h4 className="text-slate-500 font-bold uppercase tracking-widest text-[11px] mb-2">{plan.name}</h4>
+                      <span className="inline-block text-[10px] text-brand-gold bg-brand-gold/10 border border-brand-gold/20 px-2.5 py-0.5 rounded-full mb-4">
+                        {plan.limit}
+                      </span>
+
+                      {plan.custom ? (
+                        <div className="mb-6">
+                          <p className="text-2xl font-extrabold text-white leading-tight">Plano Personalizado</p>
+                          <p className="text-slate-400 text-xs mt-2">Fale conosco para soluções sob medida.</p>
+                        </div>
+                      ) : (
+                        billingCycle === "mensal" ? (
+                          <div className="mb-6">
+                            <p className="text-3xl font-black mb-1 flex items-baseline gap-2 flex-wrap">
+                              <span className="line-through text-slate-500 text-lg font-bold">R$ {plan.mensal?.regularPrice}</span>
+                              <span className="text-white">R$ 0,00</span>
+                              <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                            </p>
+                            <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[10px] font-black py-1.5 px-2 rounded-lg text-center uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5 mt-2">
+                              <Zap className="w-3 h-3 fill-brand-dark text-brand-dark shrink-0" />
+                              <span>30 dias grátis</span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-2">Após o teste, apenas R$ {plan.mensal?.regularPrice}/mês</p>
+                          </div>
+                        ) : (
+                          <div className="mb-6">
+                            {/* Installment value */}
+                            <p className="text-2xl font-black text-white mb-1 flex items-baseline gap-1 flex-wrap">
+                              <span>12x R$ {plan.anual?.installment}</span>
+                              <span className="text-[11px] font-normal text-slate-500">/mês</span>
+                            </p>
+                            
+                            {/* Formula breakdown and savings info */}
+                            <div className="bg-slate-900/60 p-3 rounded-2xl border border-brand-gold/15 text-[11px] space-y-1.5 mt-2 shadow-inner">
+                              <div className="flex justify-between text-slate-400">
+                                <span>Valor anual cheio:</span>
+                                <span className="line-through">R$ {plan.anual?.fullPrice}</span>
+                              </div>
+                              <div className="flex justify-between text-white font-bold">
+                                <span>Total com desconto (20%):</span>
+                                <span className="text-brand-gold">R$ {plan.anual?.totalAnnual}</span>
+                              </div>
+                              <div className="h-px bg-white/5 my-1" />
+                              <div className="flex justify-between text-emerald-400 font-extrabold items-center">
+                                <span className="flex items-center gap-1">
+                                  <Sparkles className="w-3 h-3 text-emerald-400" />
+                                  Desconto/Economia:
+                                </span>
+                                <span>R$ {plan.anual?.discountAmount}</span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      )}
+
+                      <p className="text-slate-400 text-xs mb-6 leading-relaxed min-h-[32px]">{plan.desc}</p>
+                      <ul className="space-y-3 mb-8 border-t border-white/5 pt-4">
+                         {plan.features.map((feature, featureIdx) => (
+                           <li key={featureIdx} className="flex items-start gap-2 text-xs text-slate-300">
+                             <CheckCircle2 className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" /> 
+                             <span>{feature}</span>
+                           </li>
+                         ))}
+                      </ul>
+                   </div>
+                   <button 
+                     onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))} 
+                     className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all mt-auto cursor-pointer w-full shadow-md hover:shadow-brand-gold/10"
+                   >
+                     {plan.custom ? "Falar com Consultor" : "Solicitar Acesso Grátis"}
+                   </button>
+                </div>
+              ))}
+           </div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const FAQ = () => {
   const [activeTab, setActiveTab] = useState<number | null>(0);
@@ -857,7 +1028,7 @@ const ContactForm = () => {
   );
 };
 
-const Footer = () => (
+const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
   <footer className="bg-brand-dark pt-12 pb-10 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:row items-center justify-between gap-8">
@@ -866,9 +1037,23 @@ const Footer = () => (
         </div>
         
         <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
-          <a href="#" className="hover:text-brand-blue transition-colors">Termos</a>
-          <a href="#" className="hover:text-brand-blue transition-colors">Privacidade</a>
-          <a href="#" className="hover:text-brand-blue transition-colors">Cookies</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); }} className="hover:text-brand-blue transition-colors">Termos</a>
+          <a 
+            href="/privacidade" 
+            onClick={(e) => { 
+              e.preventDefault(); 
+              if (onNavigate) {
+                onNavigate("/privacidade");
+              } else {
+                window.history.pushState({}, "", "/privacidade");
+                window.dispatchEvent(new PopStateEvent("popstate"));
+              }
+            }} 
+            className="hover:text-brand-blue transition-colors cursor-pointer"
+          >
+            Privacidade
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); }} className="hover:text-brand-blue transition-colors">Cookies</a>
         </nav>
 
         <div className="text-xs text-slate-600 font-medium">
@@ -1897,6 +2082,23 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 export default function App() {
   const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
   const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const handleNavigate = (path: string) => {
+    window.history.pushState({}, "", path);
+    setCurrentPath(path);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     const handleOpen = () => setIsCheckModalOpen(true);
@@ -1917,7 +2119,7 @@ export default function App() {
     if (isMobile) {
       // For mobile: trigger automatically after 5 seconds
       const timer = setTimeout(() => {
-        if (!triggered) {
+        if (!triggered && currentPath !== "/privacidade") {
           triggered = true;
           setIsExitIntentModalOpen(true);
         }
@@ -1927,7 +2129,7 @@ export default function App() {
       // For desktop: standard exit-intent mouseleave trigger
       const handleMouseLeave = (e: MouseEvent) => {
         // Trigger when cursor leaves the top of the viewport (indicating tab close / address bar focus)
-        if (e.clientY < 30 && !triggered) {
+        if (e.clientY < 30 && !triggered && currentPath !== "/privacidade") {
           triggered = true;
           setIsExitIntentModalOpen(true);
         }
@@ -1938,7 +2140,11 @@ export default function App() {
         document.removeEventListener("mouseleave", handleMouseLeave);
       };
     }
-  }, []);
+  }, [currentPath]);
+
+  if (currentPath === "/privacidade") {
+    return <PrivacyPolicy onBack={() => handleNavigate("/")} />;
+  }
 
   return (
     <div className="min-h-screen">
@@ -1955,7 +2161,7 @@ export default function App() {
       <Pricing />
       <FAQ />
       {/* <ContactForm /> */}
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
       <CheckAccessModal isOpen={isCheckModalOpen} onClose={() => setIsCheckModalOpen(false)} />
       <ExitIntentModal isOpen={isExitIntentModalOpen} onClose={() => setIsExitIntentModalOpen(false)} />
     </div>
