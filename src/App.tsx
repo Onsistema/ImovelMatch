@@ -2082,15 +2082,32 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 export default function App() {
   const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
   const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  const getInitialPath = () => {
+    const path = window.location.pathname;
+    const searchParams = new URLSearchParams(window.location.search);
+    if (
+      searchParams.get("p") === "privacidade" || 
+      searchParams.get("path") === "privacidade" ||
+      window.location.hash === "#/privacidade" || 
+      window.location.hash === "#privacidade"
+    ) {
+      return "/privacidade";
+    }
+    return path;
+  };
+
+  const [currentPath, setCurrentPath] = useState(getInitialPath);
 
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
+      setCurrentPath(getInitialPath());
     };
     window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handlePopState);
     };
   }, []);
 
