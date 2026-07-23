@@ -54,7 +54,7 @@ const Navbar = () => {
     { label: "Benefícios", href: "#beneficios" },
     { label: "Planos", href: "#planos" },
     { label: "FAQ", href: "#faq" },
-    { label: "Cadastrar Grátis", href: "https://app.swaphome.com.br/" },
+    { label: "Grátis", href: "https://app.swaphome.com.br/" },
   ];
 
   return (
@@ -99,10 +99,12 @@ const Hero = () => (
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 px-3 py-1 rounded-full mb-6"
+            className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 px-3.5 py-1.5 rounded-full mb-6"
           >
             <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
-            <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">A Evolução Inteligente da Permuta Imobiliária</span>
+            <span className="text-brand-blue text-xs font-bold uppercase tracking-wider">
+              Gratuito para um imóvel sempre · Sem cadastro de cartão
+            </span>
           </motion.div>
           <BlurText 
             text="Troque seu imóvel sem burocracia."
@@ -132,10 +134,14 @@ const Hero = () => (
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05, backgroundColor: "#A87D17" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20 text-center w-full sm:w-auto"
+              className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20 text-center w-full sm:w-auto cursor-pointer"
             >
-              <span className="flex items-center gap-2">Quero encontrar meu match agora <ArrowRight className="w-5 h-5" /></span>
-              <span className="text-[10px] opacity-70 font-normal uppercase tracking-wider">Comece de graça · Leva menos de 3 minutos</span>
+              <span className="flex items-center gap-2 text-base sm:text-lg font-black">
+                Acesse agora gratuitamente <ArrowRight className="w-5 h-5" />
+              </span>
+              <span className="text-[11px] opacity-80 font-medium tracking-wide">
+                Teste agora gratuitamente por um imóvel · Sem compromisso
+              </span>
             </motion.a>
           </motion.div>
         </motion.div>
@@ -502,19 +508,13 @@ const Pricing = () => {
       features: [
         "Até 10 imóveis cadastrados",
         "Dashboard de gestão (em breve)",
-        "Suporte por e-mail"
+        "Suporte por e-mail",
+        "Teste agora sem compromisso",
+        "Sem cadastro de cartão"
       ],
-      mensal: {
-        regularPrice: "149,90",
-        period: "/mês"
-      },
-      anual: {
-        installment: "119,92",
-        fullPrice: "1.798,80",
-        discountAmount: "359,76",
-        totalAnnual: "1.439,04",
-        period: "/mês (em 12x)"
-      }
+      mensalPrice: "149,90",
+      anualInstallment: "119,92",
+      savingsAmount: "359,76"
     },
     { 
       name: "Growth", 
@@ -524,19 +524,12 @@ const Pricing = () => {
         "Até 30 imóveis cadastrados",
         "Dashboard de gestão (em breve)",
         "Relatórios de performance (em breve)",
-        "Suporte prioritário"
+        "Suporte prioritário",
+        "Sem cadastro de cartão"
       ],
-      mensal: {
-        regularPrice: "289,90",
-        period: "/mês"
-      },
-      anual: {
-        installment: "231,92",
-        fullPrice: "3.478,80",
-        discountAmount: "695,76",
-        totalAnnual: "2.783,04",
-        period: "/mês (em 12x)"
-      }
+      mensalPrice: "289,90",
+      anualInstallment: "231,92",
+      savingsAmount: "695,76"
     },
     { 
       name: "Enterprise", 
@@ -550,17 +543,9 @@ const Pricing = () => {
         "IA para encontrar oportunidades (em breve)",
         "Gerente de conta exclusivo"
       ],
-      mensal: {
-        regularPrice: "799,90",
-        period: "/mês"
-      },
-      anual: {
-        installment: "639,92",
-        fullPrice: "9.598,80",
-        discountAmount: "1.919,76",
-        totalAnnual: "7.679,04",
-        period: "/mês (em 12x)"
-      }
+      mensalPrice: "799,90",
+      anualInstallment: "639,92",
+      savingsAmount: "1.919,76"
     },
     { 
       name: "Enterprise Pro", 
@@ -583,7 +568,7 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
           title="Escolha o plano que faz sentido para você."
-          subtitle="Comece grátis, faça upgrade quando quiser. Sem pegadinhas."
+          subtitle="Gratuito para um imóvel sempre. Teste agora sem compromisso."
           centered
         />
 
@@ -608,16 +593,13 @@ const Pricing = () => {
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              Faturamento Anual
-              <span className="bg-emerald-500/20 text-emerald-400 font-extrabold text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter">
-                Salvar 20%
-              </span>
+              Faturamento Anual (12x)
             </button>
           </div>
           <p className="text-slate-400 text-xs mt-3 text-center">
             {billingCycle === "anual" 
-              ? "⚡ Desconto de 20% e bônus aplicados nos planos Pro, Starter, Growth e Enterprise!" 
-              : "Economize até R$ 1.919,76 assinando os planos anuais"}
+              ? "Pagamento em 12 vezes com economia garantida." 
+              : "Faturamento mensal sem fidelidade."}
           </p>
         </div>
 
@@ -635,27 +617,33 @@ const Pricing = () => {
               {/* CPF FREE */}
               <div className="glass-card p-10 rounded-3xl border-white/5 relative overflow-hidden flex flex-col justify-between bg-slate-900/10">
                  <div>
-                    <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-4">Plano Free</h4>
-                    <p className="text-4xl font-bold text-white mb-4">Grátis <span className="text-sm font-normal text-slate-500">/para sempre</span></p>
-                    <p className="text-slate-400 text-sm mb-8">Para quem busca um match único e direto.</p>
+                    <h4 className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-2">Plano Free</h4>
+                    <p className="text-4xl font-extrabold text-white mb-2">Grátis</p>
+                    <p className="text-brand-gold text-xs font-bold mb-6 uppercase tracking-wider">Gratuito para um imóvel sempre</p>
+                    <p className="text-slate-400 text-sm mb-8">Para quem busca um match único e direto sem custo.</p>
                     <ul className="space-y-4 mb-10">
                        <li className="flex items-center gap-3 text-sm text-slate-300">
-                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> 1 imóvel cadastrado (Limite de 1 imóvel)
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> 1 imóvel cadastrado (Gratuito para um imóvel sempre)
                        </li>
                        <li className="flex items-center gap-3 text-sm text-slate-300">
-                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Acesso ao matching inteligente
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Teste agora gratuitamente por um imóvel
                        </li>
                        <li className="flex items-center gap-3 text-sm text-slate-300">
-                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cartão de crédito necessário
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Teste agora sem compromisso
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cadastro de cartão
                        </li>
                     </ul>
                  </div>
-                 <button 
-                   onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))}
+                 <a 
+                   href="https://app.swaphome.com.br/"
+                   target="_blank"
+                   rel="noopener noreferrer"
                    className="w-full block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all cursor-pointer mt-auto"
                  >
-                   Começar Agora
-                 </button>
+                   Acesse agora gratuitamente
+                 </a>
               </div>
 
               {/* CPF PRO */}
@@ -666,44 +654,25 @@ const Pricing = () => {
                     
                     {billingCycle === "mensal" ? (
                       <div className="mb-6">
-                        <p className="text-4xl font-black mb-1 flex items-baseline gap-2 flex-wrap">
-                           <span className="line-through text-slate-500 text-2xl font-bold">R$ 29,90</span>
-                           <span className="text-white">R$ 0,00</span>
-                           <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                        <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
+                           <span className="text-white text-3xl font-extrabold">R$ 29,90</span>
+                           <span className="text-xs font-normal text-slate-400">/mês</span>
                         </p>
-                        <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[11px] font-black py-2 px-3 rounded-xl text-center shadow-[0_0_20px_rgba(201,151,30,0.6)] border border-brand-gold uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5 mt-2">
-                           <Zap className="w-3.5 h-3.5 fill-brand-dark text-brand-dark shrink-0 animate-bounce" />
-                           <span>Teste grátis por 30 dias • Comece agora</span>
-                        </div>
-                        <p className="text-[11px] text-slate-400 mt-2">Após os 30 dias grátis, apenas R$ 29,90/mês</p>
                       </div>
                     ) : (
                       <div className="mb-6">
                         <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
                            <span className="text-white text-3xl font-extrabold">12x R$ 23,92</span>
-                           <span className="text-xs font-normal text-slate-500">/mês</span>
+                           <span className="text-xs font-normal text-slate-400">/mês</span>
                         </p>
-                        <div className="bg-slate-900/60 p-3 rounded-xl border border-brand-gold/20 text-xs space-y-1 mt-2">
-                          <div className="flex justify-between text-slate-400">
-                            <span>Anual sem desconto:</span>
-                            <span className="line-through">R$ 358,80</span>
-                          </div>
-                          <div className="flex justify-between text-white font-bold">
-                            <span>Total Anual (-20%):</span>
-                            <span className="text-brand-gold">R$ 287,04</span>
-                          </div>
-                          <div className="flex justify-between text-emerald-400 font-bold text-[11px] pt-1 border-t border-white/5">
-                            <span>Você economiza:</span>
-                            <span>R$ 71,76/ano</span>
-                          </div>
-                        </div>
+                        <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ 71,76</div>
                       </div>
                     )}
 
                     <p className="text-slate-400 text-sm mb-6">Visibilidade prioritária e curadoria assistida para até 3 imóveis.</p>
                     <ul className="space-y-4 mb-10">
                        <li className="flex items-center gap-3 text-sm text-slate-300">
-                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados (Limite de 3 imóveis)
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Até 3 imóveis cadastrados
                        </li>
                        <li className="flex items-center gap-3 text-sm text-slate-300">
                          <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Matches ilimitados com proprietários
@@ -712,7 +681,10 @@ const Pricing = () => {
                          <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Chat direto com interessados
                        </li>
                        <li className="flex items-center gap-3 text-sm text-slate-300">
-                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Suporte prioritário via WhatsApp
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Teste agora sem compromisso
+                       </li>
+                       <li className="flex items-center gap-3 text-sm text-slate-300">
+                         <CheckCircle2 className="w-4 h-4 text-brand-gold" /> Sem cadastro de cartão
                        </li>
                     </ul>
                  </div>
@@ -720,9 +692,9 @@ const Pricing = () => {
                    href="https://app.swaphome.com.br/" 
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20 animate-bounce-slow" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-check-modal")); }}
+                   className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20"
                  >
-                   Assinar Pro
+                   Acesse agora gratuitamente
                  </a>
               </div>
            </div>
@@ -754,49 +726,23 @@ const Pricing = () => {
                       {plan.custom ? (
                         <div className="mb-6">
                           <p className="text-2xl font-extrabold text-white leading-tight">Plano Personalizado</p>
-                          <p className="text-slate-400 text-xs mt-2">Fale conosco para soluções sob medida.</p>
+                          <p className="text-slate-400 text-xs mt-2">Sob solicitação.</p>
                         </div>
                       ) : (
                         billingCycle === "mensal" ? (
                           <div className="mb-6">
-                            <p className="text-3xl font-black mb-1 flex items-baseline gap-2 flex-wrap">
-                              <span className="line-through text-slate-500 text-lg font-bold">R$ {plan.mensal?.regularPrice}</span>
-                              <span className="text-white">R$ 0,00</span>
-                              <span className="text-xs font-normal text-slate-500">/30 dias</span>
+                            <p className="text-3xl font-black mb-1 flex items-baseline gap-1 flex-wrap">
+                              <span className="text-white">R$ {plan.mensalPrice}</span>
+                              <span className="text-xs font-normal text-slate-400">/mês</span>
                             </p>
-                            <div className="bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold text-brand-dark text-[10px] font-black py-1.5 px-2 rounded-lg text-center uppercase tracking-wider animate-pulse flex items-center justify-center gap-1.5 mt-2">
-                              <Zap className="w-3 h-3 fill-brand-dark text-brand-dark shrink-0" />
-                              <span>30 dias grátis</span>
-                            </div>
-                            <p className="text-[10px] text-slate-400 mt-2">Após o teste, apenas R$ {plan.mensal?.regularPrice}/mês</p>
                           </div>
                         ) : (
                           <div className="mb-6">
-                            {/* Installment value */}
                             <p className="text-2xl font-black text-white mb-1 flex items-baseline gap-1 flex-wrap">
-                              <span>12x R$ {plan.anual?.installment}</span>
-                              <span className="text-[11px] font-normal text-slate-500">/mês</span>
+                              <span>12x R$ {plan.anualInstallment}</span>
+                              <span className="text-[11px] font-normal text-slate-400">/mês</span>
                             </p>
-                            
-                            {/* Formula breakdown and savings info */}
-                            <div className="bg-slate-900/60 p-3 rounded-2xl border border-brand-gold/15 text-[11px] space-y-1.5 mt-2 shadow-inner">
-                              <div className="flex justify-between text-slate-400">
-                                <span>Valor anual cheio:</span>
-                                <span className="line-through">R$ {plan.anual?.fullPrice}</span>
-                              </div>
-                              <div className="flex justify-between text-white font-bold">
-                                <span>Total com desconto (20%):</span>
-                                <span className="text-brand-gold">R$ {plan.anual?.totalAnnual}</span>
-                              </div>
-                              <div className="h-px bg-white/5 my-1" />
-                              <div className="flex justify-between text-emerald-400 font-extrabold items-center">
-                                <span className="flex items-center gap-1">
-                                  <Sparkles className="w-3 h-3 text-emerald-400" />
-                                  Desconto/Economia:
-                                </span>
-                                <span>R$ {plan.anual?.discountAmount}</span>
-                              </div>
-                            </div>
+                            <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ {plan.savingsAmount}</div>
                           </div>
                         )
                       )}
@@ -811,12 +757,14 @@ const Pricing = () => {
                          ))}
                       </ul>
                    </div>
-                   <button 
-                     onClick={() => window.dispatchEvent(new CustomEvent("open-check-modal"))} 
+                   <a 
+                     href="https://app.swaphome.com.br/"
+                     target="_blank"
+                     rel="noopener noreferrer"
                      className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all mt-auto cursor-pointer w-full shadow-md hover:shadow-brand-gold/10"
                    >
-                     {plan.custom ? "Falar com Consultor" : "Solicitar Acesso Grátis"}
-                   </button>
+                     {plan.custom ? "Falar com Consultor" : "Acesse agora gratuitamente"}
+                   </a>
                 </div>
               ))}
            </div>

@@ -43,43 +43,46 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ isOpen, onClos
         {/* Content */}
         <div className="text-center">
           <span className="inline-block text-[10px] uppercase tracking-widest font-bold text-brand-gold bg-brand-gold/10 px-3 py-1 rounded-full mb-3 border border-brand-gold/20">
-            Oferta Especial Exclusiva
+            Gratuito Para Um Imóvel Sempre
           </span>
           
           <h3 className="text-2xl font-bold text-white tracking-tight mb-3">
-            Não vá embora de mãos vazias!
+            Comece a Trocar Seu Imóvel Agora
           </h3>
           
           <p className="text-slate-300 text-sm leading-relaxed mb-6">
-            Você sabia que pode testar <strong className="text-white">qualquer um dos nossos planos gratuitamente por 30 dias</strong>? Aproveite todos os recursos premium para decolar seus negócios de permutas de imóveis sem custo inicial.
+            <strong className="text-white">Teste agora gratuitamente por um imóvel</strong>. Cadastre sua propriedade, encontre o match certo e negocie sem compromisso e sem cadastro de cartão.
           </p>
 
           {/* Bullet points for value prop */}
           <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4 mb-6 text-left space-y-2.5">
             <div className="flex items-start gap-2.5 text-xs text-slate-300">
               <Sparkles className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
-              <span>Acesso imediato a todas as ferramentas de busca avançada</span>
+              <span>Gratuito para um imóvel sempre</span>
             </div>
             <div className="flex items-start gap-2.5 text-xs text-slate-300">
               <Sparkles className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
-              <span>Sem cobrança pelos primeiros 30 dias e cancelamento fácil</span>
+              <span>Teste agora sem compromisso</span>
             </div>
             <div className="flex items-start gap-2.5 text-xs text-slate-300">
               <Sparkles className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
-              <span>Suporte prioritário exclusivo para ajudar no seu cadastro</span>
+              <span>Sem cadastro de cartão de crédito</span>
             </div>
           </div>
 
           {/* Action buttons */}
           <div className="space-y-3">
-            <button
+            <a
               id="exit-intent-accept-cta"
-              onClick={handleAccept}
+              href="https://app.swaphome.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
               className="w-full py-4 px-6 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 cursor-pointer text-sm uppercase tracking-wider"
             >
-              Escolher Meu Plano Grátis
+              Acesse Agora Gratuitamente
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
             
             <button
               id="exit-intent-dismiss-btn"
