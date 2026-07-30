@@ -235,6 +235,8 @@ export default function BubbleMenu({
                 <a
                   role="menuitem"
                   href={item.href}
+                  target={item.href.startsWith('http') ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   onClick={handleLinkClick}
                   aria-label={item.ariaLabel || item.label}
                   className="pill-link"

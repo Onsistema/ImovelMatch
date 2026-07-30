@@ -689,12 +689,12 @@ const Pricing = () => {
                     </ul>
                  </div>
                  <a 
-                   href="https://app.swaphome.com.br/" 
+                   href="https://wa.me/5519997428649?text=Ol%C3%A1!%20Quero%20contratar%20o%20Plano%20Pro%20do%20SwapHome." 
                    target="_blank"
                    rel="noopener noreferrer"
                    className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20"
                  >
-                   Acesse agora gratuitamente
+                   Contratar Plano Pro
                  </a>
               </div>
            </div>
@@ -758,12 +758,12 @@ const Pricing = () => {
                       </ul>
                    </div>
                    <a 
-                     href="https://app.swaphome.com.br/"
+                     href={`https://wa.me/5519997428649?text=${encodeURIComponent(`Olá! Quero contratar o ${plan.name} do SwapHome.`)}`}
                      target="_blank"
                      rel="noopener noreferrer"
                      className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all mt-auto cursor-pointer w-full shadow-md hover:shadow-brand-gold/10"
                    >
-                     {plan.custom ? "Falar com Consultor" : "Acesse agora gratuitamente"}
+                     {plan.custom ? "Falar com Consultor" : `Contratar ${plan.name}`}
                    </a>
                 </div>
               ))}
@@ -1612,7 +1612,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         } else {
           setStatus("new");
           setTimeout(() => {
-            window.location.href = data.redirectUrl;
+            window.open(data.redirectUrl, "_blank", "noopener,noreferrer") || (window.location.href = data.redirectUrl);
           }, 3000);
         }
         return;
@@ -1665,7 +1665,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         } else {
           setStatus("new");
           setTimeout(() => {
-            window.location.href = redirectUrl;
+            window.open(redirectUrl, "_blank", "noopener,noreferrer") || (window.location.href = redirectUrl);
           }, 3500);
         }
       } else if (isServerConfigured) {
@@ -1689,7 +1689,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         } else {
           setStatus("new");
           setTimeout(() => {
-            window.location.href = redirectUrl;
+            window.open(redirectUrl, "_blank", "noopener,noreferrer") || (window.location.href = redirectUrl);
           }, 3500);
         }
       }
@@ -1885,29 +1885,29 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 </div>
 
                 <div className="flex flex-col gap-3.5">
-                  <motion.button
+                  <motion.a
                     id="check-btn-quick-have-account"
+                    href="https://wa.me/5519997428649?text=Ol%C3%A1!%20J%C3%A1%20tenho%20cadastro%20no%20SwapHome%20e%20quero%20contratar."
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.02, backgroundColor: "#E0AF26" }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      window.open("https://proteus.app.n8n.cloud/form/841c6341-af2d-4751-9053-4978c8a56e96", "_blank");
-                    }}
                     className="w-full py-4 px-6 rounded-xl bg-brand-gold text-brand-dark font-extrabold text-center cursor-pointer transition-all shadow-lg shadow-brand-gold/10 flex items-center justify-center gap-2 text-sm"
                   >
                     Já tenho cadastro <ArrowRight className="w-4 h-4" />
-                  </motion.button>
+                  </motion.a>
 
-                  <motion.button
+                  <motion.a
                     id="check-btn-quick-create-account"
+                    href="https://app.swaphome.com.br/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      window.open("https://app.swaphome.com.br/", "_blank");
-                    }}
                     className="w-full py-4 px-6 rounded-xl border border-white/10 text-white font-extrabold text-center cursor-pointer transition-all bg-white/5 flex items-center justify-center gap-2 text-sm"
                   >
                     Criar conta <ArrowRight className="w-4 h-4" />
-                  </motion.button>
+                  </motion.a>
                 </div>
               </div>
             )}
