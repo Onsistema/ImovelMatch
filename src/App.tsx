@@ -513,7 +513,9 @@ const Pricing = () => {
         "Sem cadastro de cartão"
       ],
       mensalPrice: "149,90",
-      anualInstallment: "119,92",
+      mensalCheckout: "https://pay.kiwify.com.br/aYl3h1H",
+      anualPrice: "1.439,04",
+      anualCheckout: "https://pay.kiwify.com.br/luAvmoF",
       savingsAmount: "359,76"
     },
     { 
@@ -528,7 +530,9 @@ const Pricing = () => {
         "Sem cadastro de cartão"
       ],
       mensalPrice: "289,90",
-      anualInstallment: "231,92",
+      mensalCheckout: "https://pay.kiwify.com.br/RZQYE3t",
+      anualPrice: "2.783,04",
+      anualCheckout: "https://pay.kiwify.com.br/b3DVrG7",
       savingsAmount: "695,76"
     },
     { 
@@ -544,7 +548,9 @@ const Pricing = () => {
         "Gerente de conta exclusivo"
       ],
       mensalPrice: "799,90",
-      anualInstallment: "639,92",
+      mensalCheckout: "https://pay.kiwify.com.br/uuvTCx9",
+      anualPrice: "7.679,04",
+      anualCheckout: "https://pay.kiwify.com.br/7Dqp3EQ",
       savingsAmount: "1.919,76"
     },
     { 
@@ -593,12 +599,12 @@ const Pricing = () => {
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              Faturamento Anual (12x)
+              Faturamento Anual
             </button>
           </div>
           <p className="text-slate-400 text-xs mt-3 text-center">
             {billingCycle === "anual" 
-              ? "Pagamento em 12 vezes com economia garantida." 
+              ? "Valor com desconto no plano anual com economia garantida." 
               : "Faturamento mensal sem fidelidade."}
           </p>
         </div>
@@ -662,10 +668,10 @@ const Pricing = () => {
                     ) : (
                       <div className="mb-6">
                         <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
-                           <span className="text-white text-3xl font-extrabold">12x R$ 23,92</span>
-                           <span className="text-xs font-normal text-slate-400">/mês</span>
+                           <span className="text-white text-3xl font-extrabold">R$ 287,04</span>
+                           <span className="text-xs font-normal text-slate-400">/ano</span>
                         </p>
-                        <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ 71,76</div>
+                        <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ 71,76 /ano</div>
                       </div>
                     )}
 
@@ -689,7 +695,7 @@ const Pricing = () => {
                     </ul>
                  </div>
                  <a 
-                   href="https://wa.me/5519997428649?text=Ol%C3%A1!%20Quero%20contratar%20o%20Plano%20Pro%20do%20SwapHome." 
+                   href={billingCycle === "mensal" ? "https://pay.kiwify.com.br/Uu15m10" : "https://pay.kiwify.com.br/mXikqYN"} 
                    target="_blank"
                    rel="noopener noreferrer"
                    className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20"
@@ -739,10 +745,10 @@ const Pricing = () => {
                         ) : (
                           <div className="mb-6">
                             <p className="text-2xl font-black text-white mb-1 flex items-baseline gap-1 flex-wrap">
-                              <span>12x R$ {plan.anualInstallment}</span>
-                              <span className="text-[11px] font-normal text-slate-400">/mês</span>
+                              <span>R$ {plan.anualPrice}</span>
+                              <span className="text-[11px] font-normal text-slate-400">/ano</span>
                             </p>
-                            <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ {plan.savingsAmount}</div>
+                            <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ {plan.savingsAmount} /ano</div>
                           </div>
                         )
                       )}
@@ -758,7 +764,10 @@ const Pricing = () => {
                       </ul>
                    </div>
                    <a 
-                     href={`https://wa.me/5519997428649?text=${encodeURIComponent(`Olá! Quero contratar o ${plan.name} do SwapHome.`)}`}
+                     href={plan.custom 
+                       ? "https://wa.me/5519997428649?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Plano%20Enterprise%20Pro%20do%20SwapHome." 
+                       : (billingCycle === "mensal" ? plan.mensalCheckout : plan.anualCheckout)
+                     }
                      target="_blank"
                      rel="noopener noreferrer"
                      className="block text-center py-3 rounded-xl border border-white/10 text-white font-bold text-sm hover:border-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all mt-auto cursor-pointer w-full shadow-md hover:shadow-brand-gold/10"
