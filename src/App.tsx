@@ -42,6 +42,7 @@ import PillNav from "./components/PillNav";
 import SleekLineCursor from "./components/SleekLineCursor";
 import AnimatedModal from "./components/AnimatedModal";
 import ExitIntentModal from "./components/ExitIntentModal";
+import WhatsAppButton from "./components/WhatsAppButton";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import DeleteAccount from "./components/DeleteAccount";
 import { LandingPageLP } from "./components/LandingPageLP";
@@ -2197,6 +2198,7 @@ export default function App() {
       <Footer onNavigate={handleNavigate} />
       <CheckAccessModal isOpen={isCheckModalOpen} onClose={() => setIsCheckModalOpen(false)} />
       <ExitIntentModal isOpen={isExitIntentModalOpen} onClose={() => setIsExitIntentModalOpen(false)} />
+      <WhatsAppButton />
     </div>
   );
 }

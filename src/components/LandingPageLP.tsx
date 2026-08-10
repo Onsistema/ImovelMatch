@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ExitIntentModal from './ExitIntentModal';
+import WhatsAppButton from './WhatsAppButton';
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -946,6 +947,9 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
         isOpen={isExitIntentModalOpen} 
         onClose={() => setIsExitIntentModalOpen(false)} 
       />
+
+      {/* Floating WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 };
