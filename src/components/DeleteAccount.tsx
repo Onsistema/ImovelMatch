@@ -154,18 +154,10 @@ export default function DeleteAccount({ onBack }: { onBack: () => void }) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button 
-              onClick={onBack}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold cursor-pointer group"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Voltar</span>
-            </button>
-            <div className="h-6 w-px bg-white/10 hidden sm:block" />
             <img 
               src={LOGO_URL} 
               alt="SwapHome Logo" 
-              className="h-9 w-auto object-contain hidden sm:block cursor-pointer"
+              className="h-9 w-auto object-contain cursor-pointer"
               onClick={onBack}
               referrerPolicy="no-referrer"
             />

@@ -44,6 +44,7 @@ import AnimatedModal from "./components/AnimatedModal";
 import ExitIntentModal from "./components/ExitIntentModal";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import DeleteAccount from "./components/DeleteAccount";
+import { LandingPageLP } from "./components/LandingPageLP";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
@@ -1025,6 +1026,21 @@ const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
             className="hover:text-brand-blue transition-colors cursor-pointer"
           >
             Excluir Conta
+          </a>
+          <a 
+            href="/lp" 
+            onClick={(e) => { 
+              e.preventDefault(); 
+              if (onNavigate) {
+                onNavigate("/lp");
+              } else {
+                window.history.pushState({}, "", "/lp");
+                window.dispatchEvent(new PopStateEvent("popstate"));
+              }
+            }} 
+            className="hover:text-brand-blue transition-colors cursor-pointer text-brand-gold font-extrabold"
+          >
+            LP
           </a>
           <a href="#" onClick={(e) => { e.preventDefault(); }} className="hover:text-brand-blue transition-colors">Cookies</a>
         </nav>
@@ -2076,6 +2092,16 @@ export default function App() {
     ) {
       return "/excluir-conta";
     }
+    if (
+      path === "/lp" ||
+      path.startsWith("/lp") ||
+      searchParams.get("p") === "lp" || 
+      searchParams.get("path") === "lp" ||
+      window.location.hash === "#/lp" || 
+      window.location.hash === "#lp"
+    ) {
+      return "/lp";
+    }
     return path;
   };
 
@@ -2147,6 +2173,10 @@ export default function App() {
 
   if (currentPath === "/excluir-conta") {
     return <DeleteAccount onBack={() => handleNavigate("/")} />;
+  }
+
+  if (currentPath === "/lp") {
+    return <LandingPageLP onBack={() => handleNavigate("/")} />;
   }
 
   return (
