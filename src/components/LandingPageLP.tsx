@@ -16,6 +16,7 @@ import {
   Target
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import BorderGlow from './BorderGlow';
 import ExitIntentModal from './ExitIntentModal';
 import WhatsAppButton from './WhatsAppButton';
 
@@ -277,51 +278,142 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-brand-gold/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-bold tracking-wide uppercase mb-6"
-          >
-            <Sparkles className="w-4 h-4 text-brand-gold" />
-            <span>Plataforma #1 em Cruzamento de Permutas Imobiliárias</span>
-          </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-10 items-center text-left">
+            {/* Column Left: Main Value Proposition */}
+            <div className="lg:col-span-7 space-y-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-bold tracking-wide uppercase"
+              >
+                <Sparkles className="w-4 h-4 text-brand-gold" />
+                <span>Plataforma #1 em Cruzamento de Permutas Imobiliárias</span>
+              </motion.div>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight"
-          >
-            Multiplique suas Vendas Destravando Imóveis Parados com <span className="bg-gradient-to-r from-brand-gold via-amber-300 to-amber-500 bg-clip-text text-transparent">Permuta Inteligente</span>
-          </motion.h1>
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight"
+              >
+                Multiplique suas Vendas Destravando Imóveis Parados com <span className="bg-gradient-to-r from-brand-gold via-amber-300 to-amber-500 bg-clip-text text-transparent">Permuta Inteligente</span>
+              </motion.h1>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed"
-          >
-            A ferramenta indispensável para <strong>corretores e imobiliárias em Campinas, RMC e Brasil</strong>. Encontre o imóvel equivalente para a permuta do seu cliente em segundos e feche parcerias de alta comissão.
-          </motion.p>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl"
+              >
+                A ferramenta indispensável para <strong>corretores e imobiliárias em Campinas, RMC e Brasil</strong>. Encontre o imóvel equivalente para a permuta do seu cliente em segundos e feche parcerias de alta comissão.
+              </motion.p>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <a 
-              href="https://app.swaphome.com.br/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-base hover:scale-[1.02] transition-all shadow-xl shadow-brand-gold/25 flex items-center justify-center gap-3"
-            >
-              <span>Acessar o App SwapHome Agora</span>
-              <ArrowRight className="w-5 h-5" />
-            </a>
-          </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
+              >
+                <a 
+                  href="https://app.swaphome.com.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-base hover:scale-[1.02] transition-all shadow-xl shadow-brand-gold/25 flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <span>Acessar o App SwapHome Agora</span>
+                  <ArrowRight className="w-5 h-5" />
+                </a>
+              </motion.div>
+
+              {/* Trust badges strip */}
+              <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-400 border-t border-white/10">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold text-white">R$ 180M+</span> VGV em Permutas
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand-gold" />
+                  <span className="font-bold text-white">2.500+</span> Imóveis Cadastrados
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  <span className="font-bold text-white">Match em 48h</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Column Right: Top Fold Featured Property Card Image with BorderGlow */}
+            <div className="lg:col-span-5">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="relative max-w-[420px] mx-auto"
+              >
+                <motion.div 
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative z-10"
+                >
+                  <BorderGlow
+                    animated={true}
+                    glowIntensity={2.0}
+                    glowColor="45 95 65"
+                    colors={['#FFD700', '#FFA500', '#FF8C00']}
+                    backgroundColor="#0A0D14"
+                    borderRadius={28}
+                    glowRadius={80}
+                    fillOpacity={0.7}
+                    borderWidth={3.5}
+                    className="glass-card shadow-2xl p-[1px]"
+                  >
+                    <div className="relative w-full h-full p-1 rounded-[27px] overflow-hidden group">
+                      <img 
+                        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                        alt="Imóvel em destaque para permuta" 
+                        className="rounded-2xl w-full h-[320px] sm:h-[380px] object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/60 to-transparent">
+                         <div className="flex justify-between items-end">
+                            <div>
+                              <span className="text-brand-gold text-xs font-bold uppercase tracking-wider block mb-1">Destaque de Permuta</span>
+                              <h4 className="text-white text-xl font-extrabold">Casa em Alphaville (Campinas)</h4>
+                              <p className="text-slate-300 text-xs mt-0.5">Aceita Apartamento de menor valor + torna</p>
+                            </div>
+                            <div className="flex gap-2">
+                               <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+                                  <Users className="w-5 h-5 text-white" />
+                               </div>
+                               <div className="w-10 h-10 bg-brand-gold rounded-full flex items-center justify-center shadow-lg shadow-brand-gold/40">
+                                  <Repeat className="w-5 h-5 text-brand-dark" />
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                      
+                      {/* Match Badge floating top left */}
+                      <div className="absolute top-5 left-5 glass-card px-3 py-1.5 rounded-full flex items-center gap-2 border border-brand-gold/50 bg-black/60 backdrop-blur-md">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                        <span className="text-xs font-extrabold text-white">98% Match de Permuta</span>
+                      </div>
+
+                      {/* Floating Indicator bottom left badge */}
+                      <div className="absolute top-5 right-5 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-[11px] font-bold text-amber-300">
+                        R$ 2.400.000
+                      </div>
+                    </div>
+                  </BorderGlow>
+                </motion.div>
+
+                {/* Decorative blur circle behind */}
+                <div className="absolute -top-10 -right-10 w-60 h-60 bg-brand-gold/20 rounded-full blur-3xl -z-10" />
+                <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-blue-500/20 rounded-full blur-3xl -z-10" />
+              </motion.div>
+            </div>
+          </div>
 
           {/* SIMULADOR DE PERMUTA REPLICADO DA PAGINA INICIAL */}
           <motion.div 
@@ -671,6 +763,139 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               <span>Acessar a Plataforma no App</span>
               <ExternalLink className="w-4 h-4 text-brand-gold" />
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Visual Showcase Section: Examples of Properties in Permuta */}
+      <section className="py-20 bg-[#0C101A] relative border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest bg-brand-gold/10 text-brand-gold border border-brand-gold/20">
+              Oportunidades Reais em Carteira
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black text-white mt-4">
+              Exemplos de Imóveis Prontos para Cruzamento de Permuta
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base mt-2">
+              Veja o tipo de acervo cadastrado diariamente por corretores parceiros em Campinas e região.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Property Card 1 */}
+            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+              <div className="relative h-60 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                  alt="Casa em Alphaville" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-brand-gold/40 text-xs font-black text-brand-gold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  98% Match
+                </div>
+                <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs font-bold text-white">
+                  Alphaville • Campinas
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0C101A] to-transparent" />
+              </div>
+              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="text-2xl font-black text-white mb-1">R$ 2.400.000</div>
+                  <h3 className="text-lg font-bold text-slate-200">Sobrado em Condomínio Fechado</h3>
+                  <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                    <strong>Aceita Permuta:</strong> Apartamento em Cambuí ou São Paulo até R$ 1.000.000 + Torna em dinheiro.
+                  </p>
+                </div>
+                <a 
+                  href="https://app.swaphome.com.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <span>Analisar Match no App</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Property Card 2 */}
+            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+              <div className="relative h-60 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1080" 
+                  alt="Mansão Contemporânea" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-brand-gold/40 text-xs font-black text-brand-gold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  95% Match
+                </div>
+                <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs font-bold text-white">
+                  Valinhos • SP
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0C101A] to-transparent" />
+              </div>
+              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="text-2xl font-black text-white mb-1">R$ 3.800.000</div>
+                  <h3 className="text-lg font-bold text-slate-200">Mansão Arquitetura Contemporânea</h3>
+                  <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                    <strong>Aceita Permuta:</strong> Terreno em condomínio ou sala comercial de alto padrão como parte de pagamento.
+                  </p>
+                </div>
+                <a 
+                  href="https://app.swaphome.com.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <span>Analisar Match no App</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Property Card 3 */}
+            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+              <div className="relative h-60 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1080" 
+                  alt="Apartamento de Luxo" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-brand-gold/40 text-xs font-black text-brand-gold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  92% Match
+                </div>
+                <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs font-bold text-white">
+                  Cambuí • Campinas
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0C101A] to-transparent" />
+              </div>
+              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="text-2xl font-black text-white mb-1">R$ 1.350.000</div>
+                  <h3 className="text-lg font-bold text-slate-200">Apartamento de Alto Padrão</h3>
+                  <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                    <strong>Aceita Permuta:</strong> Busca Casa maior em condomínio em Paulínia, Vinhedo ou Barão Geraldo.
+                  </p>
+                </div>
+                <a 
+                  href="https://app.swaphome.com.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <span>Analisar Match no App</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
