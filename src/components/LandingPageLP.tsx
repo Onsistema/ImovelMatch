@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import BorderGlow from './BorderGlow';
 import ExitIntentModal from './ExitIntentModal';
+import AppDownloadModal from './AppDownloadModal';
 import WhatsAppButton from './WhatsAppButton';
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
@@ -100,6 +101,8 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
   // Exit intent popup state for LP
   const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
+  // App download popup state
+  const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
 
   useEffect(() => {
     let triggered = false;
@@ -248,26 +251,27 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       <header className="sticky top-0 z-50 bg-[#0A0D14]/90 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <a href="https://app.swaphome.com.br/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsAppDownloadModalOpen(true)}
+              className="flex items-center gap-3 cursor-pointer focus:outline-none"
+            >
               <img 
                 src={LOGO_URL} 
                 alt="SwapHome Imobiliária" 
                 className="h-12 w-auto object-contain"
                 referrerPolicy="no-referrer"
               />
-            </a>
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
-            <a 
-              href="https://app.swaphome.com.br/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => setIsAppDownloadModalOpen(true)}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 text-brand-dark font-extrabold text-sm hover:brightness-110 transition-all shadow-lg shadow-brand-gold/20 flex items-center gap-2 cursor-pointer"
             >
               <span>Acessar o App</span>
               <ExternalLink className="w-4 h-4" />
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -316,15 +320,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
               >
-                <a 
-                  href="https://app.swaphome.com.br/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button 
+                  onClick={() => setIsAppDownloadModalOpen(true)}
                   className="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-base hover:scale-[1.02] transition-all shadow-xl shadow-brand-gold/25 flex items-center justify-center gap-3 cursor-pointer"
                 >
                   <span>Acessar o App SwapHome Agora</span>
                   <ArrowRight className="w-5 h-5" />
-                </a>
+                </button>
               </motion.div>
 
               {/* Trust badges strip */}
@@ -656,15 +658,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                      <a 
-                        href="https://app.swaphome.com.br/" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
+                      <button 
+                        onClick={() => setIsAppDownloadModalOpen(true)}
                         className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-sm hover:brightness-110 transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
                       >
                         <span>Ver Opções e Fazer Parceria no App</span>
                         <ArrowRight className="w-4 h-4" />
-                      </a>
+                      </button>
                       <button 
                         onClick={handleReset}
                         className="py-4 px-6 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm transition-all cursor-pointer"
@@ -754,15 +754,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
           </div>
 
           <div className="text-center mt-12">
-            <a 
-              href="https://app.swaphome.com.br/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => setIsAppDownloadModalOpen(true)}
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all cursor-pointer"
             >
               <span>Acessar a Plataforma no App</span>
               <ExternalLink className="w-4 h-4 text-brand-gold" />
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -809,15 +807,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                     <strong>Aceita Permuta:</strong> Apartamento em Cambuí ou São Paulo até R$ 1.000.000 + Torna em dinheiro.
                   </p>
                 </div>
-                <a 
-                  href="https://app.swaphome.com.br/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                <button 
+                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Analisar Match no App</span>
                   <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                </button>
               </div>
             </div>
 
@@ -847,15 +843,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                     <strong>Aceita Permuta:</strong> Terreno em condomínio ou sala comercial de alto padrão como parte de pagamento.
                   </p>
                 </div>
-                <a 
-                  href="https://app.swaphome.com.br/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                <button 
+                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Analisar Match no App</span>
                   <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                </button>
               </div>
             </div>
 
@@ -885,15 +879,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                     <strong>Aceita Permuta:</strong> Busca Casa maior em condomínio em Paulínia, Vinhedo ou Barão Geraldo.
                   </p>
                 </div>
-                <a 
-                  href="https://app.swaphome.com.br/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2"
+                <button 
+                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Analisar Match no App</span>
                   <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -1129,15 +1121,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             Cadastre-se na plataforma agora e tenha acesso imediato à maior rede B2B de permutas imobiliárias para corretores.
           </p>
           <div className="mt-8">
-            <a 
-              href="https://app.swaphome.com.br/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button 
+              onClick={() => setIsAppDownloadModalOpen(true)}
               className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-brand-dark text-white font-black text-lg hover:scale-[1.03] transition-all shadow-2xl shadow-brand-dark/40 cursor-pointer"
             >
               <span>Ir para o App SwapHome</span>
               <ArrowRight className="w-6 h-6 text-brand-gold" />
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -1160,9 +1150,12 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 Página Inicial
               </button>
             )}
-            <a href="https://app.swaphome.com.br/" target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:underline font-bold">
+            <button 
+              onClick={() => setIsAppDownloadModalOpen(true)}
+              className="text-brand-gold hover:underline font-bold cursor-pointer"
+            >
               Acessar App
-            </a>
+            </button>
           </div>
         </div>
       </footer>
@@ -1170,7 +1163,14 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       {/* Exit intent modal for LP */}
       <ExitIntentModal 
         isOpen={isExitIntentModalOpen} 
-        onClose={() => setIsExitIntentModalOpen(false)} 
+        onClose={() => setIsExitIntentModalOpen(false)}
+        onOpenAppModal={() => setIsAppDownloadModalOpen(true)}
+      />
+
+      {/* App download modal */}
+      <AppDownloadModal
+        isOpen={isAppDownloadModalOpen}
+        onClose={() => setIsAppDownloadModalOpen(false)}
       />
 
       {/* Floating WhatsApp Button */}

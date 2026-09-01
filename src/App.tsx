@@ -42,6 +42,7 @@ import PillNav from "./components/PillNav";
 import SleekLineCursor from "./components/SleekLineCursor";
 import AnimatedModal from "./components/AnimatedModal";
 import ExitIntentModal from "./components/ExitIntentModal";
+import AppDownloadModal from "./components/AppDownloadModal";
 import WhatsAppButton from "./components/WhatsAppButton";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import DeleteAccount from "./components/DeleteAccount";
@@ -49,14 +50,23 @@ import { LandingPageLP } from "./components/LandingPageLP";
 
 const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
-const Navbar = () => {
+const Navbar = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
   const menuItems = [
     { label: "Solução", href: "#solucao" },
     { label: "Simulador", href: "#simulador" },
     { label: "Benefícios", href: "#beneficios" },
     { label: "Planos", href: "#planos" },
     { label: "FAQ", href: "#faq" },
-    { label: "Grátis", href: "https://app.swaphome.com.br/" },
+    { label: "Grátis", href: "https://app.swaphome.com.br/", onClick: onOpenAppModal },
+  ];
+
+  const mobileMenuItems = [
+    { label: "Solução", href: "#solucao", rotation: -4, hoverStyles: { bgColor: "#C9971E", textColor: "#020617" } },
+    { label: "Simulador", href: "#simulador", rotation: 4, hoverStyles: { bgColor: "#3b82f6", textColor: "#ffffff" } },
+    { label: "Benefícios", href: "#beneficios", rotation: -4, hoverStyles: { bgColor: "#C9971E", textColor: "#020617" } },
+    { label: "Planos", href: "#planos", rotation: 4, hoverStyles: { bgColor: "#3b82f6", textColor: "#ffffff" } },
+    { label: "FAQ", href: "#faq", rotation: -4, hoverStyles: { bgColor: "#C9971E", textColor: "#020617" } },
+    { label: "Cadastrar Grátis", href: "https://app.swaphome.com.br/", rotation: 4, hoverStyles: { bgColor: "#C9971E", textColor: "#1a1f2c" }, onClick: onOpenAppModal },
   ];
 
   return (
@@ -76,6 +86,7 @@ const Navbar = () => {
         {/* Mobile Menu Button - BubbleMenu Integration */}
         <div className="lg:hidden flex items-center ml-4">
           <BubbleMenu 
+            items={mobileMenuItems}
             menuContentColor="#1B3E5F"
             menuBg="rgba(255, 255, 255, 0.85)"
           />
@@ -85,7 +96,7 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => (
+const Hero = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => (
   <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
     <div className="absolute top-[-100px] right-[-100px] w-72 h-72 md:w-96 md:h-96 bg-brand-blue/10 rounded-full blur-[60px] md:blur-[120px] -z-10" />
     <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 md:w-80 md:h-80 bg-brand-gold/10 rounded-full blur-[50px] md:blur-[100px] -z-10" />
@@ -130,10 +141,8 @@ const Hero = () => (
             transition={{ delay: 0.5, duration: 0.8 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <motion.a 
-              href="https://app.swaphome.com.br/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <motion.button 
+              onClick={onOpenAppModal}
               whileHover={{ scale: 1.05, backgroundColor: "#A87D17" }}
               whileTap={{ scale: 0.95 }}
               className="bg-brand-gold text-brand-dark px-8 py-4 rounded-xl font-bold flex flex-col items-center justify-center gap-1 transition-all shadow-lg shadow-brand-gold/20 text-center w-full sm:w-auto cursor-pointer"
@@ -144,7 +153,7 @@ const Hero = () => (
               <span className="text-[11px] opacity-80 font-medium tracking-wide">
                 Teste agora gratuitamente por um imóvel · Sem compromisso
               </span>
-            </motion.a>
+            </motion.button>
           </motion.div>
         </motion.div>
 
@@ -499,7 +508,7 @@ const Benefits = () => (
   </section>
 );
 
-const Pricing = () => {
+const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
   const [billingCycle, setBillingCycle] = useState<"mensal" | "anual">("mensal");
 
   const b2bPlans = [
@@ -644,14 +653,12 @@ const Pricing = () => {
                        </li>
                     </ul>
                  </div>
-                 <a 
-                   href="https://app.swaphome.com.br/"
-                   target="_blank"
-                   rel="noopener noreferrer"
+                 <button 
+                   onClick={onOpenAppModal}
                    className="w-full block text-center py-4 rounded-xl border border-white/10 text-white font-bold hover:bg-white hover:text-brand-dark transition-all cursor-pointer mt-auto"
                  >
                    Acesse agora gratuitamente
-                 </a>
+                 </button>
               </div>
 
               {/* CPF PRO */}
@@ -1054,7 +1061,7 @@ const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
   </footer>
 );
 
-const PermutaSimulator = () => {
+const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
   const [step, setStep] = useState<"input" | "calculating" | "result">("input");
   const [loadingText, setLoadingText] = useState("");
   const [progress, setProgress] = useState(0);
@@ -1364,15 +1371,13 @@ const PermutaSimulator = () => {
                   >
                     Nova Simulação
                   </button>
-                  <a
-                    href="https://app.swaphome.com.br/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={onOpenAppModal}
                     className="flex-1 py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all text-sm uppercase tracking-wider shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer text-center"
                   >
                     Ver Imóveis Disponíveis
                     <ArrowRight className="w-4 h-4" />
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -1923,17 +1928,17 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     Já tenho cadastro <ArrowRight className="w-4 h-4" />
                   </motion.a>
 
-                  <motion.a
+                  <motion.button
                     id="check-btn-quick-create-account"
-                    href="https://app.swaphome.com.br/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent("open-app-download-modal"));
+                    }}
                     whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-4 px-6 rounded-xl border border-white/10 text-white font-extrabold text-center cursor-pointer transition-all bg-white/5 flex items-center justify-center gap-2 text-sm"
                   >
                     Criar conta <ArrowRight className="w-4 h-4" />
-                  </motion.a>
+                  </motion.button>
                 </div>
               </div>
             )}
@@ -2072,6 +2077,7 @@ const CheckAccessModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 export default function App() {
   const [isCheckModalOpen, setIsCheckModalOpen] = useState(false);
   const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   const getInitialPath = () => {
     const path = window.location.pathname;
@@ -2128,9 +2134,12 @@ export default function App() {
 
   useEffect(() => {
     const handleOpen = () => setIsCheckModalOpen(true);
+    const handleOpenDownload = () => setIsDownloadModalOpen(true);
     window.addEventListener("open-check-modal", handleOpen);
+    window.addEventListener("open-app-download-modal", handleOpenDownload);
     return () => {
       window.removeEventListener("open-check-modal", handleOpen);
+      window.removeEventListener("open-app-download-modal", handleOpenDownload);
     };
   }, []);
 
@@ -2183,21 +2192,29 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <SleekLineCursor />
-      <Navbar />
-      <Hero />
-      <PermutaSimulator />
+      <Navbar onOpenAppModal={() => setIsDownloadModalOpen(true)} />
+      <Hero onOpenAppModal={() => setIsDownloadModalOpen(true)} />
+      <PermutaSimulator onOpenAppModal={() => setIsDownloadModalOpen(true)} />
       <HowItWorks />
       <Stats />
       <ValueProp />
       <Benefits />
       <Testimonials />
       <PainPoints />
-      <Pricing />
+      <Pricing onOpenAppModal={() => setIsDownloadModalOpen(true)} />
       <FAQ />
       {/* <ContactForm /> */}
       <Footer onNavigate={handleNavigate} />
       <CheckAccessModal isOpen={isCheckModalOpen} onClose={() => setIsCheckModalOpen(false)} />
-      <ExitIntentModal isOpen={isExitIntentModalOpen} onClose={() => setIsExitIntentModalOpen(false)} />
+      <ExitIntentModal 
+        isOpen={isExitIntentModalOpen} 
+        onClose={() => setIsExitIntentModalOpen(false)} 
+        onOpenAppModal={() => setIsDownloadModalOpen(true)}
+      />
+      <AppDownloadModal 
+        isOpen={isDownloadModalOpen} 
+        onClose={() => setIsDownloadModalOpen(false)} 
+      />
       <WhatsAppButton />
     </div>
   );

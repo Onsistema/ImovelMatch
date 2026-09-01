@@ -5,17 +5,15 @@ import AnimatedModal from "./AnimatedModal";
 interface ExitIntentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenAppModal?: () => void;
 }
 
-export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ isOpen, onClose }) => {
-  const handleAccept = () => {
+export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ isOpen, onClose, onOpenAppModal }) => {
+  const handleAction = (e: React.MouseEvent) => {
     onClose();
-    // Smooth scroll to planos section
-    const target = document.getElementById("planos");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      window.location.hash = "#planos";
+    if (onOpenAppModal) {
+      e.preventDefault();
+      onOpenAppModal();
     }
   };
 
@@ -77,7 +75,7 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ isOpen, onClos
               href="https://app.swaphome.com.br/"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={onClose}
+              onClick={handleAction}
               className="w-full py-4 px-6 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-brand-gold/20 flex items-center justify-center gap-2 cursor-pointer text-sm uppercase tracking-wider"
             >
               Acesse Agora Gratuitamente

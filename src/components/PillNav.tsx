@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import './PillNav.css';
 
-interface NavItem {
+export interface NavItem {
   label: string;
   href: string;
   ariaLabel?: string;
+  onClick?: () => void;
 }
 
 interface PillNavProps {
@@ -199,10 +200,16 @@ const PillNav = ({
                 <a
                   role="menuitem"
                   href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  target={item.href.startsWith('http') && !item.onClick ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') && !item.onClick ? 'noopener noreferrer' : undefined}
                   className={`pn-pill${activeHref === item.href ? ' is-active' : ''}`}
                   aria-label={item.ariaLabel || item.label}
+                  onClick={(e) => {
+                    if (item.onClick) {
+                      e.preventDefault();
+                      item.onClick();
+                    }
+                  }}
                   onMouseEnter={() => handleEnter(i)}
                   onMouseLeave={() => handleLeave(i)}
                 >

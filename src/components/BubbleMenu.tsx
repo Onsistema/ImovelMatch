@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 
 import './BubbleMenu.css';
 
-interface MenuItem {
+export interface MenuItem {
   label: string;
   href: string;
   ariaLabel?: string;
@@ -12,6 +12,7 @@ interface MenuItem {
     bgColor?: string;
     textColor?: string;
   };
+  onClick?: () => void;
 }
 
 const DEFAULT_ITEMS: MenuItem[] = [
@@ -235,9 +236,15 @@ export default function BubbleMenu({
                 <a
                   role="menuitem"
                   href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  onClick={handleLinkClick}
+                  target={item.href.startsWith('http') && !item.onClick ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') && !item.onClick ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => {
+                    handleLinkClick();
+                    if (item.onClick) {
+                      e.preventDefault();
+                      item.onClick();
+                    }
+                  }}
                   aria-label={item.ariaLabel || item.label}
                   className="pill-link"
                   style={{
