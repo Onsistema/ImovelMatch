@@ -254,6 +254,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <button 
               onClick={() => setIsAppDownloadModalOpen(true)}
               className="flex items-center gap-3 cursor-pointer focus:outline-none"
+              aria-label="SwapHome Página Inicial"
             >
               <img 
                 src={LOGO_URL} 
@@ -373,8 +374,12 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   >
                     <div className="relative w-full h-full p-1 rounded-[27px] overflow-hidden group">
                       <img 
-                        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=75&w=800" 
                         alt="Imóvel em destaque para permuta" 
+                        width={800}
+                        height={380}
+                        decoding="async"
+                        fetchPriority="high"
                         className="rounded-2xl w-full h-[320px] sm:h-[380px] object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
                         referrerPolicy="no-referrer"
                       />
@@ -459,8 +464,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                         
                         <div className="space-y-3">
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo de Imóvel</label>
+                            <label htmlFor="lp-has-type" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo de Imóvel</label>
                             <select 
+                              id="lp-has-type"
+                              aria-label="Tipo de imóvel que o cliente tem"
                               value={hasType}
                               onChange={(e) => setHasType(e.target.value)}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -471,8 +478,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cidade do Imóvel</label>
+                            <label htmlFor="lp-has-city" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cidade do Imóvel</label>
                             <select 
+                              id="lp-has-city"
+                              aria-label="Cidade do imóvel que o cliente tem"
                               value={hasCity}
                               onChange={(e) => setHasCity(e.target.value)}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -483,8 +492,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Valor Estimado</label>
+                            <label htmlFor="lp-has-value" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Valor Estimado</label>
                             <select 
+                              id="lp-has-value"
+                              aria-label="Valor estimado do imóvel que o cliente tem"
                               value={hasValue}
                               onChange={(e) => setHasValue(Number(e.target.value))}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -508,8 +519,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
                         <div className="space-y-3">
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo Desejado</label>
+                            <label htmlFor="lp-want-type" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tipo Desejado</label>
                             <select 
+                              id="lp-want-type"
+                              aria-label="Tipo de imóvel que o cliente busca"
                               value={wantType}
                               onChange={(e) => setWantType(e.target.value)}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -520,8 +533,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cidade Desejada</label>
+                            <label htmlFor="lp-want-city" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cidade Desejada</label>
                             <select 
+                              id="lp-want-city"
+                              aria-label="Cidade que o cliente deseja para o imóvel"
                               value={wantCity}
                               onChange={(e) => setWantCity(e.target.value)}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -532,8 +547,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Valor Desejado</label>
+                            <label htmlFor="lp-want-value" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Valor Desejado</label>
                             <select 
+                              id="lp-want-value"
+                              aria-label="Faixa de valor que o cliente busca"
                               value={wantValue}
                               onChange={(e) => setWantValue(Number(e.target.value))}
                               className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
@@ -785,8 +802,12 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=75&w=800" 
                   alt="Casa em Alphaville" 
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={500}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
@@ -821,8 +842,12 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1080" 
+                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=75&w=800" 
                   alt="Mansão Contemporânea" 
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={500}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
@@ -857,8 +882,12 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1080" 
+                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=75&w=800" 
                   alt="Apartamento de Luxo" 
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={500}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
@@ -1139,7 +1168,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <img 
               src={LOGO_URL} 
               alt="SwapHome Logo" 
-              className="h-8 w-auto opacity-70"
+              className="h-8 w-auto opacity-75"
               referrerPolicy="no-referrer"
             />
             <span>© {new Date().getFullYear()} SwapHome. Todos os direitos reservados.</span>

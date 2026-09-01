@@ -10,7 +10,7 @@ export interface NavItem {
 }
 
 interface PillNavProps {
-  logo?: string;
+  logo?: string | React.ReactNode;
   logoAlt?: string;
   items: NavItem[];
   activeHref?: string;
@@ -186,11 +186,15 @@ const PillNav = ({
         <a
           className="pn-logo"
           href="#"
-          aria-label="Home"
+          aria-label="SwapHome Página Inicial"
           onMouseEnter={handleLogoEnter}
           ref={logoRef}
         >
-          {logo && <img src={logo} alt={logoAlt} ref={logoImgRef} referrerPolicy="no-referrer" />}
+          {typeof logo === 'string' ? (
+            <img src={logo} alt={logoAlt} ref={logoImgRef} referrerPolicy="no-referrer" width={160} height={44} />
+          ) : (
+            logo
+          )}
         </a>
 
         <div className="pn-nav-items desktop-only" ref={navItemsRef}>

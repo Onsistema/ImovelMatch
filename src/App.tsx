@@ -182,8 +182,12 @@ const Hero = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => (
             >
               <div className="relative w-full h-full p-1 rounded-[27px] overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1080" 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=75&w=800" 
                   alt="Imóvel em destaque" 
+                  width={800}
+                  height={500}
+                  decoding="async"
+                  fetchPriority="high"
                   className="rounded-2xl w-full h-[320px] sm:h-[400px] md:h-[500px] object-cover opacity-90"
                   referrerPolicy="no-referrer"
                 />
@@ -371,8 +375,12 @@ const ValueProp = () => (
               <div className="glass-card py-12 md:py-24 px-6 md:px-12 rounded-3xl md:rounded-[3rem] border-brand-gold/15 relative overflow-hidden group min-h-[350px] md:min-h-[500px] flex items-center justify-center">
                  {/* Background Image */}
                  <img 
-                    src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1080" 
-                    alt="Luxury Mansion" 
+                    src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=75&w=800" 
+                    alt="Mansão contemporânea para permuta" 
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={500}
                     className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000"
                     referrerPolicy="no-referrer"
                  />
@@ -964,14 +972,19 @@ const ContactForm = () => {
                      placeholder="E-mail"
                      onChange={e => setFormData({...formData, email: e.target.value})}
                    />
-                   <select 
-                     className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer"
-                     onChange={e => setFormData({...formData, perfil: e.target.value})}
-                   >
-                     <option value="Proprietário">Proprietário (PF)</option>
-                     <option value="Corretor">Corretor Elite</option>
-                     <option value="Investidor">Investidor</option>
-                   </select>
+                   <div>
+                     <label htmlFor="form-perfil-lead" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Perfil de Usuário</label>
+                     <select 
+                       id="form-perfil-lead"
+                       aria-label="Perfil de Usuário"
+                       className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
+                       onChange={e => setFormData({...formData, perfil: e.target.value})}
+                     >
+                       <option value="Proprietário" className="bg-slate-900">Proprietário (PF)</option>
+                       <option value="Corretor" className="bg-slate-900">Corretor Elite</option>
+                       <option value="Investidor" className="bg-slate-900">Investidor</option>
+                     </select>
+                   </div>
 
                    <div className="py-2">
                       <p className="text-[10px] text-slate-500 uppercase tracking-widest text-center">
@@ -998,9 +1011,9 @@ const ContactForm = () => {
 const Footer = ({ onNavigate }: { onNavigate?: (path: string) => void }) => (
   <footer className="bg-brand-dark pt-12 pb-10 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col md:row items-center justify-between gap-8">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex items-center">
-          <img src={LOGO_URL} alt="SwapHome Logo" className="h-24 w-auto opacity-70 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
+          <img src={LOGO_URL} alt="SwapHome Logo" className="h-20 w-auto opacity-80 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
         </div>
         
         <nav className="flex flex-wrap gap-6 md:gap-8 text-xs font-bold uppercase tracking-widest text-slate-500">
@@ -1168,8 +1181,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                     
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo de Imóvel</label>
+                        <label htmlFor="sim-has-type" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo de Imóvel</label>
                         <select 
+                          id="sim-has-type"
+                          aria-label="Tipo de imóvel que você tem"
                           value={hasType}
                           onChange={(e) => setHasType(e.target.value)}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
@@ -1180,8 +1195,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade do Imóvel</label>
+                        <label htmlFor="sim-has-city" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade do Imóvel</label>
                         <select 
+                          id="sim-has-city"
+                          aria-label="Cidade do imóvel que você tem"
                           value={hasCity}
                           onChange={(e) => setHasCity(e.target.value)}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
@@ -1192,8 +1209,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Estimado</label>
+                        <label htmlFor="sim-has-value" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Estimado</label>
                         <select 
+                          id="sim-has-value"
+                          aria-label="Valor estimado do imóvel que você tem"
                           value={hasValue}
                           onChange={(e) => setHasValue(Number(e.target.value))}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
@@ -1215,8 +1234,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo Desejado</label>
+                        <label htmlFor="sim-want-type" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipo Desejado</label>
                         <select 
+                          id="sim-want-type"
+                          aria-label="Tipo de imóvel que você busca"
                           value={wantType}
                           onChange={(e) => setWantType(e.target.value)}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
@@ -1227,8 +1248,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade Desejada</label>
+                        <label htmlFor="sim-want-city" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cidade Desejada</label>
                         <select 
+                          id="sim-want-city"
+                          aria-label="Cidade do imóvel que você busca"
                           value={wantCity}
                           onChange={(e) => setWantCity(e.target.value)}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"
@@ -1239,8 +1262,10 @@ const PermutaSimulator = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) =
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Desejado</label>
+                        <label htmlFor="sim-want-value" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Valor Desejado</label>
                         <select 
+                          id="sim-want-value"
+                          aria-label="Valor estimado do imóvel que você busca"
                           value={wantValue}
                           onChange={(e) => setWantValue(Number(e.target.value))}
                           className="w-full p-4 rounded-xl input-field appearance-none cursor-pointer text-slate-100"

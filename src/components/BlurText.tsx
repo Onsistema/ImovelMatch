@@ -63,20 +63,20 @@ const BlurText = ({
     return () => observer.disconnect();
   }, [threshold, rootMargin]);
 
+  // Optimized lightweight GPU transitions: opacity and clean y translation without heavy blur filters
   const defaultFrom = useMemo(
     () =>
-      direction === 'top' ? { filter: 'blur(10px)', opacity: 0, y: -50 } : { filter: 'blur(10px)', opacity: 0, y: 50 },
+      direction === 'top' ? { opacity: 0, y: -15 } : { opacity: 0, y: 15 },
     [direction]
   );
 
   const defaultTo = useMemo(
     () => [
       {
-        filter: 'blur(5px)',
-        opacity: 0.5,
-        y: direction === 'top' ? 5 : -5
+        opacity: 0.7,
+        y: direction === 'top' ? 2 : -2
       },
-      { filter: 'blur(0px)', opacity: 1, y: 0 }
+      { opacity: 1, y: 0 }
     ],
     [direction]
   );
@@ -112,7 +112,7 @@ const BlurText = ({
 
         return (
           <motion.span
-            className={`inline-block will-change-[transform,filter,opacity] ${textStyleClass}`}
+            className={`inline-block will-change-[transform,opacity] ${textStyleClass}`}
             key={index}
             initial={fromSnapshot as any}
             animate={(inView ? animateKeyframes : fromSnapshot) as any}
