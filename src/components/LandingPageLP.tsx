@@ -104,30 +104,47 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
   // App download popup state
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
 
+  // O popup e de INTENCAO DE SAIDA. Ele existe para aparecer quando a pessoa
+  // esta indo embora, nunca enquanto ela ainda esta lendo o titulo.
+  //
+  // Antes havia aqui um setTimeout de 4 segundos, comentado no proprio codigo
+  // como "for testing", que foi para producao. Ele disparava para todo mundo,
+  // em toda visita, cobrindo o hero antes da primeira palavra ser lida. Numa
+  // pagina que recebe trafego pago isso e o clique comprado batendo num popup.
   useEffect(() => {
-    let triggered = false;
+    // Uma vez por sessao. Quem ja viu e fechou nao ve de novo a cada F5.
+    if (sessionStorage.getItem("lp-exit-visto") === "1") return;
 
-    // Auto load popup after 4 seconds for testing & mobile engagement
-    const timer = setTimeout(() => {
-      if (!triggered) {
-        triggered = true;
-        setIsExitIntentModalOpen(true);
-      }
-    }, 4000);
-
-    // Desktop exit-intent (mouse leaves viewport top)
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY < 30 && !triggered) {
-        triggered = true;
-        setIsExitIntentModalOpen(true);
-      }
+    let disparado = false;
+    const disparar = () => {
+      if (disparado) return;
+      disparado = true;
+      sessionStorage.setItem("lp-exit-visto", "1");
+      setIsExitIntentModalOpen(true);
     };
 
-    document.addEventListener("mouseleave", handleMouseLeave);
+    // Desktop: o mouse sai pelo topo da janela, rumo a aba ou a barra de
+    // endereco. E o sinal classico de saida.
+    const aoSairComMouse = (e: MouseEvent) => {
+      if (e.clientY < 30) disparar();
+    };
+    document.addEventListener("mouseleave", aoSairComMouse);
+
+    // Celular nao tem ponteiro para sair pelo topo, entao o equivalente
+    // honesto e engajamento: a pessoa leu boa parte da pagina, passou tempo
+    // nela e mesmo assim nao clicou em nada. So ai a oferta faz sentido.
+    const aoRolar = () => {
+      const alcance = document.body.scrollHeight - window.innerHeight;
+      if (alcance > 0 && window.scrollY / alcance > 0.55) disparar();
+    };
+    const tempoMinimo = window.setTimeout(() => {
+      window.addEventListener("scroll", aoRolar, { passive: true });
+    }, 20000);
 
     return () => {
-      clearTimeout(timer);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("mouseleave", aoSairComMouse);
+      window.removeEventListener("scroll", aoRolar);
+      window.clearTimeout(tempoMinimo);
     };
   }, []);
 
@@ -246,9 +263,9 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans selection:bg-brand-gold selection:text-brand-dark">
+    <div className="min-h-screen bg-surface-0 text-slate-100 font-sans selection:bg-brand-gold selection:text-brand-dark">
       {/* Top Navigation for LP */}
-      <header className="sticky top-0 z-50 bg-[#0A0D14]/90 backdrop-blur-md border-b border-white/10">
+      <header className="sticky top-0 z-50 bg-surface-0/90 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
@@ -325,7 +342,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   onClick={() => setIsAppDownloadModalOpen(true)}
                   className="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-base hover:scale-[1.02] transition-all shadow-xl shadow-brand-gold/25 flex items-center justify-center gap-3 cursor-pointer"
                 >
-                  <span>Acessar o App SwapHome Agora</span>
+                  <span>Acessar o app agora</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </motion.div>
@@ -470,7 +487,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Tipo de imóvel que o cliente tem"
                               value={hasType}
                               onChange={(e) => setHasType(e.target.value)}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {propertyTypes.map((type) => (
                                 <option key={type} value={type} className="bg-slate-900">{type}</option>
@@ -484,7 +501,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Cidade do imóvel que o cliente tem"
                               value={hasCity}
                               onChange={(e) => setHasCity(e.target.value)}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {cities.map((city) => (
                                 <option key={city} value={city} className="bg-slate-900">{city}</option>
@@ -498,7 +515,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Valor estimado do imóvel que o cliente tem"
                               value={hasValue}
                               onChange={(e) => setHasValue(Number(e.target.value))}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {valueOptions.map((opt) => (
                                 <option key={opt.value} value={opt.value} className="bg-slate-900">{opt.label}</option>
@@ -525,7 +542,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Tipo de imóvel que o cliente busca"
                               value={wantType}
                               onChange={(e) => setWantType(e.target.value)}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {propertyTypes.map((type) => (
                                 <option key={type} value={type} className="bg-slate-900">{type}</option>
@@ -539,7 +556,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Cidade que o cliente deseja para o imóvel"
                               value={wantCity}
                               onChange={(e) => setWantCity(e.target.value)}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {cities.map((city) => (
                                 <option key={city} value={city} className="bg-slate-900">{city}</option>
@@ -553,7 +570,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                               aria-label="Faixa de valor que o cliente busca"
                               value={wantValue}
                               onChange={(e) => setWantValue(Number(e.target.value))}
-                              className="w-full p-3 rounded-xl bg-[#121724] border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
+                              className="w-full p-3 rounded-xl bg-surface-2 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-gold cursor-pointer"
                             >
                               {valueOptions.map((opt) => (
                                 <option key={opt.value} value={opt.value} className="bg-slate-900">{opt.label}</option>
@@ -698,7 +715,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* Problem vs Solution Section */}
-      <section className="py-20 bg-[#0C101A] border-y border-white/5 relative">
+      <section className="py-20 bg-surface-1 border-y border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-gold mb-3">
@@ -783,7 +800,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* Visual Showcase Section: Examples of Properties in Permuta */}
-      <section className="py-20 bg-[#0C101A] relative border-b border-white/5">
+      <section className="py-20 bg-surface-1 relative border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest bg-brand-gold/10 text-brand-gold border border-brand-gold/20">
@@ -799,7 +816,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Property Card 1 */}
-            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+            <div className="rounded-3xl bg-surface-2 border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=75&w=800" 
@@ -839,7 +856,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             </div>
 
             {/* Property Card 2 */}
-            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+            <div className="rounded-3xl bg-surface-2 border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=75&w=800" 
@@ -879,7 +896,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             </div>
 
             {/* Property Card 3 */}
-            <div className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
+            <div className="rounded-3xl bg-surface-2 border border-white/10 overflow-hidden hover:border-brand-gold/50 transition-all duration-300 group flex flex-col justify-between shadow-xl">
               <div className="relative h-60 overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=75&w=800" 
@@ -922,7 +939,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* Features for Real Estate Agencies & Brokers */}
-      <section className="py-20 bg-[#0A0D14] relative">
+      <section className="py-20 bg-surface-0 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs font-bold uppercase tracking-widest text-brand-gold mb-3">
@@ -934,7 +951,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <Repeat className="w-6 h-6" />
               </div>
@@ -944,7 +961,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6" />
               </div>
@@ -954,7 +971,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <Users className="w-6 h-6" />
               </div>
@@ -964,7 +981,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <Zap className="w-6 h-6" />
               </div>
@@ -974,7 +991,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <MapPin className="w-6 h-6" />
               </div>
@@ -984,7 +1001,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-brand-gold/40 transition-all group">
+            <div className="p-6 rounded-2xl bg-surface-2 border border-white/10 hover:border-brand-gold/40 transition-all group">
               <div className="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <Building2 className="w-6 h-6" />
               </div>
@@ -998,9 +1015,9 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* Doubts / Question Form Section ("Campo de Dúvida") */}
-      <section id="duvidas" className="py-20 bg-[#0A0D14] relative">
+      <section id="duvidas" className="py-20 bg-surface-0 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 sm:p-12 rounded-3xl bg-white/[0.03] border border-white/10 relative overflow-hidden">
+          <div className="p-8 sm:p-12 rounded-3xl bg-surface-3 border border-white/10 relative overflow-hidden">
             <div className="text-center mb-10">
               <div className="w-12 h-12 rounded-2xl bg-brand-gold/10 text-brand-gold flex items-center justify-center mx-auto mb-4">
                 <HelpCircle className="w-6 h-6" />
@@ -1053,7 +1070,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                       placeholder="Ex: Carlos - Corretor / Imobiliária Campinas" 
                       value={doubtName}
                       onChange={(e) => setDoubtName(e.target.value)}
-                      className="w-full bg-[#121724] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
+                      className="w-full bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
                     />
                   </div>
                   <div>
@@ -1065,7 +1082,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                       placeholder="(19) 99999-9999" 
                       value={doubtContact}
                       onChange={(e) => setDoubtContact(e.target.value)}
-                      className="w-full bg-[#121724] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
+                      className="w-full bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
                     />
                   </div>
                 </div>
@@ -1080,7 +1097,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                     placeholder="Escreva aqui sua dúvida sobre permutas, como cadastrar carteiras, comissões..." 
                     value={doubtQuestion}
                     onChange={(e) => setDoubtQuestion(e.target.value)}
-                    className="w-full bg-[#121724] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
+                    className="w-full bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold"
                   />
                 </div>
 
@@ -1107,7 +1124,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 </h4>
                 <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
                   {savedDoubts.map((d) => (
-                    <div key={d.id} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-xs">
+                    <div key={d.id} className="p-3 rounded-xl bg-surface-2 border border-white/5 text-xs">
                       <div className="flex items-center justify-between text-slate-400 mb-1">
                         <span className="font-semibold text-brand-gold">{d.name}</span>
                         <span>{d.date}</span>
@@ -1123,7 +1140,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* SEO & Regional Text Content for Real Estate Brokers in Campinas & Region */}
-      <section className="py-16 bg-[#0B0E17] text-slate-400 text-xs leading-relaxed border-t border-white/5">
+      <section className="py-16 bg-surface-0 text-slate-400 text-xs leading-relaxed border-t border-white/5">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
           <h2 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
             Solução de Permuta Imobiliária para Imobiliárias e Corretores em Campinas e Região
@@ -1162,7 +1179,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       </section>
 
       {/* Simple Footer for LP */}
-      <footer className="py-8 bg-[#07090E] border-t border-white/10 text-center text-xs text-slate-500">
+      <footer className="py-8 bg-surface-0 border-t border-white/10 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <img 

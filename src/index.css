@@ -5,10 +5,24 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
 
-  --color-brand-dark: #020617;
+  --color-brand-dark: #070B14;
   --color-brand-blue: #3b82f6;
-  --color-brand-gold: #C9971E;
+  /* Ouro anterior: #C9971E, L* 65,5 e contraste 7,4:1. Num fundo escuro chapado
+     ele lia como barro em vez de ouro. Este esta em L* 78,2 e 11:1. */
+  --color-brand-gold: #F0B93B;
   --color-brand-slate-card: rgba(30, 41, 59, 0.5);
+
+  /* A escada de superficies.
+     A pagina usava cinco pretos escolhidos a mao (#07090E, #0A0D14, #0B0E17,
+     #0C101A, #121724) com degraus de 1,2, 0,4, 0,7 e 3,1 em L*. Tres deles o
+     olho simplesmente nao separa, e era por isso que card nao descolava do
+     fundo e secao nao descolava de secao: o site inteiro vivia numa faixa de
+     luminancia de 2%.
+     Estes degraus sao de +4,7, +5,9 e +6,2 em L*, que se enxergam. */
+  --color-surface-0: #070B14;
+  --color-surface-1: #0F1726;
+  --color-surface-2: #182337;
+  --color-surface-3: #22304A;
 }
 
 @layer base {
@@ -18,6 +32,13 @@
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-white;
+    /* O cabecalho fixo tem 81px. Sem esta margem, rolar ate qualquer secao
+       esconde o titulo dela inteiro debaixo dele. */
+    scroll-margin-top: 6rem;
+  }
+
+  section, [id] {
+    scroll-margin-top: 6rem;
   }
 }
 
