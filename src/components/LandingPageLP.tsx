@@ -21,7 +21,6 @@ import ExitIntentModal from './ExitIntentModal';
 import AppDownloadModal from './AppDownloadModal';
 import WhatsAppButton from './WhatsAppButton';
 
-const LOGO_URL = "https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL";
 
 interface LandingPageLPProps {
   onBack?: () => void;
@@ -265,20 +264,29 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-surface-0 text-slate-100 font-sans selection:bg-brand-gold selection:text-brand-dark">
       {/* Top Navigation for LP */}
-      <header className="sticky top-0 z-50 bg-surface-0/90 backdrop-blur-md border-b border-white/10">
+      {/* O cabecalho e uma barra que FLUTUA sobre a pagina, entao precisa ser a
+          superficie mais alta da escada, nao a mais baixa. Estava em surface-0,
+          o preto mais fundo do site, e por isso a faixa inteira sumia. */}
+      <header className="sticky top-0 z-50 bg-surface-2/95 backdrop-blur-md border-b border-white/15 shadow-lg shadow-black/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setIsAppDownloadModalOpen(true)}
-              className="flex items-center gap-3 cursor-pointer focus:outline-none"
+              className="flex items-center gap-3 cursor-pointer focus:outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-brand-gold"
               aria-label="SwapHome Página Inicial"
             >
-              <img 
-                src={LOGO_URL} 
-                alt="SwapHome Imobiliária" 
-                className="h-12 w-auto object-contain"
-                referrerPolicy="no-referrer"
-              />
+              {/* PENDENTE: falta o arquivo de logo de verdade.
+                  O que havia aqui era uma foto de 1536x1024 e 2,1 MB, de um logo
+                  montado numa parede cinza, com o fundo cinza e o brilho pintados
+                  dentro da propria imagem, servida do Google Drive. Renderizada
+                  com 48px de altura, o cinza se misturava com a barra escura e a
+                  metade azul-marinho da marca desaparecia.
+                  Ate existir um vetor da marca, o cabecalho usa a assinatura
+                  escrita. Nao e perda: texto vivo fica nitido em qualquer tela,
+                  pesa zero, e mantem a divisao de duas cores da identidade. */}
+              <span className="font-display text-2xl font-bold tracking-tight leading-none">
+                <span className="text-white">Swap</span><span className="text-brand-gold">Home</span>
+              </span>
             </button>
           </div>
 
@@ -1182,12 +1190,9 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       <footer className="py-8 bg-surface-0 border-t border-white/10 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <img 
-              src={LOGO_URL} 
-              alt="SwapHome Logo" 
-              className="h-8 w-auto opacity-75"
-              referrerPolicy="no-referrer"
-            />
+            <span className="font-display text-sm font-bold tracking-tight">
+              <span className="text-slate-200">Swap</span><span className="text-brand-gold">Home</span>
+            </span>
             <span>© {new Date().getFullYear()} SwapHome. Todos os direitos reservados.</span>
           </div>
           <div className="flex items-center gap-6">
