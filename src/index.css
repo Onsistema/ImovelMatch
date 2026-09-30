@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Manrope", sans-serif;
 
-  --color-brand-dark: #070B14;
-  --color-brand-blue: #3b82f6;
+  --color-brand-dark: #07111F;
+  --color-brand-blue: #38BDF8;
   /* Ouro anterior: #C9971E, L* 65,5 e contraste 7,4:1. Num fundo escuro chapado
      ele lia como barro em vez de ouro. Este esta em L* 78,2 e 11:1. */
-  --color-brand-gold: #F0B93B;
+  --color-brand-gold: #F5B940;
   --color-brand-slate-card: rgba(30, 41, 59, 0.5);
 
   /* A escada de superficies.
@@ -19,10 +19,10 @@
      fundo e secao nao descolava de secao: o site inteiro vivia numa faixa de
      luminancia de 2%.
      Estes degraus sao de +4,7, +5,9 e +6,2 em L*, que se enxergam. */
-  --color-surface-0: #070B14;
-  --color-surface-1: #0F1726;
-  --color-surface-2: #182337;
-  --color-surface-3: #22304A;
+  --color-surface-0: #07111F;
+  --color-surface-1: #0B1728;
+  --color-surface-2: #102238;
+  --color-surface-3: #17304D;
 }
 
 @layer base {
