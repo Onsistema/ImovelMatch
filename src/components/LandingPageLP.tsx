@@ -27,6 +27,10 @@ interface LandingPageLPProps {
 
 const APP_URL = 'https://app.swaphome.com.br';
 const LOGO_URL = 'https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL';
+const HERO_IMAGE = '/lp-assets/swaphome-hero.webp';
+const PAIN_IMAGE = '/lp-assets/swaphome-client-pain.webp';
+const OPPORTUNITY_IMAGE = '/lp-assets/swaphome-opportunity.webp';
+const CLOSING_IMAGE = '/lp-assets/swaphome-closing.webp';
 
 const goToApp = () => {
   window.location.href = APP_URL;
@@ -208,68 +212,19 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <FadeIn delay={0.12} className="relative">
               <div className="absolute -inset-5 rounded-[32px] bg-gradient-to-br from-brand-gold/15 via-transparent to-sky-500/10 blur-2xl" />
               <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0d1a2c] shadow-[0_35px_100px_rgba(0,0,0,0.45)]">
-                <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-gold text-[#07111f]">
-                      <Repeat2 className="h-4.5 w-4.5" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-extrabold text-white">Cruzamento de oportunidade</div>
-                      <div className="text-[11px] text-slate-500">Exemplo de fluxo SwapHome</div>
-                    </div>
-                  </div>
-                  <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-                    ativo
-                  </div>
-                </div>
-
-                <div className="space-y-4 p-5 sm:p-6">
-                  <div className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-4">
-                    <div className="mb-3 flex items-center justify-between">
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500">Cliente tem</span>
-                      <span className="rounded-md bg-white/[0.06] px-2 py-1 text-[10px] font-semibold text-slate-400">Campinas</span>
-                    </div>
-                    <div className="grid grid-cols-[72px_1fr] gap-3">
-                      <div className="h-[72px] rounded-xl bg-gradient-to-br from-slate-700 to-slate-800" />
-                      <div>
-                        <div className="text-sm font-extrabold text-white">Apartamento • Cambuí</div>
-                        <div className="mt-1 text-xs text-slate-400">2 dorm. • 2 vagas • R$ 850 mil</div>
-                        <div className="mt-2 inline-flex rounded-lg bg-brand-gold/10 px-2.5 py-1 text-[11px] font-bold text-brand-gold">
-                          aceita usar na troca
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 px-2">
-                    <div className="h-px flex-1 bg-white/[0.08]" />
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold">
-                      <Zap className="h-4 w-4" />
-                    </div>
-                    <div className="h-px flex-1 bg-white/[0.08]" />
-                  </div>
-
-                  <div className="rounded-2xl border border-brand-gold/25 bg-brand-gold/[0.05] p-4">
-                    <div className="mb-3 flex items-center justify-between">
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-brand-gold">Cliente busca</span>
-                      <span className="rounded-md bg-white/[0.06] px-2 py-1 text-[10px] font-semibold text-slate-400">até R$ 1,4 mi</span>
-                    </div>
-                    <div className="text-sm font-extrabold text-white">Casa em condomínio • Campinas / Valinhos</div>
-                    <div className="mt-1 text-xs text-slate-400">3+ dorm. • aceita apartamento como parte</div>
-                  </div>
-
-                  <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-300">
-                        <Target className="h-4.5 w-4.5" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-extrabold text-white">Oportunidades compatíveis encontradas</div>
-                        <div className="mt-1 text-xs leading-5 text-slate-400">
-                          Veja imóveis com interesse de troca compatível e avance para a parceria profissional.
-                        </div>
-                      </div>
-                    </div>
+                <img
+                  src={HERO_IMAGE}
+                  alt="Exemplo visual da SwapHome: imóvel do cliente, busca em anúncios de terceiros e oportunidades encontradas"
+                  width={760}
+                  height={570}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="h-auto w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#07111f]/90 via-[#07111f]/20 to-transparent px-5 pb-4 pt-12">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#07111f]/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-200 backdrop-blur-md">
+                    <Search className="h-3.5 w-3.5 text-brand-gold" />
+                    Busca em imóveis de terceiros
                   </div>
                 </div>
               </div>
@@ -322,6 +277,35 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               })}
             </div>
           </div>
+
+            <FadeIn className="mt-14">
+              <div className="grid overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0b1728] lg:grid-cols-[1.15fr_.85fr] lg:items-stretch">
+                <div className="relative min-h-[300px] overflow-hidden sm:min-h-[420px]">
+                  <img
+                    src={PAIN_IMAGE}
+                    alt="Corretor apresenta uma casa a clientes cuja compra depende do imóvel atual"
+                    width={760}
+                    height={570}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#07111f]/65 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0b1728]/25" />
+                </div>
+                <div className="flex flex-col justify-center p-7 sm:p-10">
+                  <div className="text-xs font-black uppercase tracking-[0.18em] text-brand-gold">A dor em uma cena</div>
+                  <h3 className="mt-3 font-display text-2xl font-black leading-tight text-white sm:text-3xl">
+                    O cliente encontrou o imóvel que quer. O imóvel atual ainda trava a compra.
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-slate-400">
+                    É nesse ponto que a SwapHome entra: usando as informações da necessidade real do cliente para buscar, entre imóveis de terceiros, alternativas que possam viabilizar a negociação.
+                  </p>
+                  <div className="mt-6">
+                    <PrimaryButton label="Buscar uma oportunidade para meu cliente" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
         </section>
 
         <section id="como-funciona" className="bg-surface-0 py-20 sm:py-24">
@@ -439,7 +423,51 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
           </div>
         </section>
 
-        <section id="profissionais" className="bg-surface-0 py-20 sm:py-24">
+                <section className="bg-surface-1 py-20 sm:py-24">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:items-center lg:px-8">
+            <FadeIn className="mx-auto w-full max-w-sm">
+              <div className="overflow-hidden rounded-[28px] border border-brand-gold/20 bg-[#07111f] shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
+                <img
+                  src={OPPORTUNITY_IMAGE}
+                  alt="Exemplo ilustrativo de oportunidade imobiliária encontrada entre anúncios de terceiros"
+                  width={320}
+                  height={400}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-auto w-full"
+                />
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.08}>
+              <SectionEyebrow>Do anúncio à oportunidade</SectionEyebrow>
+              <h2 className="mt-5 text-balance font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+                O imóvel certo pode já estar anunciado por um terceiro. O difícil é encontrá-lo na hora certa.
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
+                A SwapHome organiza a necessidade do cliente e ajuda o corretor a localizar opções compatíveis fora da própria base, para que ele gaste menos tempo procurando e mais tempo avaliando negócios que podem avançar.
+              </p>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {[
+                  'Busca orientada pela necessidade do cliente',
+                  'Oportunidades em imóveis de terceiros',
+                  'Informações reunidas para avaliação',
+                  'Corretor decide se vale avançar',
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-4 text-sm font-semibold text-slate-300">
+                    <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-brand-gold" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-7">
+                <PrimaryButton label="Ver oportunidades na SwapHome" />
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+<section id="profissionais" className="bg-surface-0 py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="mx-auto max-w-3xl text-center">
               <SectionEyebrow>Uma dor, dois ganhos diferentes</SectionEyebrow>
@@ -542,7 +570,43 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
           </div>
         </section>
 
-        <section id="faq" className="bg-surface-0 py-20 sm:py-24">
+                <section className="border-y border-white/[0.06] bg-[#0b1728] py-20 sm:py-24">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.92fr_1.08fr] lg:items-center lg:px-8">
+            <FadeIn>
+              <SectionEyebrow>O resultado que importa</SectionEyebrow>
+              <h2 className="mt-5 text-balance font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
+                Em vez de voltar para o cliente com “não encontrei”, volte com opções para avaliar.
+              </h2>
+              <p className="mt-5 text-base leading-7 text-slate-400">
+                A tecnologia faz a busca. O corretor continua fazendo o trabalho que exige experiência: analisar o imóvel, conversar com as partes, validar a condição de permuta e conduzir a negociação.
+              </p>
+              <div className="mt-7 space-y-3 text-sm text-slate-300">
+                <div className="flex gap-3"><Check className="mt-1 h-4.5 w-4.5 shrink-0 text-brand-gold" /><span>Mais alternativas para apresentar ao cliente.</span></div>
+                <div className="flex gap-3"><Check className="mt-1 h-4.5 w-4.5 shrink-0 text-brand-gold" /><span>Menos tempo perdido procurando manualmente.</span></div>
+                <div className="flex gap-3"><Check className="mt-1 h-4.5 w-4.5 shrink-0 text-brand-gold" /><span>Decisão e negociação permanecem com o profissional.</span></div>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.08}>
+              <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#07111f] shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
+                <img
+                  src={CLOSING_IMAGE}
+                  alt="Corretor apresenta aos clientes oportunidades encontradas entre imóveis de terceiros"
+                  width={320}
+                  height={240}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-auto w-full"
+                />
+                <div className="absolute bottom-4 left-4 rounded-full border border-white/10 bg-[#07111f]/85 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.15em] text-white backdrop-blur-md">
+                  Exemplo visual do resultado
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+<section id="faq" className="bg-surface-0 py-20 sm:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center">
               <SectionEyebrow>Antes de começar</SectionEyebrow>
