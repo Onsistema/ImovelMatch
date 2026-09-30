@@ -82,7 +82,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
     if (metaDesc) {
       metaDesc.setAttribute(
         'content',
-        'Destrave negociações de clientes que precisam vender ou permutar outro imóvel. A SwapHome cruza interesses entre corretores e imobiliárias e ajuda a encontrar combinações de permuta.'
+        'Destrave negociações de clientes que precisam vender ou permutar outro imóvel. A SwapHome busca oportunidades em imóveis anunciados por terceiros e ajuda o corretor a encontrar opções compatíveis com a necessidade do cliente.'
       );
     }
 
@@ -170,14 +170,14 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               <FadeIn delay={0.16}>
                 <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
                   Cadastre o imóvel que o cliente tem, informe o que ele procura e deixe a
-                  <strong className="font-extrabold text-white"> SwapHome cruzar oportunidades de permuta</strong>
-                  {' '}entre profissionais. Menos busca manual. Mais caminhos para a negociação avançar.
+                  <strong className="font-extrabold text-white"> SwapHome buscar oportunidades compatíveis entre imóveis de terceiros</strong>.
+                  {' '}Menos busca manual em anúncios. Mais caminhos para a negociação avançar.
                 </p>
               </FadeIn>
 
               <FadeIn delay={0.24}>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <PrimaryButton label="Encontrar oportunidades para minha carteira" className="sm:min-w-[310px]" />
+                  <PrimaryButton label="Buscar oportunidades para meu cliente" className="sm:min-w-[310px]" />
                   <a
                     href="#como-funciona"
                     className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-bold text-white transition hover:bg-white/[0.08]"
@@ -199,7 +199,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    Carteira sob sua gestão
+                    Busca em imóveis de terceiros
                   </div>
                 </div>
               </FadeIn>
@@ -303,8 +303,8 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 },
                 {
                   icon: Eye,
-                  title: 'Oportunidade invisível na carteira',
-                  text: 'Duas pontas compatíveis podem existir sem que os profissionais envolvidos saibam uma da outra.',
+                  title: 'Oportunidade escondida entre anúncios',
+                  text: 'O imóvel compatível pode já estar anunciado por um terceiro — o desafio é encontrá-lo no meio de tantas opções.',
                 },
               ].map((item, index) => {
                 const Icon = item.icon;
@@ -329,7 +329,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <FadeIn className="max-w-3xl">
               <SectionEyebrow>Simples de entender. Rápido de usar.</SectionEyebrow>
               <h2 className="mt-5 text-balance font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-                Você informa as duas pontas. A SwapHome faz o cruzamento.
+                Você informa o imóvel do cliente e o que ele procura. A SwapHome busca a outra ponta.
               </h2>
             </FadeIn>
 
@@ -339,19 +339,19 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   n: '01',
                   icon: Building2,
                   title: 'Cadastre o imóvel que o cliente tem',
-                  text: 'Inclua localização, faixa de valor, tipo do imóvel e as informações relevantes para a permuta.',
+                  text: 'Inclua localização, faixa de valor, tipo do imóvel e as informações relevantes para a negociação.',
                 },
                 {
                   n: '02',
                   icon: Search,
-                  title: 'Informe o que ele quer encontrar',
-                  text: 'Defina região, tipo, faixa de valor e condições que fazem sentido para a próxima compra.',
+                  title: 'Informe o que ele quer comprar',
+                  text: 'Defina região, tipo, faixa de valor e as condições que fazem sentido para a próxima compra.',
                 },
                 {
                   n: '03',
                   icon: Repeat2,
-                  title: 'Veja combinações e abra a parceria',
-                  text: 'A plataforma aproxima interesses compatíveis para você avaliar a oportunidade e negociar com outro profissional.',
+                  title: 'Receba oportunidades encontradas',
+                  text: 'A plataforma busca em imóveis de terceiros opções que podem fazer sentido para a necessidade cadastrada e apresenta os resultados para avaliação.',
                 },
               ].map((item, index) => {
                 const Icon = item.icon;
@@ -371,7 +371,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             </div>
 
             <FadeIn className="mt-10 flex justify-center">
-              <PrimaryButton label="Quero cruzar oportunidades agora" />
+              <PrimaryButton label="Quero buscar oportunidades agora" />
             </FadeIn>
           </div>
         </section>
@@ -384,14 +384,14 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 O corretor precisa bater o olho e entender a oportunidade.
               </h2>
               <p className="mt-5 text-base leading-7 text-slate-400">
-                A proposta da SwapHome é transformar informações que já fazem parte da negociação imobiliária em um fluxo organizado de busca por compatibilidade.
+                A proposta da SwapHome é transformar as informações do imóvel do cliente e da próxima compra em uma busca estruturada por oportunidades disponíveis em imóveis de terceiros.
               </p>
 
               <div className="mt-7 space-y-4">
                 {[
-                  ['Interesse de troca estruturado', 'Registre o que o cliente tem e o que está disposto a aceitar.'],
-                  ['Busca por compatibilidade', 'Enxergue oportunidades além da sua própria carteira.'],
-                  ['Parceria entre profissionais', 'A negociação continua com o corretor no centro da relação.'],
+                  ['Imóvel do cliente bem definido', 'Registre o que o cliente tem e quais condições de permuta fazem sentido.'],
+                  ['Busca em imóveis de terceiros', 'A plataforma procura oportunidades fora da base do próprio corretor.'],
+                  ['Resultados para avaliação', 'O corretor analisa as opções encontradas e decide quais fazem sentido para avançar.'],
                   ['Torna e faixa de valor', 'Considere diferença financeira como parte do cenário da permuta.'],
                 ].map(([title, text]) => (
                   <div key={title} className="flex gap-3">
@@ -444,7 +444,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             <FadeIn className="mx-auto max-w-3xl text-center">
               <SectionEyebrow>Uma dor, dois ganhos diferentes</SectionEyebrow>
               <h2 className="mt-5 text-balance font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-                Para o corretor, mais caminhos para fechar. Para a imobiliária, mais inteligência sobre a carteira.
+                Para o corretor, menos busca manual. Para a imobiliária, mais eficiência para encontrar oportunidades fora da própria base.
               </h2>
             </FadeIn>
 
@@ -456,13 +456,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </div>
                   <h3 className="mt-6 text-2xl font-black text-white">Para corretores</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-400">
-                    Use a permuta como alternativa real quando o cliente depende do imóvel atual para avançar.
+                    Use a permuta como alternativa real quando o cliente depende do imóvel atual para avançar — sem limitar a busca aos imóveis que você já conhece.
                   </p>
                   <div className="mt-6 space-y-3">
                     {[
-                      'Encontrar outras pontas sem depender só de grupos e contatos pessoais',
+                      'Buscar imóveis de terceiros sem depender só de grupos, portais e contatos pessoais',
                       'Apresentar novas possibilidades antes que a negociação esfrie',
-                      'Ampliar a chance de parceria preservando sua relação com o cliente',
+                      'Manter o corretor no centro da análise e da condução da negociação',
                     ].map((x) => (
                       <div key={x} className="flex gap-3 text-sm text-slate-300">
                         <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-brand-gold" />
@@ -480,13 +480,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </div>
                   <h3 className="mt-6 text-2xl font-black text-white">Para imobiliárias</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-400">
-                    Transforme a carteira da equipe em uma base mais útil para identificar combinações e parcerias.
+                    Dê à equipe uma forma mais eficiente de buscar, fora da própria base, imóveis que podem destravar negociações em andamento.
                   </p>
                   <div className="mt-6 space-y-3">
                     {[
-                      'Dar mais visibilidade às intenções de compra e permuta da equipe',
-                      'Criar mais possibilidades de giro para imóveis com negociação travada',
-                      'Organizar um processo que hoje costuma ficar espalhado em conversas e planilhas',
+                      'Estruturar melhor o que cada cliente tem e o que está procurando',
+                      'Buscar oportunidades em imóveis de terceiros para negociações travadas',
+                      'Reduzir o tempo gasto pesquisando manualmente em diferentes fontes',
                     ].map((x) => (
                       <div key={x} className="flex gap-3 text-sm text-slate-300">
                         <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-sky-300" />
@@ -513,8 +513,8 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               {[
                 {
                   icon: LockKeyhole,
-                  title: 'Sua carteira continua sendo sua',
-                  text: 'A plataforma organiza oportunidades; a relação comercial e o atendimento continuam sob gestão dos profissionais.',
+                  title: 'O corretor continua no controle',
+                  text: 'A SwapHome ajuda a encontrar oportunidades de terceiros; a análise, o contato e a condução da negociação continuam com o profissional.',
                 },
                 {
                   icon: ShieldCheck,
@@ -553,7 +553,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
             <div className="mt-10 space-y-3">
               {[
-                ['A SwapHome substitui meu CRM ou portal imobiliário?', 'Não. A proposta é atuar em uma dor específica: organizar interesses de permuta e ajudar a encontrar combinações entre carteiras e profissionais.'],
+                ['A SwapHome substitui meu CRM ou portal imobiliário?', 'Não. A proposta é resolver uma dor específica: a partir do imóvel do cliente e do que ele procura, buscar oportunidades compatíveis entre imóveis de terceiros.'],
                 ['Preciso instalar aplicativo?', 'Não para começar. O acesso principal pode ser feito diretamente pelo navegador em app.swaphome.com.br.'],
                 ['Outro corretor passa a ter acesso ao meu cliente?', 'A lógica é conectar oportunidades profissionais. Dados sensíveis de atendimento e relacionamento comercial devem continuar sob gestão do corretor ou da imobiliária responsável.'],
                 ['Serve só para Campinas?', 'Não. A plataforma pode apoiar profissionais de outras regiões. A operação comercial pode ter foco inicial em determinadas cidades sem limitar o uso da solução.'],
@@ -576,13 +576,13 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
           <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
             <FadeIn>
               <div className="mx-auto inline-flex rounded-full bg-[#07111f]/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-[#07111f]">
-                Sua próxima parceria pode estar em outra carteira
+                A oportunidade certa pode já estar anunciada por um terceiro
               </div>
               <h2 className="mx-auto mt-5 max-w-4xl text-balance font-display text-3xl font-black tracking-[-0.035em] text-[#07111f] sm:text-5xl">
                 Antes de dizer “esse cliente precisa vender primeiro”, veja se existe uma permuta possível.
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-base font-semibold leading-7 text-[#142033]/80">
-                Cadastre a necessidade, cruze oportunidades e crie mais uma rota para a negociação continuar.
+                Cadastre a necessidade, deixe a SwapHome buscar imóveis de terceiros e avalie novas rotas para a negociação continuar.
               </p>
               <button
                 onClick={goToApp}
