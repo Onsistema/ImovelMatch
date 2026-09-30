@@ -18,9 +18,9 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import BorderGlow from './BorderGlow';
 import ExitIntentModal from './ExitIntentModal';
-import AppDownloadModal from './AppDownloadModal';
 import WhatsAppButton from './WhatsAppButton';
 
+const APP_URL = 'https://app.swaphome.com.br';
 
 interface LandingPageLPProps {
   onBack?: () => void;
@@ -38,7 +38,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
   // SEO optimization on mount
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = "SwapHome | Plataforma de Permuta Imobiliária para Corretores e Imobiliárias em Campinas";
+    document.title = "SwapHome | Permuta Imobiliária para Corretores e Imobiliárias";
 
     // Set meta description
     let metaDesc = document.querySelector('meta[name="description"]');
@@ -50,7 +50,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
     }
     metaDesc.setAttribute(
       'content',
-      'Aumente suas vendas de imóveis em Campinas, RMC e todo o Brasil com a maior plataforma de permuta imobiliária para corretores e imobiliárias. Cruzamento automático de carteiras.'
+      'Cruze oportunidades de permuta imobiliária com mais agilidade. A SwapHome conecta corretores e imobiliárias, organiza interesses de troca e ajuda a encontrar combinações entre imóveis.'
     );
 
     // Set meta keywords
@@ -100,9 +100,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
   // Exit intent popup state for LP
   const [isExitIntentModalOpen, setIsExitIntentModalOpen] = useState(false);
-  // App download popup state
-  const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
-
+  
   // O popup e de INTENCAO DE SAIDA. Ele existe para aparecer quando a pessoa
   // esta indo embora, nunca enquanto ela ainda esta lendo o titulo.
   //
@@ -271,7 +269,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setIsAppDownloadModalOpen(true)}
+              onClick={() => { window.location.href = APP_URL; }}
               className="flex items-center gap-3 cursor-pointer focus:outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-brand-gold"
               aria-label="SwapHome Página Inicial"
             >
@@ -292,7 +290,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => setIsAppDownloadModalOpen(true)}
+              onClick={() => { window.location.href = APP_URL; }}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 text-brand-dark font-extrabold text-sm hover:brightness-110 transition-all shadow-lg shadow-brand-gold/20 flex items-center gap-2 cursor-pointer"
             >
               <span>Acessar o App</span>
@@ -319,7 +317,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-bold tracking-wide uppercase"
               >
                 <Sparkles className="w-4 h-4 text-brand-gold" />
-                <span>Plataforma #1 em Cruzamento de Permutas Imobiliárias</span>
+                <span>Permuta imobiliária com inteligência para profissionais</span>
               </motion.div>
 
               <motion.h1 
@@ -328,7 +326,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight"
               >
-                Multiplique suas Vendas Destravando Imóveis Parados com <span className="bg-gradient-to-r from-brand-gold via-amber-300 to-amber-500 bg-clip-text text-transparent">Permuta Inteligente</span>
+                Transforme clientes travados em novas possibilidades com <span className="bg-gradient-to-r from-brand-gold via-amber-300 to-amber-500 bg-clip-text text-transparent">Permuta Inteligente</span>
               </motion.h1>
 
               <motion.p 
@@ -337,7 +335,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl"
               >
-                A ferramenta indispensável para <strong>corretores e imobiliárias em Campinas, RMC e Brasil</strong>. Encontre o imóvel equivalente para a permuta do seu cliente em segundos e feche parcerias de alta comissão.
+                Uma solução feita para <strong>corretores e imobiliárias</strong> que precisam encontrar combinações de permuta com mais rapidez, organizar interesses de troca e criar novas possibilidades de negócio entre carteiras.
               </motion.p>
 
               <motion.div 
@@ -347,10 +345,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
               >
                 <button 
-                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  onClick={() => { window.location.href = APP_URL; }}
                   className="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-base hover:scale-[1.02] transition-all shadow-xl shadow-brand-gold/25 flex items-center justify-center gap-3 cursor-pointer"
                 >
-                  <span>Acessar o app agora</span>
+                  <span>Começar agora na SwapHome</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </motion.div>
@@ -359,15 +357,15 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-400 border-t border-white/10">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-bold text-white">R$ 180M+</span> VGV em Permutas
+                  <span className="font-bold text-white">Cruzamento automático</span> de interesses
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-brand-gold" />
-                  <span className="font-bold text-white">2.500+</span> Imóveis Cadastrados
+                  <span className="font-bold text-white">Rede profissional</span> para novas parcerias
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-blue-400" />
-                  <span className="font-bold text-white">Match em 48h</span>
+                  <span className="font-bold text-white">Acesso web imediato</span>
                 </div>
               </div>
             </div>
@@ -701,7 +699,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-2">
                       <button 
-                        onClick={() => setIsAppDownloadModalOpen(true)}
+                        onClick={() => { window.location.href = APP_URL; }}
                         className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-brand-gold via-amber-400 to-amber-500 text-brand-dark font-black text-sm hover:brightness-110 transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-brand-gold/20"
                       >
                         <span>Ver Opções e Fazer Parceria no App</span>
@@ -730,10 +728,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               O Grande Gargalo do Mercado Imobiliário
             </h2>
             <p className="text-2xl sm:text-4xl font-extrabold text-white">
-              Por que 7 a cada 10 compradores travam na hora de fechar negócio?
+              Quantas vendas ficam paradas porque o cliente precisa vender ou permutar outro imóvel?
             </p>
             <p className="text-slate-400 mt-4 text-base">
-              A imensa maioria dos clientes precisa vender ou dar um imóvel existente como parte de pagamento para adquirir o novo. Sem uma rede que cruze permutas rapidamente, o imóvel fica travado nos portais por meses.
+              Quando o cliente depende de vender ou usar outro imóvel como parte do negócio, encontrar a combinação certa pode exigir dezenas de contatos e buscas manuais. A SwapHome organiza esse processo e facilita o encontro entre interesses compatíveis.
             </p>
           </div>
 
@@ -797,10 +795,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
 
           <div className="text-center mt-12">
             <button 
-              onClick={() => setIsAppDownloadModalOpen(true)}
+              onClick={() => { window.location.href = APP_URL; }}
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all cursor-pointer"
             >
-              <span>Acessar a Plataforma no App</span>
+              <span>Acessar a SwapHome</span>
               <ExternalLink className="w-4 h-4 text-brand-gold" />
             </button>
           </div>
@@ -854,10 +852,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </p>
                 </div>
                 <button 
-                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  onClick={() => { window.location.href = APP_URL; }}
                   className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Analisar Match no App</span>
+                  <span>Analisar oportunidade</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -894,10 +892,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </p>
                 </div>
                 <button 
-                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  onClick={() => { window.location.href = APP_URL; }}
                   className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Analisar Match no App</span>
+                  <span>Analisar oportunidade</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -934,10 +932,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                   </p>
                 </div>
                 <button 
-                  onClick={() => setIsAppDownloadModalOpen(true)}
+                  onClick={() => { window.location.href = APP_URL; }}
                   className="w-full py-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Analisar Match no App</span>
+                  <span>Analisar oportunidade</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -954,7 +952,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               Recursos para Corretores e Imobiliárias
             </h2>
             <p className="text-2xl sm:text-4xl font-extrabold text-white">
-              Tudo o que você precisa para dominar o mercado de permutas
+              Um fluxo simples para transformar permutas em novas oportunidades
             </p>
           </div>
 
@@ -1015,7 +1013,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </div>
               <h3 className="text-lg font-bold text-white mb-2">Acesso Imediato sem Burocracia</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                Basta acessar a plataforma web no App e começar a cadastrar seus imóveis para permuta sem complicação.
+                Acesse pelo navegador, cadastre seus imóveis e interesses de permuta e comece a buscar combinações sem instalação.
               </p>
             </div>
           </div>
@@ -1172,14 +1170,14 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             Pronto para destravar as permutas da sua carteira?
           </h2>
           <p className="mt-4 text-brand-dark/90 text-base sm:text-lg max-w-2xl mx-auto font-medium">
-            Cadastre-se na plataforma agora e tenha acesso imediato à maior rede B2B de permutas imobiliárias para corretores.
+            Acesse a plataforma, cadastre seus imóveis e interesses e comece a descobrir combinações de permuta com outros profissionais.
           </p>
           <div className="mt-8">
             <button 
-              onClick={() => setIsAppDownloadModalOpen(true)}
+              onClick={() => { window.location.href = APP_URL; }}
               className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-brand-dark text-white font-black text-lg hover:scale-[1.03] transition-all shadow-2xl shadow-brand-dark/40 cursor-pointer"
             >
-              <span>Ir para o App SwapHome</span>
+              <span>Acessar a SwapHome agora</span>
               <ArrowRight className="w-6 h-6 text-brand-gold" />
             </button>
           </div>
@@ -1202,10 +1200,10 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               </button>
             )}
             <button 
-              onClick={() => setIsAppDownloadModalOpen(true)}
+              onClick={() => { window.location.href = APP_URL; }}
               className="text-brand-gold hover:underline font-bold cursor-pointer"
             >
-              Acessar App
+              Acessar SwapHome
             </button>
           </div>
         </div>
@@ -1215,14 +1213,9 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
       <ExitIntentModal 
         isOpen={isExitIntentModalOpen} 
         onClose={() => setIsExitIntentModalOpen(false)}
-        onOpenAppModal={() => setIsAppDownloadModalOpen(true)}
+        onOpenAppModal={() => { window.location.href = APP_URL; }}
       />
 
-      {/* App download modal */}
-      <AppDownloadModal
-        isOpen={isAppDownloadModalOpen}
-        onClose={() => setIsAppDownloadModalOpen(false)}
-      />
 
       {/* Floating WhatsApp Button */}
       <WhatsAppButton />
