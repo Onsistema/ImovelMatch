@@ -27,8 +27,7 @@ interface LandingPageLPProps {
 
 const APP_URL = 'https://app.swaphome.com.br';
 const LOGO_URL = 'https://lh3.googleusercontent.com/d/16FOqiYB4xcoXfqJ_k5sxP-c58SS6_zpL';
-const HERO_IMAGE = '/lp-assets/swaphome-hero.webp';
-const PAIN_IMAGE = '/lp-assets/swaphome-client-pain.webp';
+const HERO_IMAGE = '/lp-assets/swaphome-client-pain.webp';
 const OPPORTUNITY_IMAGE = '/lp-assets/swaphome-opportunity.webp';
 const CLOSING_IMAGE = '/lp-assets/swaphome-closing.webp';
 
@@ -214,7 +213,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
               <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0d1a2c] shadow-[0_35px_100px_rgba(0,0,0,0.45)]">
                 <img
                   src={HERO_IMAGE}
-                  alt="Exemplo visual da SwapHome: imóvel do cliente, busca em anúncios de terceiros e oportunidades encontradas"
+                  alt="Corretor apresenta um imóvel a clientes cuja compra depende do imóvel atual"
                   width={760}
                   height={570}
                   fetchPriority="high"
@@ -224,7 +223,7 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#07111f]/90 via-[#07111f]/20 to-transparent px-5 pb-4 pt-12">
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#07111f]/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-200 backdrop-blur-md">
                     <Search className="h-3.5 w-3.5 text-brand-gold" />
-                    Busca em imóveis de terceiros
+                    A dor que a SwapHome ajuda a destravar
                   </div>
                 </div>
               </div>
@@ -278,34 +277,6 @@ export const LandingPageLP: React.FC<LandingPageLPProps> = ({ onBack }) => {
             </div>
           </div>
 
-            <FadeIn className="mt-14">
-              <div className="grid overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0b1728] lg:grid-cols-[1.15fr_.85fr] lg:items-stretch">
-                <div className="relative min-h-[300px] overflow-hidden sm:min-h-[420px]">
-                  <img
-                    src={PAIN_IMAGE}
-                    alt="Corretor apresenta uma casa a clientes cuja compra depende do imóvel atual"
-                    width={760}
-                    height={570}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#07111f]/65 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0b1728]/25" />
-                </div>
-                <div className="flex flex-col justify-center p-7 sm:p-10">
-                  <div className="text-xs font-black uppercase tracking-[0.18em] text-brand-gold">A dor em uma cena</div>
-                  <h3 className="mt-3 font-display text-2xl font-black leading-tight text-white sm:text-3xl">
-                    O cliente encontrou o imóvel que quer. O imóvel atual ainda trava a compra.
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-slate-400">
-                    É nesse ponto que a SwapHome entra: usando as informações da necessidade real do cliente para buscar, entre imóveis de terceiros, alternativas que possam viabilizar a negociação.
-                  </p>
-                  <div className="mt-6">
-                    <PrimaryButton label="Buscar uma oportunidade para meu cliente" />
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
         </section>
 
         <section id="como-funciona" className="bg-surface-0 py-20 sm:py-24">
