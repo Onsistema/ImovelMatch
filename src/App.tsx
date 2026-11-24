@@ -517,7 +517,7 @@ const Benefits = () => (
 );
 
 const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
-  const [billingCycle, setBillingCycle] = useState<"mensal" | "anual">("mensal");
+  const [billingCycle, setBillingCycle] = useState<"mensal" | "anual">("anual");
 
   const b2bPlans = [
     { 
@@ -531,11 +531,12 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
         "Teste agora sem compromisso",
         "Sem cadastro de cartão"
       ],
-      mensalPrice: "149,90",
-      mensalCheckout: "https://pay.kiwify.com.br/aYl3h1H",
-      anualPrice: "1.439,04",
-      anualCheckout: "https://pay.kiwify.com.br/luAvmoF",
-      savingsAmount: "359,76"
+      mensalPrice: "49,99",
+      mensalCheckout: "https://pay.kiwify.com.br/6ApAgpT",
+      anualPrice: "479,99",
+      anualCheckout: "https://pay.kiwify.com.br/ySEgXmS",
+      anualPeriodo: "ano",
+      savingsAmount: "119,89"
     },
     { 
       name: "Growth", 
@@ -548,11 +549,12 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
         "Suporte prioritário",
         "Sem cadastro de cartão"
       ],
-      mensalPrice: "289,90",
-      mensalCheckout: "https://pay.kiwify.com.br/RZQYE3t",
-      anualPrice: "2.783,04",
-      anualCheckout: "https://pay.kiwify.com.br/b3DVrG7",
-      savingsAmount: "695,76"
+      mensalPrice: "119,99",
+      mensalCheckout: "https://pay.kiwify.com.br/uD857Sr",
+      anualPrice: "1.149,99",
+      anualCheckout: "https://pay.kiwify.com.br/TanByhj",
+      anualPeriodo: "ano",
+      savingsAmount: "289,89"
     },
     { 
       name: "Enterprise", 
@@ -566,11 +568,12 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
         "IA para encontrar oportunidades (em breve)",
         "Gerente de conta exclusivo"
       ],
-      mensalPrice: "799,90",
-      mensalCheckout: "https://pay.kiwify.com.br/uuvTCx9",
-      anualPrice: "7.679,04",
-      anualCheckout: "https://pay.kiwify.com.br/7Dqp3EQ",
-      savingsAmount: "1.919,76"
+      mensalPrice: "299,99",
+      mensalCheckout: "https://pay.kiwify.com.br/oRQezgb",
+      anualPrice: "1.449,99",
+      anualCheckout: "https://pay.kiwify.com.br/Kt7Dhsh",
+      anualPeriodo: "semestre",
+      savingsAmount: "349,95"
     },
     { 
       name: "Enterprise Pro", 
@@ -618,13 +621,13 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
                   : "text-slate-400 hover:text-white"
               }`}
             >
-              Faturamento Anual
+              Anual / Semestral
             </button>
           </div>
           <p className="text-slate-400 text-xs mt-3 text-center">
             {billingCycle === "anual" 
-              ? "Valor com desconto no plano anual com economia garantida." 
-              : "Faturamento mensal sem fidelidade."}
+              ? "Desconto no período longo (Enterprise: semestral). Pix à vista ou cartão em até 12x, com juros do parcelamento por conta do comprador." 
+              : "Faturamento mensal sem fidelidade. Pagamento por Pix ou cartão."}
           </p>
         </div>
 
@@ -678,17 +681,17 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
                     {billingCycle === "mensal" ? (
                       <div className="mb-6">
                         <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
-                           <span className="text-white text-3xl font-extrabold">R$ 29,90</span>
+                           <span className="text-white text-3xl font-extrabold">R$ 19,99</span>
                            <span className="text-xs font-normal text-slate-400">/mês</span>
                         </p>
                       </div>
                     ) : (
                       <div className="mb-6">
                         <p className="text-3xl font-black mb-1 flex items-baseline gap-1.5 flex-wrap">
-                           <span className="text-white text-3xl font-extrabold">R$ 287,04</span>
+                           <span className="text-white text-3xl font-extrabold">R$ 189,99</span>
                            <span className="text-xs font-normal text-slate-400">/ano</span>
                         </p>
-                        <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ 71,76 /ano</div>
+                        <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ 49,89 /ano</div>
                       </div>
                     )}
 
@@ -712,7 +715,7 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
                     </ul>
                  </div>
                  <a 
-                   href={billingCycle === "mensal" ? "https://pay.kiwify.com.br/Uu15m10" : "https://pay.kiwify.com.br/mXikqYN"} 
+                   href={billingCycle === "mensal" ? "https://pay.kiwify.com.br/Q2Eyjyo" : "https://pay.kiwify.com.br/eUxZcR7"} 
                    target="_blank"
                    rel="noopener noreferrer"
                    className="block text-center py-4 rounded-xl bg-brand-gold text-brand-dark font-bold hover:opacity-90 transition-all shadow-lg shadow-brand-gold/20"
@@ -763,9 +766,9 @@ const Pricing = ({ onOpenAppModal }: { onOpenAppModal?: () => void }) => {
                           <div className="mb-6">
                             <p className="text-2xl font-black text-white mb-1 flex items-baseline gap-1 flex-wrap">
                               <span>R$ {plan.anualPrice}</span>
-                              <span className="text-[11px] font-normal text-slate-400">/ano</span>
+                              <span className="text-[11px] font-normal text-slate-400">/{plan.anualPeriodo}</span>
                             </p>
-                            <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ {plan.savingsAmount} /ano</div>
+                            <div className="text-emerald-400 text-xs font-bold mt-2">Você economiza R$ {plan.savingsAmount} /{plan.anualPeriodo}</div>
                           </div>
                         )
                       )}
